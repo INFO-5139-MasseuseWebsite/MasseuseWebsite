@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CMTO</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <header class="header">
+    <div class="logo">
+      <img src="./logo/LogoCMTO.svg" alt="Logo" height="50">
+    </div>
+    <nav class="navbar">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li class="dropdown">
+          <a href="#explore-section">Treatments</a>
+          <div class="dropdown-content">
+            <a href="#">Massages</a>
+            <a href="#">Deep Tissue</a>
+            <a href="#">Holistic</a>
+            <a href="#">Aromatherapy</a>
+            <a href="#">Acupuncture</a>
+            <a href="#">chiropractic-care</a>
+            <a href="#">Facial Care</a>
+            <a href="#">Hands / Feet</a>
+          </div>
+        </li>
+        <li><a href="#map-section">Hours/Location</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero-video">
+    <video autoplay muted loop class="video-bg">
+      <source src="./images/MassageVid.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </section>
+
+  <section class="welcome">
+    <h2>Take a deep breath...</h2>
+    <p> We welcome you to the <strong> College of Massage Therapists of Ontario</strong>,
+      we invite you to meet your Registered Massage Therapist (RMT). Using our platform we hope that you can find the
+      right RMT to meet all
+      your health needs while also providing you with a premium restorative experiance. Our RMTs believe in creating a
+      tranquil environment where
+      you can unwind, and rejuvinate your mind and body. </p>
+  </section>
+
+  <!-- Explore Section -->
+  <section class="explore-section" id="explore-section">
+    <h2>Our Treatments</h2>
+    <div class="treatment-container">
+      <!-- Massages -->
+      <div class="treatment-card">
+        <img src="./images/relax.png" alt="Massages" class="treatment-image">
+        <h3><a href="#">Massages</a></h3>
+        <p>Immerse yourself in a world of complete relaxation with a classic massage. Book with our knowledgeable
+          Registered Massage Therapists</p>
+        <p class="price">$70 - 60 mins</p>
+      </div>
+
+      <!-- Deep Tissue -->
+      <div class="treatment-card">
+        <img src="./images/deeptissue.png" alt="Deep Tissue Massage" class="treatment-image">
+        <h3><a href="#">Deep Tissue</a></h3>
+        <p>A deeper, more intense massage to target muscle knots and relieve chronic tension. Ideal for those with stiff
+          muscles or soreness from physical activity.</p>
+        <p class="price">$100 - 60 mins</p>
+      </div>
+
+      <!-- Holistic -->
+      <div class="treatment-card">
+        <img src="./images/temples.jpg" alt="Holistic Massage" class="treatment-image">
+        <h3><a href="#">Holistic</a></h3>
+        <p>Holistic therapy for balancing mind, body, and spirit. We use natural healing techniques to align energy and
+          promote overall well-being.</p>
+        <p class="price">$90 - 60 mins</p>
+      </div>
+
+      <!-- Aromatherapy -->
+      <div class="treatment-card">
+        <img src="./images/room.jpeg" alt="Aromatherapy Massage" class="treatment-image">
+        <h3><a href="#">Aromatherapy</a></h3>
+        <p>Immerse yourself in the therapeutic power of essential oils, combined with a relaxing massage to help balance
+          your body and mind for a truly rejuvenating experience.</p>
+        <p class="price">$90 - 60 mins</p>
+      </div>
+
+      <!-- Acupuncture -->
+      <div class="treatment-card">
+        <img src="./images/accu.jpg" alt="Acupuncture" class="treatment-image">
+        <h3><a href="#">Acupuncture</a></h3>
+        <p>Acupuncture therapy to stimulate specific points on the body, promoting energy flow and healing. Ideal for
+          pain relief, stress reduction, and overall wellness.</p>
+        <p class="price">$120 - 60 mins</p>
+      </div>
+
+      <!-- Chiropractic Care -->
+      <div class="treatment-card">
+        <img src="./images/chiro.jpg" alt="Chiropractic Care" class="treatment-image">
+        <h3><a href="#">Chiropractic Care</a></h3>
+        <p>Chiropractic care that focuses on the spine and musculoskeletal system to improve alignment, mobility, and
+          overall health.</p>
+        <p class="price">$85 - 60 mins</p>
+      </div>
+
+      <!-- Facial Care -->
+      <div class="treatment-card">
+        <img src="./images/facemask.jpeg" alt="Facial Care" class="treatment-image">
+        <h3><a href="#">Facial Care</a></h3>
+        <p>Pamper your skin with a rejuvenating facial, designed to cleanse, hydrate, and refresh. Perfect for a
+          youthful glow and overall skin health.</p>
+        <p class="price">$75 - 60 mins</p>
+      </div>
+
+      <!-- Hands / Feet -->
+      <div class="treatment-card">
+        <img src="./Images/hand.png" alt="Hands / Feet Care" class="treatment-image">
+        <h3><a href="#">Hands / Feet</a></h3>
+        <p>Treat your hands and feet to a relaxing therapy session with our special hand and foot care treatments that
+          promote relaxation and improve skin health.</p>
+        <p class="price">$40 - 30 mins</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="map" id="map-section">
+    <h1>GIVE US A VISIT</h1>
+
+    <div class="mapContainer">
+      <div class="mapEmbed">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d8159.1462176870455!2d-79.40172200975833!3d43.69612860626877!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x882b333ecb8379f5%3A0x2b7c1df679b58ae7!2sThe%20College%20of%20Massage%20Therapists%20of%20Ontario%20(CMTO)!5e0!3m2!1sen!2sca!4v1738809915753!5m2!1sen!2sca"
+          width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+
+      <div class="infoContainer">
+        <div class="info">
+          <img src="./location/marker.svg" alt="Location Icon" class="map-icon" />
+          1867 Yonge St #810, Toronto, ON M4S 1Y5
+        </div>
+        <div class="info">
+          <img src="./location/phone.svg" alt="Phone Icon" class="map-icon" />
+          (416) 489-2626
+        </div>
+        <div class="info">
+          <img src="./location/time.svg" alt="Hours Icon" class="map-icon" />
+          Mon - Fri: 9am - 4pm for Online Service. <br>
+          Tuesday & Thursday: 9am - 1pm for In Person
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <!-- Footer Icons and Text -->
+      <div class="footer-icons">
+        <div class="icon">
+          <img src="./location/marker.svg" alt="Location Icon" class="footer-icon">
+          <p>1867 Yonge St #810, Toronto, ON M4S 1Y5</p>
+        </div>
+        <div class="icon">
+          <img src="./location/phone.svg" alt="Phone Icon" class="footer-icon">
+          <p> (416) 489-2626</p>
+        </div>
+        <div class="icon">
+          <img src="./location/time.svg" alt="Hours Icon" class="footer-icon">
+          <p>Mon - Fri: 9am - 4pm for Online Service. <br> Tuesday & Thursday: 9am - 1pm for In Person</p>
+        </div>
+      </div>
+
+      <!-- Footer Logo -->
+      <div class="footer-logo">
+        <img src="./logo/LogoCMTO.svg" alt="Logo" height="50">
+      </div>
+    </div>
+
+    <div class="copyright">
+      <p>&copy; 2025 CMTO. All Rights Reserved.</p>
+    </div>
+
+  </footer>
+</body>
+
+</html>
