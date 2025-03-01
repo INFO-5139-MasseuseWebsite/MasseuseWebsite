@@ -4,6 +4,9 @@ const http = require('http'),
 const express = require('express')
 const app = express()
 
+// This makes *everything* within the dist folder public.
+// If we add any private files, this needs to be changed.
+// Pipeline needs work
 app.use(express.static(path.join(__dirname, 'dist')))
 
 // for testing purposes, use both http and https
