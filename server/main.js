@@ -1,15 +1,22 @@
 import path from 'path'
 import http from 'http'
 import https from 'https'
-import { addBooking } from './database'
+import mime from 'mime'
+import bodyparser from 'body-parser'
+import { addBooking, getAvailableBookingsMonth } from './database.js'
 import e from 'express'
 const app = e()
 
-// Blanket auth for public
-app.post('/api/public/:handle', (request, response, next) => {
-    console.log('Accessing public...')
+function filterJson(request, response, next) {
+    if (mime.lookup(request.headers['content-type']) !== 'application/json') {
+        response.status(400).type('plain').send(`Invalid content-type: expected application/json, got ${request.headers['content-type']}`)
+        return
+    }
     next()
-})
+}
+
+// Blanket auth for public
+app.post('/api/public/:handle', bodyparser.json({ type: ['json', 'application/json'] }), filterJson)
 app.post('/api/public/add-booking', (request, response) => {
     // verify request
 
@@ -22,6 +29,27 @@ app.post('/api/public/add-booking', (request, response) => {
     response.send()
     // else
     // send not valid response
+})
+app.post('/api/public/get-available-bookings', (request, response) => {
+    const rmt = request.body.rmt
+    const year = parseInt(request.body.year, 10)
+    const month = parseInt(request.body.month, 10)
+    if (!rmt) {
+        response.status(400).type('plain').send('(404) Bad Request: Invalid json')
+        return
+    }
+    if (isNaN(year)) {
+        response.status(400).type('plain').send('(404) Bad Request: Invalid json')
+        return
+    }
+    if (isNaN(month)) {
+        response.status(400).type('plain').send('(404) Bad Request: Invalid json')
+        return
+    }
+    console.log(rmt, year, month)
+    getAvailableBookingsMonth(rmt, year, month)
+    .then(available=>response.status(200).type('json').send(available))
+    .catch(err=>response.status(err.status).type('plain').send(err.message))
 })
 
 // Blanket auth for RMTs
@@ -65,8 +93,8 @@ app.use(e.static(path.resolve(import.meta.dirname, '../dist')))
 
 // for testing purposes, use both http and https
 // when https testing is done (mainly need a certificate), remove the http
-http.createServer(app).listen(80, ()=>console.log('Server listening on port 80'));
+http.createServer(app).listen(80, () => console.log('Server listening on port 80'));
 // certificate information goes here
 const https_credentials = {}
-https.createServer(https_credentials, app).listen(443, ()=>console.log('Server listening on port 443'));
+https.createServer(https_credentials, app).listen(443, () => console.log('Server listening on port 443'));
 
