@@ -1,22 +1,13 @@
 import path from 'path'
 import http from 'http'
 import https from 'https'
-import mime from 'mime'
-import bodyparser from 'body-parser'
 import { addBooking, getAvailableBookingsMonth } from './database.js'
 import e from 'express'
+import { authRMT, filterJson, parseJson } from './middleware.js'
 const app = e()
 
-function filterJson(request, response, next) {
-    if (mime.lookup(request.headers['content-type']) !== 'application/json') {
-        response.status(400).type('plain').send(`Invalid content-type: expected application/json, got ${request.headers['content-type']}`)
-        return
-    }
-    next()
-}
-
 // Blanket auth for public
-app.post('/api/public/:handle', bodyparser.json({ type: ['json', 'application/json'] }), filterJson)
+app.post('/api/public/:handle', filterJson, parseJson)
 app.post('/api/public/add-booking', (request, response) => {
     // verify request
 
@@ -53,17 +44,7 @@ app.post('/api/public/get-available-bookings', (request, response) => {
 })
 
 // Blanket auth for RMTs
-app.post('/api/rmt/:handle', (request, response, next) => {
-    // authenticate. Replace with FireStore Admin
-    console.log('Accessing RMT...')
-    if (request.headers['x-auth']) {
-        console.log(`Authed as ${request.headers['x-auth']}`)
-        next()
-        return
-    }
-    console.log('Unauthorized')
-    response.status(401).send('401 Unauthorized')
-})
+app.post('/api/rmt/:handle', authRMT, filterJson, parseJson)
 app.post('/api/rmt/dothing', (request, response, next) => {
     console.log('Accessing dothing...')
     response.status(200).send()
