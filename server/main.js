@@ -92,7 +92,7 @@ app.post('/api/public/add-booking', (request, response) => {
     }
 })
 app.post('/api/public/get-available-bookings', (request, response) => {
-    const rmt = request.body.rmt
+    const rmt = request.body.rmtID
     const year = parseInt(request.body.year, 10)
     const month = parseInt(request.body.month, 10)
     if (!rmt) {
