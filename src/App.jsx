@@ -5,6 +5,9 @@ import WelcomeSection from './components/WelcomeSection';
 import TreatmentsSection from './components/TreatmentsSection';
 import MapSection from './components/MapSection';
 import Footer from './components/Footer';
+
+
+
 import './App.css';
 
 function App() {
