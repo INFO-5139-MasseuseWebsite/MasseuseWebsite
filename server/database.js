@@ -1,6 +1,7 @@
 // https://getpantry.cloud/apiv1/pantry/YOUR_PANTRY_ID/basket/YOUR_BASKET_NAME
 
 import axios from 'axios';
+import {v4 as uuidv4} from 'uuid'
 
 const PANTRY_ID = process.env.PANTRY_ID
 if (!PANTRY_ID)
@@ -24,14 +25,18 @@ export async function addBooking(data) {
     if (!available)
         return 'Date already booked'
 
+    const bookingID = uuidv4()
     const result = await axios.put(DB + 'rmt_booking', {
-        [data.rmtID]: [{
-            form: data.form,
-            year: data.year,
-            month: data.month,
-            day: data.day,
-            hour: data.hour
-        }],
+        [data.rmtID]: {
+            [bookingID]: {
+                bookingID: bookingID,
+                form: data.form,
+                year: data.year,
+                month: data.month,
+                day: data.day,
+                hour: data.hour
+            }
+        }
     })
     console.log(result)
     return true
@@ -51,7 +56,7 @@ export async function getAvailableBookingsMonth(rmtID, year, month) {
         status: 400,
         message: 'Invalid rmtID: RMT doesnt exist'
     }
-    const bookings = result.data[rmtID]
+    const bookings = Object.values(result.data[rmtID])
     if (month < 0) throw {
         status: 400,
         message: 'Invalid month: Less than 0'
