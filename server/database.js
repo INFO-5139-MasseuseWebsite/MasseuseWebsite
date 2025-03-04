@@ -34,7 +34,9 @@ export async function addBooking(data) {
                 year: data.year,
                 month: data.month,
                 day: data.day,
-                hour: data.hour
+                hour: data.hour,
+                confirmed: false,
+                canceled: false,
             }
         }
     })
@@ -93,8 +95,8 @@ export async function getAvailableBookingsMonth(rmtID, year, month) {
     else
         // At least 2 months of overhead. Don't bother with "can't book too soon" calculations
         nextAvailableDay = 1
-    // only process bookings in this current year/month
-    const validBookings = bookings.filter(booking => booking.year === year && booking.month === month)
+    // only process bookings in this current year/month and that havnt been canceled
+    const validBookings = bookings.filter(booking => booking.year === year && booking.month === month && !booking.canceled)
     // fill array with "no available bookings" up until the next available day
     const available = Array(Math.min(nextAvailableDay - 1, daysInTargetMonth - 1)).fill(Array(maxHour - minHour).fill(false))
     // fill rest of array with actual availability data
