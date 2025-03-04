@@ -4,22 +4,92 @@ import https from 'https'
 import { addBooking, getAvailableBookingsMonth } from './database.js'
 import e from 'express'
 import { authRMT, filterJson, parseJson } from './middleware.js'
+import { ARRAY_T, checkType, DATA_TYPES, EMAIL, NULLABLE } from './formParser.js'
 const app = e()
 
 // Blanket auth for public
 app.post('/api/public/:handle', filterJson, parseJson)
 app.post('/api/public/add-booking', (request, response) => {
-    // verify request
+    const form = request.body
+    const [valid, data] = checkType({
+        rmtID: DATA_TYPES.STRING,
+        year: DATA_TYPES.INTEGER,
+        month: DATA_TYPES.INTEGER,
+        day: DATA_TYPES.INTEGER,
+        hour: DATA_TYPES.INTEGER,
+        form: {
+            firstName: DATA_TYPES.STRING,
+            lastName: DATA_TYPES.STRING,
+            email: EMAIL,
+            // give it a proper typing later
+            phoneNumber: DATA_TYPES.STRING,
+            // if we are to actually store an address, it needs to be split up into proper fields
+            // this works as a placeholder for now though
+            address: NULLABLE(DATA_TYPES.STRING),
+            occupation: NULLABLE(DATA_TYPES.STRING),
+            dateOfBirth: NULLABLE(DATA_TYPES.STRING),
+            recievedMassageBefore: NULLABLE(DATA_TYPES.STRING),
+            referredByPractitioner: NULLABLE(DATA_TYPES.STRING),
+            // this also needs to be split up if we are storing it
+            practitionerNameAddress: NULLABLE(DATA_TYPES.STRING),
+            cardiovascularConditions: NULLABLE(ARRAY_T(DATA_TYPES.STRING)),
+            cardiovascularHistory: NULLABLE(DATA_TYPES.STRING),
+            infections: NULLABLE(ARRAY_T(DATA_TYPES.STRING)),
+            respiratoryConditions: NULLABLE(ARRAY_T(DATA_TYPES.STRING)),
+            respiratoryFamilyHistory: NULLABLE(DATA_TYPES.STRING),
+            headNeckConditions: NULLABLE(ARRAY_T(DATA_TYPES.STRING)),
+            otherConditions: NULLABLE({
+                lossOfSensation: NULLABLE(DATA_TYPES.STRING),
+                diabetesOnset: NULLABLE(DATA_TYPES.STRING),
+                allergies: NULLABLE(DATA_TYPES.STRING),
+                reactionType: NULLABLE(DATA_TYPES.STRING),
+                epilepsy: NULLABLE(DATA_TYPES.STRING),
+                cancer: NULLABLE(DATA_TYPES.STRING),
+                skinConditions: NULLABLE(DATA_TYPES.STRING),
+                arthritis: NULLABLE(DATA_TYPES.STRING),
+                arthritisFamilyHistory: NULLABLE(DATA_TYPES.STRING),
+            }),
+            womenHealth: NULLABLE({
+                pregnantDue: NULLABLE(DATA_TYPES.STRING),
+                gynecologicalConditions: NULLABLE(DATA_TYPES.STRING),
+                generalHealth: NULLABLE(DATA_TYPES.STRING),
+                primaryCarePhysician: NULLABLE(DATA_TYPES.STRING),
+                physicianAddress: NULLABLE(DATA_TYPES.STRING),
+            }),
+            currentMedications: NULLABLE(ARRAY_T(DATA_TYPES.STRING)),
+            otherTreatment: NULLABLE(DATA_TYPES.STRING),
+            otherTreatmentReason: NULLABLE(DATA_TYPES.STRING),
+            surgeryDate: NULLABLE(DATA_TYPES.STRING),
+            surgeryNature: NULLABLE(DATA_TYPES.STRING),
+            injuryDate: NULLABLE(DATA_TYPES.STRING),
+            injuryNature: NULLABLE(DATA_TYPES.STRING),
 
-    // if valid
-    addBooking('debug').then(console.log).catch(console.error)
-    // send client email
-    // send rmt email
-    // send valid response
-    response.statusCode = 200
-    response.send()
-    // else
-    // send not valid response
+            otherMedicalConditions: NULLABLE(DATA_TYPES.STRING),
+            otherMedicalConditionsDetails: NULLABLE(DATA_TYPES.STRING),
+            internalPinsWires: NULLABLE(DATA_TYPES.STRING),
+            internalPinsWiresDetails: NULLABLE(DATA_TYPES.STRING),
+            internalPinsWiresLocation: NULLABLE(DATA_TYPES.STRING),
+            massageTherapyReason: NULLABLE(DATA_TYPES.STRING),
+            allergiesLubricants: NULLABLE(DATA_TYPES.STRING),
+            allergiesLubricantsDetails: NULLABLE(DATA_TYPES.STRING),
+            treatmentGoals: NULLABLE(DATA_TYPES.STRING),
+            limitationsDailyLife: NULLABLE(DATA_TYPES.STRING),
+            discomfortAreas: NULLABLE(DATA_TYPES.STRING),
+        }
+    }, form)
+
+    if (valid) {
+        addBooking(data)
+            .then(result => {
+                if (result === true)
+                    response.status(200).send()
+                else
+                    response.status(400).type('plain').send(result)
+            })
+            .catch(() => response.status(500).send())
+    } else {
+        response.status(400).type('plain').send('(400) Invalid Form')
+    }
 })
 app.post('/api/public/get-available-bookings', (request, response) => {
     const rmt = request.body.rmt
@@ -39,8 +109,8 @@ app.post('/api/public/get-available-bookings', (request, response) => {
     }
     console.log(rmt, year, month)
     getAvailableBookingsMonth(rmt, year, month)
-    .then(available=>response.status(200).type('json').send(available))
-    .catch(err=>response.status(err.status).type('plain').send(err.message))
+        .then(available => response.status(200).type('json').send(available))
+        .catch(err => response.status(err.status).type('plain').send(err.message))
 })
 
 // Blanket auth for RMTs

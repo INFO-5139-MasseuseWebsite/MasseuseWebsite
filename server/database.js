@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 const PANTRY_ID = process.env.PANTRY_ID
-if(!PANTRY_ID)
+if (!PANTRY_ID)
     throw 'No PANTRY_ID found in environment variables'
 const DB = `https://getpantry.cloud/apiv1/pantry/${PANTRY_ID}/basket/`
 
@@ -12,19 +12,29 @@ const DB = `https://getpantry.cloud/apiv1/pantry/${PANTRY_ID}/basket/`
 // Expects month to be an integer from 0-11
 const daysInMonth = (year, month) => new Date(year, month + 1, 0).getDate()
 
-export async function addBooking(rmtID) {
+export async function addBooking(data) {
     //verify time
+    const availableMonth = await getAvailableBookingsMonth(data.rmtID, data.year, data.month)
+    if (data.day > availableMonth.maxDay || data.day <= 0)
+        return 'Invalid Day (out of bounds)'
+    if (data.hour < availableMonth.hourIndexOffset)
+        return 'Invalid Hour (out of bounds)'
+    const day = availableMonth.available[data.day]
+    const available = day[data.hour - availableMonth.hourIndexOffset]
+    if (!available)
+        return 'Date already booked'
 
     const result = await axios.put(DB + 'rmt_booking', {
-        [rmtID]: [{
-            form: {},
-            hour: 9,
-            day: 1,
-            month: 0,
-            year: 2025
+        [data.rmtID]: [{
+            form: data.form,
+            year: data.year,
+            month: data.month,
+            day: data.day,
+            hour: data.hour
         }],
     })
     console.log(result)
+    return true
 }
 
 // This can be moved into RMT data if we wanna personalize it
