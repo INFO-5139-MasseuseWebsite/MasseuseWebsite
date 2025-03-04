@@ -107,7 +107,6 @@ app.post('/api/public/get-available-bookings', (request, response) => {
         response.status(400).type('plain').send('(404) Bad Request: Invalid json')
         return
     }
-    console.log(rmt, year, month)
     getAvailableBookingsMonth(rmt, year, month)
         .then(available => response.status(200).type('json').send(available))
         .catch(err => response.status(err.status).type('plain').send(err.message))
