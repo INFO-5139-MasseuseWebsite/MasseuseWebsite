@@ -2,6 +2,13 @@ import path from 'path'
 import http from 'http'
 import https from 'https'
 import e from 'express'
+
+// Node version requirement check
+const [major, minor, patch] = process.versions.node.split('.').map(Number)
+if(major !== 20) {
+    throw 'Node version must be 20.x.x'
+}
+
 const app = e()
 
 // This makes *everything* within the dist folder public.
