@@ -6,6 +6,7 @@ const HealthHistory = () => {
 
     name: '',
     phoneNumber: '',
+    email: '',
     address: '',
     occupation: '',
     dateOfBirth: '',
@@ -20,7 +21,7 @@ const HealthHistory = () => {
     respiratoryFamilyHistory: '',
     headNeckConditions: [],
 
-    
+
     otherConditions: {
       lossOfSensation: '',
       diabetesOnset: '',
@@ -40,6 +41,8 @@ const HealthHistory = () => {
       physicianAddress: '',
     },
     currentMedications: [],
+    medication: '',
+    condition: '',
     otherTreatment: '',
     otherTreatmentReason: '',
     surgeryDate: '',
@@ -60,60 +63,39 @@ const HealthHistory = () => {
     discomfortAreas: '',
   });
 
-  // const handleChange = (e) => {
-  //   const { name, value, type, checked } = e.target;
+//To Do: Add sanitization and data validation to forms
 
-  //   if (type === 'checkbox') {
-  //     const { cardiovascularConditions, infections, respiratoryConditions, headNeckConditions } = formData;
-  //     const updatedConditions = [...formData[name]];
 
-  //     if (checked) {
-  //       updatedConditions.push(value);
-  //     } else {
-  //       updatedConditions.splice(updatedConditions.indexOf(value), 1);
-  //     }
-
-  //     setFormData({
-  //       ...formData,
-  //       [name]: updatedConditions,
-  //     });
-  //   } else if (type === 'radio') {
-  //     setFormData({
-  //       ...formData,
-  //       [name]: value,
-  //     });
-  //   } else {
-  //     setFormData({
-  //       ...formData,
-  //       [name]: value,
-  //     });
-  //   }
-  // };
+  const sanitizeInput = (input) => {
+    if (typeof input === 'string') {
+      return DOMPurify.sanitize(input);
+    }
+    return input;
+  };
 
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-  
+
     if (type === 'checkbox') {
       const updatedConditions = [...formData[name]];
-  
       if (checked) {
         updatedConditions.push(value);
       } else {
         updatedConditions.splice(updatedConditions.indexOf(value), 1);
       }
-  
       setFormData({
         ...formData,
         [name]: updatedConditions,
       });
     } else if (type === 'radio') {
-      if (name === 'epilepsy' || name === 'arthritis' || name === 'arthritisFamilyHistory') {
+      if (name.includes('.')) {
+        const [parent, child] = name.split('.');
         setFormData((prevData) => ({
           ...prevData,
-          otherConditions: {
-            ...prevData.otherConditions,
-            [name]: value,
+          [parent]: {
+            ...prevData[parent],
+            [child]: value,
           },
         }));
       } else {
@@ -141,7 +123,7 @@ const HealthHistory = () => {
     }
   };
 
-
+  //TO DO: Once linked handle submit 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Form Data Submitted:', formData);
@@ -153,13 +135,12 @@ const HealthHistory = () => {
       <h1>Health History Form</h1>
       <p>
         The information request below will assist us in treating you safely. Feel free to ask any questions about the information being requested.
-        Please note that all information provided below will be kept confidentially unless allowed or required by law. 
-        Your written permission will be required to release any information. Please inform us of any changes to your health status. We are required 
-        to keep annually updated records of your health history. 
+        Please note that all information provided below will be kept confidentially unless allowed or required by law.
+        Your written permission will be required to release any information. Please inform us of any changes to your health status. We are required
+        to keep annually updated records of your health history.
       </p>
 
       <form onSubmit={handleSubmit}>
-        {/* Existing fields */}
         <div className="form-group">
           <label htmlFor="name">Name:</label>
           <input
@@ -180,6 +161,20 @@ const HealthHistory = () => {
             id="phoneNumber"
             name="phoneNumber"
             value={formData.phoneNumber}
+            onChange={handleChange}
+            required
+            className="text-style"
+          />
+        </div>
+
+
+        <div className="form-group">
+          <label htmlFor="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
             onChange={handleChange}
             required
             className="text-style"
@@ -289,7 +284,6 @@ const HealthHistory = () => {
           </div>
         )}
 
-        {/* New fields */}
         <div className="form-group">
           <h3>Please indicate the conditions you are experiencing or have experienced:</h3>
           <h4>Cardiovascular:</h4>
@@ -435,7 +429,7 @@ const HealthHistory = () => {
             Loss of sensation, where?
             <input
               type="text"
-              name="lossOfSensation"
+              name="otherConditions.lossOfSensation"
               value={formData.otherConditions.lossOfSensation}
               onChange={handleChange}
               className="text-style"
@@ -445,7 +439,7 @@ const HealthHistory = () => {
             Diabetes, onset:
             <input
               type="text"
-              name="diabetesOnset"
+              name="otherConditions.diabetesOnset"
               value={formData.otherConditions.diabetesOnset}
               onChange={handleChange}
               className="text-style"
@@ -455,7 +449,7 @@ const HealthHistory = () => {
             Allergies/hypersensitivity to what?
             <input
               type="text"
-              name="allergies"
+              name="otherConditions.allergies"
               value={formData.otherConditions.allergies}
               onChange={handleChange}
               className="text-style"
@@ -465,17 +459,18 @@ const HealthHistory = () => {
             Type of reaction:
             <input
               type="text"
-              name="reactionType"
+              name="otherConditions.reactionType"
               value={formData.otherConditions.reactionType}
               onChange={handleChange}
               className="text-style"
             />
           </label>
+
           <p>Epilepsy:</p>
           <label>
             <input
               type="radio"
-              name="epilepsy"
+              name="otherConditions.epilepsy"
               value="Yes"
               checked={formData.otherConditions.epilepsy === 'Yes'}
               onChange={handleChange}
@@ -485,7 +480,7 @@ const HealthHistory = () => {
           <label>
             <input
               type="radio"
-              name="epilepsy"
+              name="otherConditions.epilepsy"
               value="No"
               checked={formData.otherConditions.epilepsy === 'No'}
               onChange={handleChange}
@@ -497,27 +492,29 @@ const HealthHistory = () => {
             Cancer, where?
             <input
               type="text"
-              name="cancer"
+              name="otherConditions.cancer"
               value={formData.otherConditions.cancer}
               onChange={handleChange}
               className="text-style"
             />
           </label>
+
           <label>
             Skin conditions, what?
             <input
               type="text"
-              name="skinConditions"
+              name="otherConditions.skinConditions"
               value={formData.otherConditions.skinConditions}
               onChange={handleChange}
               className="text-style"
             />
           </label>
+          
           <p>Arthritis:</p>
           <label>
             <input
               type="radio"
-              name="arthritis"
+              name="otherConditions.arthritis"
               value="Yes"
               checked={formData.otherConditions.arthritis === 'Yes'}
               onChange={handleChange}
@@ -527,7 +524,7 @@ const HealthHistory = () => {
           <label>
             <input
               type="radio"
-              name="arthritis"
+              name="otherConditions.arthritis"
               value="No"
               checked={formData.otherConditions.arthritis === 'No'}
               onChange={handleChange}
@@ -538,7 +535,7 @@ const HealthHistory = () => {
           <label>
             <input
               type="radio"
-              name="arthritisFamilyHistory"
+              name="otherConditions.arthritisFamilyHistory"
               value="Yes"
               checked={formData.otherConditions.arthritisFamilyHistory === 'Yes'}
               onChange={handleChange}
@@ -548,7 +545,7 @@ const HealthHistory = () => {
           <label>
             <input
               type="radio"
-              name="arthritisFamilyHistory"
+               name="otherConditions.arthritisFamilyHistory"
               value="No"
               checked={formData.otherConditions.arthritisFamilyHistory === 'No'}
               onChange={handleChange}
@@ -563,17 +560,18 @@ const HealthHistory = () => {
             Pregnant, due:
             <input
               type="text"
-              name="pregnantDue"
+              name="womenHealth.pregnantDue"
               value={formData.womenHealth.pregnantDue}
               onChange={handleChange}
               className="text-style"
             />
           </label>
+
           <label>
             Gynecological conditions, what?
             <input
               type="text"
-              name="gynecologicalConditions"
+              name="womenHealth.gynecologicalConditions"
               value={formData.womenHealth.gynecologicalConditions}
               onChange={handleChange}
               className="text-style"
@@ -583,7 +581,7 @@ const HealthHistory = () => {
             Overall, how is your general health?
             <input
               type="text"
-              name="generalHealth"
+              name="womenHealth.generalHealth"
               value={formData.womenHealth.generalHealth}
               onChange={handleChange}
               className="text-style"
@@ -593,7 +591,7 @@ const HealthHistory = () => {
             Primary care physician:
             <input
               type="text"
-              name="primaryCarePhysician"
+              name="womenHealth.primaryCarePhysician"
               value={formData.womenHealth.primaryCarePhysician}
               onChange={handleChange}
               className="text-style"
@@ -603,7 +601,7 @@ const HealthHistory = () => {
             Address:
             <input
               type="text"
-              name="physicianAddress"
+              name="womenHealth.physicianAddress"
               value={formData.womenHealth.physicianAddress}
               onChange={handleChange}
               className="text-style"
@@ -619,18 +617,19 @@ const HealthHistory = () => {
             Medication:
             <input
               type="text"
-              name="currentMedications"
-              value={formData.currentMedications}
+              name="currentMedications.medication"
+              value={formData.currentMedications.medication}
               onChange={handleChange}
               className="text-style"
             />
           </label>
+
           <label>
             Condition it treats:
             <input
               type="text"
-              name="currentMedications"
-              value={formData.currentMedications}
+              name="currentMedications.condition"
+              value={formData.currentMedications.condition}
               onChange={handleChange}
               className="text-style"
             />
@@ -719,7 +718,6 @@ const HealthHistory = () => {
           </label>
         </div>
 
-        {/* Additional fields */}
         <div className="form-group">
           <p>Do you have any other medical conditions? (e.g. digestive conditions, haemophilia, osteoporosis, mental illness)</p>
           <label>
@@ -855,7 +853,7 @@ const HealthHistory = () => {
 
         <div className="form-group">
           <label>
-            Are there any limitations to activities of daily life? (e.g. Limited mobility, pain or discomfort, difficulties sleeping, 
+            Are there any limitations to activities of daily life? (e.g. Limited mobility, pain or discomfort, difficulties sleeping,
             stress or anxiety, reduces physical endurance, troubles lifting, postural problems, circulatory issues, post-surgery or injury
             recovery)
             <br />
@@ -870,7 +868,7 @@ const HealthHistory = () => {
 
         <div className="form-group">
           <label>
-            Are there any particular areas where you're experiencing discomfort or tension that you'd like focused on? (e.g. back, legs, 
+            Are there any particular areas where you're experiencing discomfort or tension that you'd like focused on? (e.g. back, legs,
             shoulders, or neck?)
             <br />
             <textarea
