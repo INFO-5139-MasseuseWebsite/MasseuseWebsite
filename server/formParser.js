@@ -27,12 +27,12 @@ export const NUMBER = AND(FLOAT, v => [Number.isFinite(v), v])
 export const INTEGER = v => [Number.isSafeInteger(v), v]
 export const STRING = typeof ''
 export const ARRAY = v => [Array.isArray(v), v]
-export const VECTOR2 = VECTOR_N(2)
-export const VECTOR3 = VECTOR_N(3)
 
 // Custom Primitives
 const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
 export const EMAIL = AND(STRING, v => [emailRegex.test(v), v])
+export const VECTOR2 = VECTOR_N(2)
+export const VECTOR3 = VECTOR_N(3)
 
 // Magic happens here
 export default function checkType(type, value) {
