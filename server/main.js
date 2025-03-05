@@ -2,9 +2,16 @@ import path from 'path'
 import http from 'http'
 import https from 'https'
 import { addBooking, getAvailableBookingsMonth } from './database.js'
-import e from 'express'
 import { authRMT, filterJson, parseJson } from './middleware.js'
 import checkType, { ARRAY_T,  EMAIL, INTEGER, NULLABLE, STRING } from './formParser.js'
+import e from 'express'
+
+// Node version requirement check
+const [major, minor, patch] = process.versions.node.split('.').map(Number)
+if(major !== 20) {
+    throw 'Node version must be 20.x.x'
+}
+
 const app = e()
 
 // Blanket auth for public
