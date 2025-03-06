@@ -69,13 +69,14 @@ import MassageVid from '../assets/images/MassageVid.mp4';
 const HeroVideo = () => {
   return (
     <section className="hero-video">
-      <video autoPlay muted loop className="video-bg">
-        <source src={MassageVid} type="video/mp4" />
+      <video autoPlay muted loop playsInline className="video-bg">
+      <source src={MassageVid} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
     </section>
   );
 };
+
 
 export default HeroVideo;
 EOF
@@ -338,3 +339,60 @@ export default App;
 EOF
 
 echo "React components and asset structure have been set up successfully."
+
+
+
+# Create CSSLoader.jsx
+cat > src/components/CSSLoader.jsx << 'EOF'
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+
+function CSSLoader() {
+  const location = useLocation();
+
+  useEffect(() => {
+    console.log('Current route:', location.pathname);
+
+    // Remove existing CSS files
+    const appCSS = document.getElementById('app-css');
+    const healthHistoryCSS = document.getElementById('health-history-css');
+
+    if (appCSS) {
+      console.log('Removing App.css');
+      appCSS.remove();
+    }
+    if (healthHistoryCSS) {
+      console.log('Removing HealthHistory.css');
+      healthHistoryCSS.remove();
+    }
+
+    // Add the appropriate CSS file based on the route
+    if (location.pathname === '/') {
+      console.log('Adding App.css');
+      const link = document.createElement('link');
+      link.id = 'app-css';
+      link.rel = 'stylesheet';
+      link.href = './App.css'; // Ensure this path is correct
+      document.head.appendChild(link);
+    } else if (location.pathname === '/health-history') {
+      console.log('Adding HealthHistory.css');
+      const link = document.createElement('link');
+      link.id = 'health-history-css';
+      link.rel = 'stylesheet';
+      link.href = './HealthHistory.css'; // Ensure this path is correct
+      document.head.appendChild(link);
+    }
+
+    // Cleanup function to remove the CSS file when the component unmounts
+    return () => {
+      console.log('Cleaning up CSS files');
+      if (appCSS) appCSS.remove();
+      if (healthHistoryCSS) healthHistoryCSS.remove();
+    };
+  }, [location.pathname]);
+
+  return null;
+}
+
+export default CSSLoader;
+EOF
