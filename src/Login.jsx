@@ -5,10 +5,14 @@ const Login = () => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 
+	const handleSubmit = (e) => {
+		e.preventDefault();
+	};
+
 	return (
 		<div className="login-container">
 			<h2>Login</h2>
-			<form>
+			<form onSubmit={handleSubmit}>
 				<label htmlFor="username">Username</label>
 				<input
 					type="text"
