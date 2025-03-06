@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import './HealthHistory.css';
+import { useNavigate } from 'react-router-dom';
 
 const HealthHistory = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
 
     name: '',
@@ -126,8 +128,12 @@ const HealthHistory = () => {
   //TO DO: Once linked handle submit 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // validate required fields
+    // set cookies
     console.log('Form Data Submitted:', formData);
+    // if successful,
     alert('Form submitted successfully!');
+    navigate('/booking')
   };
 
   return (

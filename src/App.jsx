@@ -11,6 +11,7 @@ import Footer from './components/Footer';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HealthHistory from './HealthHistory';
+import BookingLayout from './components/BookingLayout'
 // import './HealthHistory.css';
 import Links from './Links';
 import CSSLoader from './CSSLoader';
@@ -50,6 +51,7 @@ function App() {
             </>
           } />
           <Route path="/health-history" element={<HealthHistory />} />
+          <Route path="/booking" element={<BookingLayout />} />
         </Routes>
       </div>
     </Router>
