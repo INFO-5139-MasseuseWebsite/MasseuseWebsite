@@ -5,7 +5,7 @@ import WelcomeSection from './components/WelcomeSection';
 import TreatmentsSection from './components/TreatmentsSection';
 import MapSection from './components/MapSection';
 import Footer from './components/Footer';
-// import './App.css';
+import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HealthHistory from './HealthHistory';
 // import './HealthHistory.css';
@@ -30,7 +30,7 @@ import CSSLoader from './CSSLoader';
 function App() {
   return (
     <Router>
-      <CSSLoader />
+      {/* <CSSLoader /> */}
       <div>
         <Links />
 
