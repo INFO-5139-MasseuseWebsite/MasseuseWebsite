@@ -6,18 +6,56 @@ import TreatmentsSection from './components/TreatmentsSection';
 import MapSection from './components/MapSection';
 import Footer from './components/Footer';
 import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HealthHistory from './HealthHistory';
+// import './HealthHistory.css';
+import Links from './Links';
+import CSSLoader from './CSSLoader';
+
+// function App() {
+//   return (
+//     <div>
+//       <Header />
+//       <HeroVideo />
+//       <WelcomeSection />
+//       <TreatmentsSection />
+//       <MapSection />
+//       <Footer />
+//     </div>
+//   );
+// }
+
+// export default App;
 
 function App() {
   return (
-    <div>
-      <Header />
-      <HeroVideo />
-      <WelcomeSection />
-      <TreatmentsSection />
-      <MapSection />
-      <Footer />
-    </div>
+    <Router>
+      {/* <CSSLoader /> */}
+      <div>
+        <Links />
+
+
+        <Routes>
+          <Route path="/" element={
+            <>
+              <Header />
+              <HeroVideo />
+              <WelcomeSection />
+              <TreatmentsSection />
+              <MapSection />
+              <Footer />
+            </>
+          } />
+          <Route path="/health-history" element={<HealthHistory />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
+
+
 export default App;
+
+
+
