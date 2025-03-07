@@ -1,27 +1,30 @@
 import React, { useState } from 'react';
 import './Login.css';
+import { auth } from './firebaseConfig';
 
 const Login = () => {
-	const [username, setUsername] = useState('');
+	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [error, setError] = useState('');
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		setError('');
 	};
 
 	return (
 		<div className="login-container">
 			<h2>Login</h2>
 			<form onSubmit={handleSubmit}>
-				<label htmlFor="username">Username</label>
+				<label htmlFor="email">Email</label>
 				<input
 					type="text"
-					placeholder="Type your username"
-					value={username}
-					id="username"
-					name="username"
+					placeholder="Type your email"
+					value={email}
+					id="email"
+					name="email"
 					required
-					onChange={(e) => setUsername(e.target.value)}
+					onChange={(e) => setEmail(e.target.value)}
 					className="text-style"
 				/>
 
