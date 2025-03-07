@@ -11,6 +11,7 @@ import HealthHistory from './HealthHistory';
 // import './HealthHistory.css';
 import Links from './Links';
 import CSSLoader from './CSSLoader';
+import Login from './Login';
 
 // function App() {
 //   return (
@@ -28,34 +29,32 @@ import CSSLoader from './CSSLoader';
 // export default App;
 
 function App() {
-  return (
-    <Router>
-      {/* <CSSLoader /> */}
-      <div>
-        <Links />
+	return (
+		<Router>
+			{/* <CSSLoader /> */}
+			<div>
+				<Links />
 
-
-        <Routes>
-          <Route path="/" element={
-            <>
-              <Header />
-              <HeroVideo />
-              <WelcomeSection />
-              <TreatmentsSection />
-              <MapSection />
-              <Footer />
-            </>
-          } />
-          <Route path="/health-history" element={<HealthHistory />} />
-        </Routes>
-      </div>
-    </Router>
-  );
+				<Routes>
+					<Route
+						path="/"
+						element={
+							<>
+								<Header />
+								<HeroVideo />
+								<WelcomeSection />
+								<TreatmentsSection />
+								<MapSection />
+								<Footer />
+							</>
+						}
+					/>
+					<Route path="/health-history" element={<HealthHistory />} />
+					<Route path="/login" element={<Login />} />
+				</Routes>
+			</div>
+		</Router>
+	);
 }
 
-
-
 export default App;
-
-
-
