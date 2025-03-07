@@ -7,8 +7,10 @@ const Login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
+	const [loading, setLoading] = useState(false);
 
 	const loginWithEmail = async (email, password) => {
+		setLoading(true);
 		try {
 			const userCredential = await signInWithEmailAndPassword(auth, email, password);
 			console.log('User logged in:', userCredential.user);
@@ -17,6 +19,8 @@ const Login = () => {
 			setPassword('');
 		} catch (err) {
 			setError(err.message);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -53,7 +57,14 @@ const Login = () => {
 					onChange={(e) => setPassword(e.target.value)}
 					className="text-style"
 				/>
-				<button type="submit">Login</button>
+
+				{loading ? (
+					<button type="submit" disabled>
+						Logging in...
+					</button>
+				) : (
+					<button type="submit">Login</button>
+				)}
 			</form>
 		</div>
 	);
