@@ -3,12 +3,13 @@ import http from 'http'
 import https from 'https'
 import { addBooking, getAvailableBookingsMonth } from './database.js'
 import { authRMT, filterJson, parseJson } from './middleware.js'
-import checkType, { ARRAY_T,  EMAIL, INTEGER, NULLABLE, STRING } from './formParser.js'
+import checkType, { ARRAY_T, EMAIL, INTEGER, NULLABLE, STRING } from './formParser.js'
 import e from 'express'
+import { getTransport } from './email.js'
 
 // Node version requirement check
 const [major, minor, patch] = process.versions.node.split('.').map(Number)
-if(major !== 20) {
+if (major !== 20) {
     throw 'Node version must be 20.x.x'
 }
 
@@ -88,10 +89,11 @@ app.post('/api/public/add-booking', (request, response) => {
     if (valid) {
         addBooking(data)
             .then(result => {
-                if (result === true)
-                    response.status(200).send()
-                else
+                if (response !== true) {
                     response.status(400).type('plain').send(result)
+                    return
+                }
+                response.status(200).send()
             })
             .catch(() => response.status(500).send())
     } else {

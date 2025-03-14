@@ -141,3 +141,11 @@ export async function setRMTInfo(rmtID) {
         }
     })
 }
+
+export async function getEmailCredentials() {
+    const result = await axios.get(DB + 'email')
+    return {
+        email: result.data.email,
+        password: result.data.password,
+    }
+}
