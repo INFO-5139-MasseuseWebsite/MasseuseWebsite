@@ -8,6 +8,11 @@ if (!PANTRY_ID)
     throw 'No PANTRY_ID found in environment variables'
 const DB = `https://getpantry.cloud/apiv1/pantry/${PANTRY_ID}/basket/`
 
+export async function getFirebaseCredidentials() {
+    const creds = await axios.get(DB + 'firebase_sdk_credidentials')
+    return creds.data
+}
+
 // https://www.30secondsofcode.org/js/s/days-in-month/
 // Gets the number of days in a month
 // Expects month to be an integer from 0-11

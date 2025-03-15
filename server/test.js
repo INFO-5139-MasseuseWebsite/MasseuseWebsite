@@ -1,9 +1,4 @@
-import checkType, { ARRAY_T, EMAIL, STRING } from "./formParser.js";
+const match_bearer=/bearer\s+(.+)/i
 
-const [valid, value] = checkType({
-    arr_str: ARRAY_T(EMAIL)
-}, {
-    arr_str: ['a@a.c', '']
-})
-
-console.log(valid, value)
+const [valid, g1] = match_bearer.exec('BEARER  a')??[]
+console.log(!!valid, g1)

@@ -12,8 +12,13 @@ export function filterJson(request, response, next) {
     }
 }
 
+const match_bearer=/bearer\s+(.+)/i
 export function authRMT(request, response, next) {
-    const firebase_token = request.headers.authorization
+    const [valid, firebase_token] = match_bearer.exec(request.headers.authorization)??[]
+    if(!valid) {
+        response.status(401).send()
+        return
+    }
     console.log(firebase_token)
     authenticateToken(firebase_token).then(auth => {
         if(!auth.rmtID) {
