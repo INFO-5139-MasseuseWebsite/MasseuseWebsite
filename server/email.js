@@ -1,32 +1,33 @@
-import nodemailer from 'nodemailer'
-import { getEmailCredentials } from './database.js'
-const sleep = ms => new Promise((resolve) => { setTimeout(resolve, ms); });
+import { EmailClient } from "@azure/communication-email";
+import html_entities from 'html-entities'
+import fs from 'node:fs'
+import path from 'path'
 
-let mail = null
-    .then(({ email, password }) => {
-        console.log(email, password)
+const connectionString = process.env['COMMUNICATION_SERVICES_CONNECTION_STRING'];
+if (!connectionString)
+    throw 'No COMMUNICATION_SERVICES_CONNECTION_STRING found in environment variables'
+const client = new EmailClient(connectionString);
+
+export async function formatEmailFile(filePath, params) {
+    let file = fs.readFileSync(path.resolve(import.meta.dirname, filePath), {encoding: 'utf8'})
+    return file.replace(/\$\{(\w+)\}/g, (substring, key) => html_entities.encode(params[key] ?? key.toUpperCase()))
+}
+
+export async function sendEmail(to, subject, emailPath, params) {
+    const emailHtml = await formatEmailFile(emailPath, params)
+    const emailMessage = {
+        senderAddress: "DoNotReply@7bae2829-7bfa-4985-b1c6-18f2e0f92e5d.azurecomm.net",
+        content: {
+            subject: subject,
+            html: emailHtml,
+        },
+        recipients: {
+            to: [{ address: to }],
+        },
         
-        return mail.verify()
-    })
-    .then(value => console.log(value))
+    };
 
-export async function getTransport() {
-    if (mail !== null) return mail
-    const { email, password } = await getEmailCredentials()
-    mail = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: email,
-            pass: password
-        }
-    }, {
-        from: email,
-    })
-    try {
-        await mail.verify()
-    } catch (e) {
-        console.error('SMTP service validation failed:', e)
-        return null
-    }
-    return mail
+    const poller = await client.beginSend(emailMessage);
+    const result = await poller.pollUntilDone();
+    console.log(result)
 }

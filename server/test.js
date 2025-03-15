@@ -1,9 +1,6 @@
-import checkType, { ARRAY_T, EMAIL, STRING } from "./formParser.js";
+import { formatEmailFile, sendEmail } from "./email.js";
 
-const [valid, value] = checkType({
-    arr_str: ARRAY_T(EMAIL)
-}, {
-    arr_str: ['a@a.c', '']
+sendEmail('kitcat0962@gmail.com', "Test", './email/clientConfirm.html', {
+    firstName: 'Katt',
+    lastName:'Katakana',
 })
-
-console.log(valid, value)
