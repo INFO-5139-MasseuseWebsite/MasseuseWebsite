@@ -145,7 +145,7 @@ export async function setRMTInfo(rmtID) {
 export async function getRMTIDFromFirebaseID(firebaseID) {
     const rmtIDS = await axios.get(DB + 'rmt_firebase')
     const rmtID = rmtIDS.data[firebaseID]
-    if (!rmtID) throw 'RMT not in system'
+    if (!rmtID) return null
     return rmtID
 }
 
@@ -157,4 +157,10 @@ export async function getAllBookingsRMT(rmtID) {
         rmtBookings.push(booking)
     }
     return rmtBookings
+}
+
+export async function getAdminFromFirebaseID(firebaseID) {
+    const admins = await axios.get(DB + 'admin_firebase')
+    const isAdmin = admins.data[firebaseID]
+    return isAdmin ?? false
 }
