@@ -1,6 +1,7 @@
 import bodyParser from "body-parser"
 import mime from 'mime'
 import { auth } from "./firebase.js"
+import { getRMTIDFromFirebaseID } from "./database.js"
 
 export const parseJson = bodyParser.json({ type: ['json', 'application/json'] })
 
@@ -15,13 +16,17 @@ export function filterJson(request, response, next) {
 export function authRMT(request, response, next) {
     const firebase_token = request.headers.authorization
     console.log(firebase_token)
-    auth.verifyIdToken(firebase_token, true)
-        .then(user => {
-            console.log(user)
+        (async () => {
+            const user = await auth.verifyIdToken(firebase_token, true)
+            response.locals.auth = {
+                user: user,
+                firebaseID: user.uid,
+                rmtID: await getRMTIDFromFirebaseID(user.uid)
+            }
             next()
-        })
+        })()
         .catch(err => {
             console.error(err)
-            response.status(401).send()
+            response.status(401).send(err)
         })
 }

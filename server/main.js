@@ -3,12 +3,12 @@ import http from 'http'
 import https from 'https'
 import { addBooking, getAvailableBookingsMonth } from './database.js'
 import { authRMT, filterJson, parseJson } from './middleware.js'
-import checkType, { ARRAY_T,  EMAIL, INTEGER, NULLABLE, STRING } from './formParser.js'
+import checkType, { ARRAY_T, EMAIL, INTEGER, NULLABLE, STRING } from './formParser.js'
 import e from 'express'
 
 // Node version requirement check
 const [major, minor, patch] = process.versions.node.split('.').map(Number)
-if(major !== 20) {
+if (major !== 20) {
     throw 'Node version must be 20.x.x'
 }
 
@@ -99,22 +99,16 @@ app.post('/api/public/add-booking', (request, response) => {
     }
 })
 app.post('/api/public/get-available-bookings', (request, response) => {
-    const rmt = request.body.rmtID
-    const year = parseInt(request.body.year, 10)
-    const month = parseInt(request.body.month, 10)
-    if (!rmt) {
-        response.status(400).type('plain').send('(404) Bad Request: Invalid json')
+    const [valid, form] = checkType({
+        rmt: STRING,
+        year: INTEGER,
+        month: INTEGER
+    }, request.body)
+    if (!valid) {
+        response.status(400).type('plain').send('(404) Bad Request: Invalid types')
         return
     }
-    if (isNaN(year)) {
-        response.status(400).type('plain').send('(404) Bad Request: Invalid json')
-        return
-    }
-    if (isNaN(month)) {
-        response.status(400).type('plain').send('(404) Bad Request: Invalid json')
-        return
-    }
-    getAvailableBookingsMonth(rmt, year, month)
+    getAvailableBookingsMonth(form.rmt, form.year, form.month)
         .then(available => response.status(200).type('json').send(available))
         .catch(err => response.status(err.status).type('plain').send(err.message))
 })
@@ -123,7 +117,15 @@ app.post('/api/public/get-available-bookings', (request, response) => {
 app.post('/api/rmt/:handle', authRMT, filterJson, parseJson)
 app.post('/api/rmt/dothing', (request, response, next) => {
     console.log('Accessing dothing...')
-    response.status(200).send()
+    response.status(200).send('Accessing dothing...')
+})
+app.post('/api/rmt/get-all-bookings', (request, response, next) => {
+    getAllBookingsRMT(response.locals.auth.rmtID)
+        .then(bookings => response.status(200).type('json').send(bookings))
+        .catch(err => {
+            console.log(err)
+            response.status(400).send()
+        })
 })
 
 // Blanket auth for Admins

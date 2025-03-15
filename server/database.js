@@ -1,7 +1,7 @@
 // https://getpantry.cloud/apiv1/pantry/YOUR_PANTRY_ID/basket/YOUR_BASKET_NAME
 
 import axios from 'axios';
-import {v4 as uuidv4} from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 
 const PANTRY_ID = process.env.PANTRY_ID
 if (!PANTRY_ID)
@@ -140,4 +140,21 @@ export async function setRMTInfo(rmtID) {
 
         }
     })
+}
+
+export async function getRMTIDFromFirebaseID(firebaseID) {
+    const rmtIDS = await axios.get(DB + 'rmt_firebase')
+    const rmtID = rmtIDS.data[firebaseID]
+    if (!rmtID) throw 'RMT not in system'
+    return rmtID
+}
+
+export async function getAllBookingsRMT(rmtID) {
+    const allBookings = await axios.get(DB + 'rmt_booking')
+    if (!allBookings.data[rmtID]) return []
+    const rmtBookings = []
+    for (let [id, booking] of Object.entries(allBookings.data[rmtID])) {
+        rmtBookings.push(booking)
+    }
+    return rmtBookings
 }
