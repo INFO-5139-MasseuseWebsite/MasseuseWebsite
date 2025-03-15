@@ -1,9 +1,9 @@
 import path from 'path'
 import http from 'http'
 import https from 'https'
-import { addBooking, getAvailableBookingsMonth } from './database.js'
-import { authRMT, filterJson, parseJson } from './middleware.js'
-import checkType, { ARRAY_T,  EMAIL, INTEGER, NULLABLE, STRING } from './formParser.js'
+import { addBooking, getAvailableBookingsMonth } from './database.mjs'
+import { authRMT, filterJson, parseJson } from './middleware.mjs'
+import checkType, { ARRAY_T,  EMAIL, INTEGER, NULLABLE, STRING } from './formParser.mjs'
 import e from 'express'
 
 // Node version requirement check
