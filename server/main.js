@@ -1,11 +1,11 @@
 import path from 'path'
 import http from 'http'
 import https from 'https'
-import { addBooking, getAvailableBookingsMonth } from './database.js'
+import { addBooking, getAvailableBookingsMonth, getRMTInfo } from './database.js'
 import { authRMT, filterJson, parseJson } from './middleware.js'
 import checkType, { ARRAY_T, EMAIL, INTEGER, NULLABLE, STRING } from './formParser.js'
 import e from 'express'
-import { getTransport } from './email.js'
+import { sendEmail } from './email.js'
 
 // Node version requirement check
 const [major, minor, patch] = process.versions.node.split('.').map(Number)
@@ -86,19 +86,30 @@ app.post('/api/public/add-booking', (request, response) => {
         }
     }, form)
 
-    if (valid) {
-        addBooking(data)
-            .then(result => {
-                if (response !== true) {
-                    response.status(400).type('plain').send(result)
-                    return
-                }
-                response.status(200).send()
-            })
-            .catch(() => response.status(500).send())
-    } else {
+    if (!valid) {
         response.status(400).type('plain').send('(400) Invalid Form')
+        return
     }
+
+    (async () => {
+        const success = await addBooking(data)
+        if (success !== true) {
+            response.status(400).type('plain').send(success)
+            return
+        }
+        response.status(200).send()
+        const rmt = await getRMTInfo(data.rmtID)
+        const clientEmail = sendEmail(data.form.email, 'Massage Appointment Confirmation', './email/clientConfirm.html', {
+            firstName: data.form.firstName,
+            lastName: data.form.lastName
+        })
+        const rmtEmail = sendEmail(rmt.email, 'New Client Booked', './email/rmtConfirm.html', {
+            clientFirstName: data.form.firstName,
+            clientLastName: data.form.lastName
+        })
+        await Promise.all([clientEmail, rmtEmail])
+    })()
+        .catch(() => response.status(500).send())
 })
 app.post('/api/public/get-available-bookings', (request, response) => {
     const rmt = request.body.rmtID

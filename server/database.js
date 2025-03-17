@@ -40,7 +40,6 @@ export async function addBooking(data) {
             }
         }
     })
-    console.log(result)
     return true
 }
 
@@ -120,7 +119,7 @@ function getAvailableBookingsDay(bookings, day, minHour, maxHour) {
     for (let booking of bookings) {
         if (booking.day !== day) continue
         const index = booking.hour - minHour
-        if (index < 0) console.error(`A booking has been booked at an invalid time. FIX IT`)
+        if (index < 0) console.error(`Booking ${booking.bookingID} has been booked at an invalid time. FIX IT`)
         else ret[index] = false
     }
     return ret
@@ -134,11 +133,9 @@ export async function getRMTInfo(rmtID) {
     }
     return rmt
 }
-export async function setRMTInfo(rmtID) {
+export async function setRMTInfo(rmtID, data) {
     await axios.put(DB + 'rmts', {
-        [rmtID]: {
-
-        }
+        [rmtID]: data
     })
 }
 

@@ -9,8 +9,14 @@ if (!connectionString)
 const client = new EmailClient(connectionString);
 
 export async function formatEmailFile(filePath, params) {
-    let file = fs.readFileSync(path.resolve(import.meta.dirname, filePath), {encoding: 'utf8'})
-    return file.replace(/\$\{(\w+)\}/g, (substring, key) => html_entities.encode(params[key] ?? key.toUpperCase()))
+    let stylesheet = fs.readFileSync(path.resolve(import.meta.dirname, './email/style.css'), { encoding: 'utf8' })
+    let file = fs.readFileSync(path.resolve(import.meta.dirname, filePath), { encoding: 'utf8' })
+    return file.replace(/\$\s*\{\s*(\w+)\s*\}/g, (substring, key) => {
+        if (key === 'stylesheet')
+            return stylesheet
+        else
+            return html_entities.encode(params[key] ?? key.toUpperCase())
+    })
 }
 
 export async function sendEmail(to, subject, emailPath, params) {
@@ -24,10 +30,8 @@ export async function sendEmail(to, subject, emailPath, params) {
         recipients: {
             to: [{ address: to }],
         },
-        
     };
 
     const poller = await client.beginSend(emailMessage);
     const result = await poller.pollUntilDone();
-    console.log(result)
 }
