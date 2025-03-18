@@ -7,6 +7,7 @@ const PANTRY_ID = process.env.PANTRY_ID
 if (!PANTRY_ID)
     throw 'No PANTRY_ID found in environment variables'
 const DB = `https://getpantry.cloud/apiv1/pantry/${PANTRY_ID}/basket/`
+const CMTO_DB = `https://cmto.ca.thentiacloud.net/rest/public/profile/get/`
 
 // https://www.30secondsofcode.org/js/s/days-in-month/
 // Gets the number of days in a month
@@ -17,13 +18,13 @@ export async function addBooking(data) {
     //verify time
     const availableMonth = await getAvailableBookingsMonth(data.rmtID, data.year, data.month)
     if (data.day > availableMonth.maxDay || data.day <= 0)
-        return 'Invalid Day (out of bounds)'
+        return [false, 'Invalid Day (out of bounds)']
     if (data.hour < availableMonth.hourIndexOffset)
-        return 'Invalid Hour (out of bounds)'
+        return [false, 'Invalid Hour (out of bounds)']
     const day = availableMonth.available[data.day]
     const available = day[data.hour - availableMonth.hourIndexOffset]
     if (!available)
-        return 'Date already booked'
+        return [false, 'Date already booked']
 
     const bookingID = uuidv4()
     const result = await axios.put(DB + 'rmt_booking', {
@@ -40,7 +41,7 @@ export async function addBooking(data) {
             }
         }
     })
-    return true
+    return [true, bookingID]
 }
 
 // This can be moved into RMT data if we wanna personalize it
@@ -52,12 +53,13 @@ const minHour = 9, // 9am
 // year: numeric year. No restrictions
 // month: numeric month. Valid range: 0-11
 export async function getAvailableBookingsMonth(rmtID, year, month) {
-    const result = await axios.get(DB + 'rmt_booking')
-    if (!result.data[rmtID]) throw {
+    const rmt_result = await getRMTInfo(rmtID)
+    if(!rmt_result) throw {
         status: 400,
         message: 'Invalid rmtID: RMT doesnt exist'
     }
-    const bookings = Object.values(result.data[rmtID])
+    const bookings_result = await axios.get(DB + 'rmt_booking')
+    const bookings = Object.values(bookings_result.data[rmtID] ?? {})
     if (month < 0) throw {
         status: 400,
         message: 'Invalid month: Less than 0'
@@ -126,11 +128,33 @@ function getAvailableBookingsDay(bookings, day, minHour, maxHour) {
 }
 
 export async function getRMTInfo(rmtID) {
-    const result = await axios.get(DB + 'rmts')
-    // get rmt info if available, or default values
-    const rmt = result.data[rmtID] ?? {
-
+    console.log('cmto')
+    const cmto_result = axios.get(CMTO_DB, {
+        params: {
+            id: rmtID
+        }
+    })
+    console.log('local')
+    const local_result = axios.get(DB + 'rmts')
+    const cmto = await cmto_result
+    console.log('get cmto')
+    const local = await local_result
+    if(cmto.status !== 200 && local.status !== 200) {
+        return null
     }
+    console.log('get local')
+    console.log(cmto.data, local.data)
+    // Merge CMTO data with our data, overwriting existing data with our data
+    const rmt = {
+        ...(cmto.data ?? {}),
+        // If rmt doesnt exist in our database, use an object with default values instead
+        ...(local.data[rmtID] ?? {
+
+        }),
+        // remove email from data so that we dont actually email anyone
+        publicEmail: null
+    }
+    console.log(rmt)
     return rmt
 }
 export async function setRMTInfo(rmtID, data) {
@@ -145,4 +169,36 @@ export async function getEmailCredentials() {
         email: result.data.email,
         password: result.data.password,
     }
+}
+
+export async function getBooking(bookingID) {
+    const result = await axios.get(DB + 'rmt_booking')
+    console.log(bookingID)
+    let data = null
+    for (let [rmt, rmtData] of Object.entries(result.data)) {
+        console.log(rmt, rmtData)
+        if(rmtData[bookingID]) {
+            data = [rmtData[bookingID], rmt]
+            break
+        }
+    }
+    console.log(data)
+    if(!data) return null
+    return data
+}
+
+export async function cancelBooking(bookingID) {
+    const [booking, rmtID] = await getBooking(bookingID) ?? []
+    if(!booking) throw {
+        serverError: `Booking with id ${bookingID} doesn't exist`,
+        clientError: '(404) Page Not Found',
+        status: 404,
+    }
+    await axios.put(DB+ 'rmt_booking', {
+        [rmtID]: {
+            [booking.bookingID]: {
+                canceled: true
+            }
+        }
+    })
 }

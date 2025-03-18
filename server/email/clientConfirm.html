@@ -10,10 +10,20 @@
 
 <body class="body">
     <div class="center container">
-        <p>Booking confirmed for ${firstName} ${lastName} at ${date}</p>
-        <div>
-            <button class="button" style="display: inline;" href="https://google.com">Button1</button>
-            <button class="button" style="display: inline;" href="https://google.com">Button2</button>
+        <h1>Appointment Registration Submitted</h1>
+        <p>You have scheduled an appointment with ${rmtName} at ${rmtAddressStreet}, ${rmtAddressCity}, ${rmtAddressProvince} on ${date}</p>
+        <p>Please allow for 1-2 business days for the RMT to review your appointment. You will recieve another email when the RMT confirms your appointment</p>
+        <p>For any concerns, please call ${rmtAddressPhone}</p>
+        <br/>
+        <p>If for any reason you need to update your form information, you may do so by clicking the button below</p>
+        <p>You may update your form information up until the RMT has confirmed your appointment. If you need to update your information after the RMT has confirmed your appointment, please contact the clinic.</p>
+        <a class="button" style="display: inline;" href="http://localhost">Change Form Details</a>
+        <br/>
+        <p>To cancel your appointment, click the button below</p>
+        <a class="button" style="display: inline;" href="http://localhost/api/public/cancel-booking?id=${bookingID}">Cancel Appointment</a>
+        <div class="footer">
+            <p>&copy; 2025 CMTO. All Rights Reserved.</p>
+            <p>Sent at ${timestamp}</p>
         </div>
     </div>
 </body>

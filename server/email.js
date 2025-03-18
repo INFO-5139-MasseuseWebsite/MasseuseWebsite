@@ -1,4 +1,5 @@
 import { EmailClient } from "@azure/communication-email";
+import { format } from "date-fns";
 import html_entities from 'html-entities'
 import fs from 'node:fs'
 import path from 'path'
@@ -9,13 +10,15 @@ if (!connectionString)
 const client = new EmailClient(connectionString);
 
 export async function formatEmailFile(filePath, params) {
-    let stylesheet = fs.readFileSync(path.resolve(import.meta.dirname, './email/style.css'), { encoding: 'utf8' })
-    let file = fs.readFileSync(path.resolve(import.meta.dirname, filePath), { encoding: 'utf8' })
+    const timestamp = format(new Date(), '[H:mm:ss yyyy/MM/dd]')
+    const stylesheet = fs.readFileSync(path.resolve(import.meta.dirname, './email/style.css'), { encoding: 'utf8' })
+    const file = fs.readFileSync(path.resolve(import.meta.dirname, filePath), { encoding: 'utf8' })
     return file.replace(/\$\s*\{\s*(\w+)\s*\}/g, (substring, key) => {
-        if (key === 'stylesheet')
-            return stylesheet
-        else
-            return html_entities.encode(params[key] ?? key.toUpperCase())
+        switch (key) {
+            case 'stylesheet': return stylesheet;
+            case 'timestamp': return timestamp;
+            default: return html_entities.encode(params[key] ?? key.toUpperCase())
+        }
     })
 }
 
