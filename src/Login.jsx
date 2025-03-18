@@ -38,6 +38,7 @@ const Login = () => {
 				case 'auth/user-disabled':
 					message = 'This account has been disabled.';
 					break;
+				case 'auth/invalid-credential':
 				case 'auth/user-not-found':
 				case 'auth/wrong-password':
 					message = 'Incorrect email/password. Please try again.';
