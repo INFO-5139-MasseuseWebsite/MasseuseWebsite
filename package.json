@@ -3,13 +3,14 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "main": "./server/main.js",
+  "main": "./server/main.mjs",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npx vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "npm run build && node ./server/main.js"
+    "start": "node ./server/main.mjs",
+    "start-dev": "npm run build && node ./server/main.mjs"
   },
   "dependencies": {
     "@azure/communication-email": "^1.0.0",
@@ -35,5 +36,8 @@
     "eslint-plugin-react-refresh": "^0.4.18",
     "globals": "^15.14.0",
     "vite": "^6.1.0"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.9.5"
   }
 }
