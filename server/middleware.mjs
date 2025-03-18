@@ -1,6 +1,6 @@
 import bodyParser from "body-parser"
 import mime from 'mime'
-import { authenticateToken } from "./firebase.js"
+import { authenticateToken } from "./firebase.mjs"
 
 export const parseJson = bodyParser.json({ type: ['json', 'application/json'] })
 
