@@ -1,12 +1,17 @@
 // https://getpantry.cloud/apiv1/pantry/YOUR_PANTRY_ID/basket/YOUR_BASKET_NAME
 
 import axios from 'axios';
-import {v4 as uuidv4} from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 
 const PANTRY_ID = process.env.PANTRY_ID
 if (!PANTRY_ID)
     throw 'No PANTRY_ID found in environment variables'
 const DB = `https://getpantry.cloud/apiv1/pantry/${PANTRY_ID}/basket/`
+
+export async function getFirebaseCredidentials() {
+    const creds = await axios.get(DB + 'firebase_sdk_credidentials')
+    return creds.data
+}
 
 // https://www.30secondsofcode.org/js/s/days-in-month/
 // Gets the number of days in a month
@@ -140,4 +145,27 @@ export async function setRMTInfo(rmtID) {
 
         }
     })
+}
+
+export async function getRMTIDFromFirebaseID(firebaseID) {
+    const rmtIDS = await axios.get(DB + 'rmt_firebase')
+    const rmtID = rmtIDS.data[firebaseID]
+    if (!rmtID) return null
+    return rmtID
+}
+
+export async function getAllBookingsRMT(rmtID) {
+    const allBookings = await axios.get(DB + 'rmt_booking')
+    if (!allBookings.data[rmtID]) return []
+    const rmtBookings = []
+    for (let [id, booking] of Object.entries(allBookings.data[rmtID])) {
+        rmtBookings.push(booking)
+    }
+    return rmtBookings
+}
+
+export async function getAdminFromFirebaseID(firebaseID) {
+    const admins = await axios.get(DB + 'admin_firebase')
+    const isAdmin = admins.data[firebaseID]
+    return isAdmin ?? false
 }
