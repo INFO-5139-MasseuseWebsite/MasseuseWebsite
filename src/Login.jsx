@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Header from './components/Header';
 import './Login.css';
 import { auth } from './firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -31,43 +32,46 @@ const Login = () => {
 	};
 
 	return (
-		<div className="login-container">
-			<h2>Login</h2>
-			<form onSubmit={handleSubmit}>
-				<label htmlFor="email">Email</label>
-				<input
-					type="text"
-					placeholder="Type your email"
-					value={email}
-					id="email"
-					name="email"
-					required
-					onChange={(e) => setEmail(e.target.value)}
-					className="text-style"
-				/>
+		<div>
+			<Header />
+			<div className="login-container">
+				<h2>Login</h2>
+				<form onSubmit={handleSubmit}>
+					<label htmlFor="email">Email</label>
+					<input
+						type="text"
+						placeholder="Type your email"
+						value={email}
+						id="email"
+						name="email"
+						required
+						onChange={(e) => setEmail(e.target.value)}
+						className="text-style"
+					/>
 
-				<label htmlFor="password">Password</label>
-				<input
-					type="password"
-					placeholder="Type your password"
-					value={password}
-					id="password"
-					name="password"
-					required
-					onChange={(e) => setPassword(e.target.value)}
-					className="text-style"
-				/>
+					<label htmlFor="password">Password</label>
+					<input
+						type="password"
+						placeholder="Type your password"
+						value={password}
+						id="password"
+						name="password"
+						required
+						onChange={(e) => setPassword(e.target.value)}
+						className="text-style"
+					/>
 
-				{loading ? (
-					<button type="submit" disabled>
-						Logging in...
-					</button>
-				) : (
-					<button type="submit">Login</button>
-				)}
+					{loading ? (
+						<button type="submit" disabled>
+							Logging in...
+						</button>
+					) : (
+						<button type="submit">Login</button>
+					)}
 
-				{error && <p className="error-msg">{error}</p>}
-			</form>
+					{error && <p className="error-msg">{error}</p>}
+				</form>
+			</div>
 		</div>
 	);
 };
