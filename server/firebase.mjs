@@ -1,6 +1,6 @@
 import { initializeApp, applicationDefault } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
-import { getAdminFromFirebaseID, getFirebaseCredidentials, getRMTIDFromFirebaseID } from "./database.js";
+import { getAdminFromFirebaseID, getFirebaseCredidentials, getRMTIDFromFirebaseID } from "./database.mjs";
 import path from 'path'
 import fs from 'node:fs'
 
