@@ -140,9 +140,9 @@ app.post('/api/admin/dothing', (request, response, next) => {
 app.post('/api/admin/:handle', (request, response) => response.status(400).send())
 
 // This makes *everything* within the dist folder public.
-// If we add any private files, this needs to be changed.
-// Pipeline needs work
 app.use(e.static(path.resolve(import.meta.dirname, '../dist')))
+// Allows React Routing to work properly
+app.get('*', (req, res) => res.sendFile(path.resolve(import.meta.dirname, '../dist/index.html')))
 
 // for testing purposes, use both http and https
 // when https testing is done (mainly need a certificate), remove the http
