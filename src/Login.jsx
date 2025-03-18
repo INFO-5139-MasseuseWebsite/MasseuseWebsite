@@ -19,11 +19,44 @@ const Login = () => {
 			setEmail('');
 			setPassword('');
 		} catch (err) {
-			setError(err.message);
+			handleError(err);
 		} finally {
 			setLoading(false);
 		}
 	};
+
+	function handleError(err) {
+		let message = 'An unexpected error occurred. Please try again later.';
+
+		if (err) {
+			console.log(err);
+
+			switch (err.code) {
+				case 'auth/invalid-email':
+					message = 'Invalid email format.';
+					break;
+				case 'auth/user-disabled':
+					message = 'This account has been disabled.';
+					break;
+				case 'auth/user-not-found':
+					message = 'No account found with this email.';
+					break;
+				case 'auth/wrong-password':
+					message = 'Incorrect password. Please try again.';
+					break;
+				case 'auth/too-many-requests':
+					message = 'Too many failed attempts. Try again later.';
+					break;
+				case 'auth/network-request-failed':
+					message = 'Check your internet connection and try again.';
+					break;
+				default:
+					message = 'An unexpected error occurred. Please try again.';
+			}
+		}
+
+		setError(message);
+	}
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
