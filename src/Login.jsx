@@ -39,10 +39,8 @@ const Login = () => {
 					message = 'This account has been disabled.';
 					break;
 				case 'auth/user-not-found':
-					message = 'No account found with this email.';
-					break;
 				case 'auth/wrong-password':
-					message = 'Incorrect password. Please try again.';
+					message = 'Incorrect email/password. Please try again.';
 					break;
 				case 'auth/too-many-requests':
 					message = 'Too many failed attempts. Try again later.';
