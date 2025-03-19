@@ -11,6 +11,7 @@ import HealthHistory from './HealthHistory';
 // import './HealthHistory.css';
 import Links from './Links';
 import CSSLoader from './CSSLoader';
+import NotFound404 from './404';
 
 // function App() {
 //   return (
@@ -31,24 +32,23 @@ function App() {
   return (
     <Router>
       {/* <CSSLoader /> */}
-      <div>
-        <Links />
+      <Links />
 
 
-        <Routes>
-          <Route path="/" element={
-            <>
-              <Header />
-              <HeroVideo />
-              <WelcomeSection />
-              <TreatmentsSection />
-              <MapSection />
-              <Footer />
-            </>
-          } />
-          <Route path="/health-history" element={<HealthHistory />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={
+          <>
+            <Header />
+            <HeroVideo />
+            <WelcomeSection />
+            <TreatmentsSection />
+            <MapSection />
+            <Footer />
+          </>
+        } />
+        <Route path="/health-history" element={<HealthHistory />} />
+        <Route path='*' element={<NotFound404 />} />
+      </Routes>
     </Router>
   );
 }
