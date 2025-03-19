@@ -13,7 +13,6 @@ import Links from './Links';
 import CSSLoader from './CSSLoader';
 import Login from './Login';
 import ViewAppointment from './ViewAppointment';
-import { AuthProvider } from './AuthContext';
 
 // function App() {
 //   return (
@@ -32,33 +31,31 @@ import { AuthProvider } from './AuthContext';
 
 function App() {
 	return (
-		<AuthProvider>
-			<Router>
-				{/* <CSSLoader /> */}
-				<div>
-					<Links />
+		<Router>
+			{/* <CSSLoader /> */}
+			<div>
+				<Links />
 
-					<Routes>
-						<Route
-							path="/"
-							element={
-								<>
-									<Header />
-									<HeroVideo />
-									<WelcomeSection />
-									<TreatmentsSection />
-									<MapSection />
-									<Footer />
-								</>
-							}
-						/>
-						<Route path="/health-history" element={<HealthHistory />} />
-						<Route path="/login" element={<Login />} />
-						<Route path="/view-appointment" element={<ViewAppointment />} />
-					</Routes>
-				</div>
-			</Router>
-		</AuthProvider>
+				<Routes>
+					<Route
+						path="/"
+						element={
+							<>
+								<Header />
+								<HeroVideo />
+								<WelcomeSection />
+								<TreatmentsSection />
+								<MapSection />
+								<Footer />
+							</>
+						}
+					/>
+					<Route path="/health-history" element={<HealthHistory />} />
+					<Route path="/login" element={<Login />} />
+					<Route path="/view-appointment" element={<ViewAppointment />} />
+				</Routes>
+			</div>
+		</Router>
 	);
 }
 

@@ -4,7 +4,6 @@ import './Login.css';
 import { auth } from './firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
 
 const Login = () => {
 	const [email, setEmail] = useState('');
@@ -12,7 +11,6 @@ const Login = () => {
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
-	const { login } = useAuth();
 
 	const loginWithEmail = async (email, password) => {
 		setLoading(true);
@@ -22,8 +20,6 @@ const Login = () => {
 			// Reset form
 			setEmail('');
 			setPassword('');
-			// Set user data in AuthContext
-			login(userCredential.user);
 			// Navigate to ViewAppointment page
 			navigate('../view-appointment');
 		} catch (err) {
