@@ -12,6 +12,7 @@ import HealthHistory from './HealthHistory';
 import Links from './Links';
 import CSSLoader from './CSSLoader';
 import Login from './Login';
+import ViewAppointment from './ViewAppointment';
 
 // function App() {
 //   return (
@@ -51,6 +52,7 @@ function App() {
 					/>
 					<Route path="/health-history" element={<HealthHistory />} />
 					<Route path="/login" element={<Login />} />
+					<Route path="/view-appointment" element={<ViewAppointment />} />
 				</Routes>
 			</div>
 		</Router>
