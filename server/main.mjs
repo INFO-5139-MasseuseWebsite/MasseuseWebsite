@@ -1,12 +1,13 @@
 import path from 'path'
 import http from 'http'
 import https from 'https'
-import { addBooking, cancelBooking, getAvailableBookingsMonth, getBooking, getRMTInfo } from './database.mjs'
+import { addBooking, cancelBooking, getAvailableBookingsMonth, getBooking, getBookingsTable, getRMTInfo } from './database.mjs'
 import { authAdmin, authRMT, filterJson, parseJson } from './middleware.mjs'
-import checkType, { ARRAY_T,  EMAIL, INTEGER, NULLABLE, STRING } from './formParser.mjs'
+import checkType, { ARRAY_T, EMAIL, INTEGER, NULLABLE, STRING } from './formParser.mjs'
 import e from 'express'
 import { sendEmail } from './email.js'
 import { format } from 'date-fns'
+import { scheduleJob } from 'node-schedule'
 
 // Node version requirement check
 const [major, minor, patch] = process.versions.node.split('.').map(Number)
@@ -16,6 +17,32 @@ if (major !== 20) {
 
 const PORT = process.env.PORT || 80
 const app = e()
+
+// every day at 4am, send out reminder emails to all clients that have an appointment today
+scheduleJob('0 4 * * *', async date => {
+    const year = date.getFullYear(),
+        month = date.getMonth(),
+        day = date.getDate()
+
+    const bookingTable = await getBookingsTable()
+
+    for (let [rmtID, bookings] of Object.entries(bookingTable)) {
+        const rmtData = await getRMTInfo(rmtID)
+        const rmtAddress = rmt.placesOfPractice?.[0] ?? {}
+        for (let [bookingID, bookingData] of Object.entries(bookings)) {
+            if (bookingData.year === year && bookingData.month === month && bookingData.day === day) {
+                sendEmail(bookingData.form.email, 'Reminder for todays Appointment', './email/clientReminder.html', {
+                    hour: bookingData.hour > 12 ? `${bookingData.hour - 12} pm` : `${bookingData.hour} am`,
+                    rmtName: `${rmtData.firstName} ${rmtData.lastName}`,
+                    rmtAddressProvince: rmtAddress.province ?? rmtAddress.businessState,
+                    rmtAddressCity: rmtAddress.city ?? rmtAddress.businessCity,
+                    rmtAddressStreet: rmtAddress.businessAddress,
+                    rmtAddressPhone: rmtAddress.phone,
+                })
+            }
+        }
+    }
+})
 
 // Blanket auth for public
 app.post('/api/public/:handle', filterJson, parseJson)

@@ -230,3 +230,7 @@ export async function getAdminFromFirebaseID(firebaseID) {
     const isAdmin = admins.data[firebaseID]
     return isAdmin ?? false
 }
+
+export async function getBookingsTable() {
+    return await axios.get(DB + 'rmt_booking')
+}
