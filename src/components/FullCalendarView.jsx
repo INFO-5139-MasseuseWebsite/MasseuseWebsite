@@ -1,53 +1,59 @@
 import React, { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import "./FullCalendarView.css";
 
-const FullCalendarView = () => {
-  const [date, setDate] = useState(new Date());
-  const [bookings, setBookings] = useState({});
+const FullCalendarView = ({rmtID, date, setDate, onSubmit, onCancel}) => {
+  const [available, setAvailable] = useState({});
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        const response = await fetch("/api/bookings");
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        setBookings(data);
-      } catch (error) {
-        setError("Failed to load bookings. Please try again later.");
-        console.error("Error fetching bookings:", error);
+  const fetchBookings = async (year, month) => {
+    try {
+      const response = await fetch("/api/public/get-available-bookings", {
+        method:'POST',
+        headers: {
+          "Content-Type":"application/json"
+        },
+        body: JSON.stringify({
+          rmtID: rmtID,
+          year: year,
+          month: month,
+        })
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    };
-
-    fetchBookings();
-  }, []);
-
-  const formattedDate = format(date, "yyyy-MM-dd'T'HH:mm:ssXXX"); 
-  const handleBackNavigation = () => {
-    if (window.confirm("Are you sure you want to leave this page? Unsaved changes may be lost.")) {
-      navigate("/booking");
+      const data = await response.json();
+      setAvailable(data);
+    } catch (error) {
+      setError("Failed to load bookings. Please try again later.");
+      console.error("Error fetching bookings:", error);
     }
   };
+
+  useEffect(() => {
+    fetchBookings(date.year, date.month);
+  }, [date]);
 
   return (
     <div className="full-calendar-container">
       <h1>Select Your Booking Date & Time</h1>
       <Calendar
-        onChange={setDate}
-        value={date}
+        onChange={date=>setDate({
+          year:date.getFullYear(),
+          month:date.getMonth(),
+          day:date.getDate(),
+          hour:null
+        })}
+        value={new Date(date.year, date.month, date.day)}
         minDate={new Date()} // Disable past dates
-        className="full-screen-calendar" // Added class to make calendar full-screen
+        // className="full-screen-calendar" // Added class to make calendar full-screen
       />
       
       <div className="bookings-container">
-        <h2>Bookings for {formattedDate}</h2>
+        {available?.available?.[date.day-1].map((v, i) => <>{v && <p onClick={()=>setDate({...date, hour: available.hourIndexOffset + i})}>{available.hourIndexOffset + i}</p>}</>)}
+        {/* <h2>Bookings for {formattedDate}</h2>
         {error ? (
           <p className="error-message">{error}</p>
         ) : bookings[formattedDate] ? (
@@ -58,10 +64,11 @@ const FullCalendarView = () => {
           </ul>
         ) : (
           <p>No bookings for this date.</p>
-        )}
+        )} */}
       </div>
       
-      <button className="back-button" onClick={handleBackNavigation}>Back to Booking</button>
+      <button className="back-button" onClick={onCancel}>Return to Health Form</button>
+      <button onClick={onSubmit} disabled={date.hour?false:true}>Select Time</button>
     </div>
   );
 };

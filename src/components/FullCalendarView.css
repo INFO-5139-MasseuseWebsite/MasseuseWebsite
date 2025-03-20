@@ -89,10 +89,10 @@ h1 {
 }
 
 /* 🌙 Dark Mode */
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
     :root {
-        --background-color: #121212; /* True dark mode */
-        --text-color: #0f0101; /* Bright white for better contrast */
+        --background-color: #121212; 
+        --text-color: #0f0101; 
         --button-color: #1a73e8;
         --button-hover-color: #135abe;
     }
@@ -131,4 +131,4 @@ h1 {
     .back-button:hover {
         background-color: var(--button-hover-color);
     }
-}
+} */

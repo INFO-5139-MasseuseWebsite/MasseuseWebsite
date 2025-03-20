@@ -1,65 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './HealthHistory.css';
 
-const HealthHistory = () => {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    name: '',
-    phoneNumber: '',
-    email: '',
-    address: '',
-    occupation: '',
-    dateOfBirth: '',
-    receivedMassageBefore: '',
-    referredByPractitioner: '',
-    practitionerNameAddress: '',
-    cardiovascularConditions: [],
-    cardiovascularHistory: '',
-    infections: [],
-    respiratoryConditions: [],
-    respiratoryFamilyHistory: '',
-    headNeckConditions: [],
-    otherConditions: {
-      lossOfSensation: '',
-      diabetesOnset: '',
-      allergies: '',
-      reactionType: '',
-      epilepsy: '',
-      cancer: '',
-      skinConditions: '',
-      arthritis: '',
-      arthritisFamilyHistory: '',
-    },
-    womenHealth: {
-      pregnantDue: '',
-      gynecologicalConditions: '',
-      generalHealth: '',
-      primaryCarePhysician: '',
-      physicianAddress: '',
-    },
-    currentMedications: [],
-    medication: '',
-    condition: '',
-    otherTreatment: '',
-    otherTreatmentReason: '',
-    surgeryDate: '',
-    surgeryNature: '',
-    injuryDate: '',
-    injuryNature: '',
-    otherMedicalConditions: '',
-    otherMedicalConditionsDetails: '',
-    internalPinsWires: '',
-    internalPinsWiresDetails: '',
-    internalPinsWiresLocation: '',
-    massageTherapyReason: '',
-    allergiesLubricants: '',
-    allergiesLubricantsDetails: '',
-    treatmentGoals: '',
-    limitationsDailyLife: '',
-    discomfortAreas: '',
-  });
-
+const HealthHistory = ({formData, setFormData, onSubmit}) => {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (type === 'checkbox') {
@@ -85,9 +27,7 @@ const HealthHistory = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form Data Submitted:', formData);
-    alert('Form submitted successfully!');
-    navigate('/booking');
+    onSubmit()
   };
 
   return (

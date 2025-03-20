@@ -5,12 +5,11 @@ import WelcomeSection from "./components/WelcomeSection";
 import TreatmentsSection from "./components/TreatmentsSection";
 import MapSection from "./components/MapSection";
 import Footer from "./components/Footer";
-import HealthHistory from "./components/HealthHistory";
-import BookingLayout from "./components/BookingLayout"; // Fixed path
 import About from "./components/About"; // Fixed path
 import FullCalendarView from "./components/FullCalendarView"; // Added missing import
 import "./App.css"; // Ensure App.css exists
 import Logo from "./assets/logo/LogoCMTO.svg";
+import NewAppointmentPage from "./components/NewAppointment";
 
 function App() {
   return (
@@ -29,7 +28,7 @@ function App() {
               <li className="dropdown">
                 <a href="#treatments" className="dropdown-toggle">Treatments</a>
               </li>
-              <li><Link to="/booking">Book Appointment</Link></li> {/* Fixed link */}
+              <li><Link to="/book-appointment">Book Appointment</Link></li> {/* Fixed link */}
               <li><a href="#map-section">Location</a></li>
               <li><Link to="/about">About Us</Link></li> {/* Fixed link */}
               <li><Link to="/login">Login</Link></li>
@@ -53,10 +52,7 @@ function App() {
           />
 
           {/* Health History Page */}
-          <Route path="/health-history" element={<HealthHistory />} /> {/* Fixed path */}
-
-          {/* Booking Page */}
-          <Route path="/booking" element={<BookingLayout />} />
+          <Route path="/book-appointment" element={<NewAppointmentPage />} /> {/* Fixed path */}
 
           {/* About Page */}
           <Route path="/about" element={<About />} />
