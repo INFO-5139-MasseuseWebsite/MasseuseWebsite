@@ -1,10 +1,11 @@
 import path from 'path';
 import http from 'http';
 import https from 'https';
-import { addBooking, getAvailableBookingsMonth } from './database.mjs';
+import { addBooking, getAvailableBookingsMonth, getRMTIDFromFirebaseID, getAllBookingsRMT } from './database.mjs';
 import { authAdmin, authRMT, filterJson, parseJson } from './middleware.mjs';
 import checkType, { ARRAY_T, EMAIL, INTEGER, NULLABLE, STRING } from './formParser.mjs';
 import e from 'express';
+import cors from 'cors';
 
 // Node version requirement check
 const [major, minor, patch] = process.versions.node.split('.').map(Number);
@@ -14,6 +15,16 @@ if (major !== 20) {
 
 const PORT = process.env.PORT || 80;
 const app = e();
+
+app.use(
+	cors({
+		origin: 'http://localhost:5173',
+		methods: ['GET', 'POST', 'OPTIONS'],
+		allowedHeaders: ['Content-Type', 'Authorization'],
+	})
+);
+
+app.use(e.json());
 
 // Blanket auth for public
 app.post('/api/public/:handle', filterJson, parseJson);

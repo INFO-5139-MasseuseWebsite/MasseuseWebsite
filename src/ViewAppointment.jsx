@@ -20,8 +20,8 @@ const ViewAppointment = () => {
 					const response = await fetch('http://localhost/api/rmt/get-all-bookings', {
 						method: 'POST',
 						headers: {
-							Authorization: `Bearer ${token}`,
 							'Content-Type': 'application/json',
+							Authorization: `Bearer ${token}`,
 						},
 					});
 
