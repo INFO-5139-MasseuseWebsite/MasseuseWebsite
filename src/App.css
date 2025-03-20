@@ -24,6 +24,9 @@ body {
   background-color: white;
   padding: 20px 30px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 2;
+
 }
 
 /* Logo */
@@ -36,6 +39,7 @@ body {
 .navbar ul {
   display: flex;
   list-style-type: none;
+  overflow: visible;
 }
 
 .navbar li {
@@ -84,7 +88,7 @@ body {
   background-color: white;
   min-width: 160px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  z-index: 1;
+  z-index: 2;
 }
 
 .dropdown:hover .dropdown-content {

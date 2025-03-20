@@ -11,7 +11,10 @@ const Header = () => {
 			<nav className="navbar">
 				<ul>
 					<li>
-						<a href="index.html">Home</a>
+					<Link to="/">Home</Link>
+					</li>
+					<li>
+					<Link to="/book-now">Find an RMT</Link> 
 					</li>
 					<li className="dropdown">
 						<a href="#explore-section">Treatments</a>
