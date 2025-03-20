@@ -1,0 +1,229 @@
+/* BookNow.css
+
+.book-now-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    padding: 0 20px;
+}
+
+.logo-container {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 100px; 
+    width: auto;
+}
+
+.logo-hr {
+    width: 100vw;
+    margin-top: -200px;
+    border: 2px solid#4B3621;
+    margin-bottom: 20px;
+}
+
+.table-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0px;
+}
+
+.table-image img {
+    max-width: 35%; 
+    height: auto;
+    border: 5px solid #4B3621;
+} */
+
+
+/* BookNow.css */
+
+.book-now-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align to top */
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0; /* Optional background */
+    padding: 0; /* Remove padding */
+    margin: 0; /* Remove margins */
+}
+
+.logo-container {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 100px; /* Adjust size as needed */
+    width: auto;
+}
+
+.logo-hr {
+    width: 100vw; /* Make it span the full viewport width */
+    border: 0; /* Remove default border */
+    height: 2px; /* Set the thickness of the line */
+    background-color: #000; /* Color of the line */
+    margin-top: 100px; /* Adjust the margin to position the line */
+    margin-bottom: 20px;
+}
+
+.welcome-section {
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.welcome-section h1 {
+    font-size: 2rem;
+    color: #4B3621;
+}
+
+.welcome-section p {
+    font-size: 1.1rem;
+    color: #333;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.search-form {
+    width: 100%;
+    max-width: 650px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.search-form h2 {
+    font-size: 1.5rem;
+    color: #4B3621;
+    margin-bottom: 20px;
+}
+
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.radio-group label {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.radio-group input[type="radio"] {
+    margin-right: 10px; 
+    vertical-align: middle;
+}
+
+.input-group, .select-group {
+    margin-bottom: 15px;
+}
+
+.input-group label, .select-group label {
+    font-size: 1rem;
+    color: #333;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.input-group input, .select-group select {
+    width: 100%;
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.search-btn {
+    background-color: #4B3621;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.search-btn:hover {
+    background-color: #3a2c1f;
+}
+
+.table-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px; /* Add margin to separate from previous content */
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.table-image img {
+    max-width: 50%; /* Adjust this to scale the image as needed */
+    height: auto;
+    border: 5px solid #4B3621; /* Add a 5px solid border with the color #4B3621 */
+    border-radius: 8px; /* Optional: adds rounded corners to the border */
+}
+
+.additional-info {
+    text-align: left;
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 1rem;
+    color: #333;
+}
+
+.additional-info ul {
+    list-style-type: disc;
+    margin-left: 20px;
+}
+
+.additional-info a {
+    color: #4B3621;
+    text-decoration: none;
+}
+
+.additional-info a:hover {
+    text-decoration: underline;
+}
+
+
+.book-with-us-section {
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.book-with-us-section h1 {
+    font-size: 2rem;
+    color: #4B3621;
+}
+
+.book-with-us-section p {
+    font-size: 1.1rem;
+    color: #333;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+
+.checkbox-group div {
+    margin-bottom: 15px; /* Add margin between checkbox and label */
+}
+
+.checkbox-group label {
+    margin-left: 10px; /* Add some space between checkbox and text */
+}
