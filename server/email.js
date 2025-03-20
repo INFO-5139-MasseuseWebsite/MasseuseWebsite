@@ -7,16 +7,21 @@ import path from 'path'
 const connectionString = process.env['COMMUNICATION_SERVICES_CONNECTION_STRING'];
 if (!connectionString)
     throw 'No COMMUNICATION_SERVICES_CONNECTION_STRING found in environment variables'
+const WEBSITE_HOSTNAME = process.env['WEBSITE_HOSTNAME'] || 'localhost'
+const PROTOCOL = process.env['WEBSITE_HOSTNAME'] ? 'https' : 'http'
 const client = new EmailClient(connectionString);
+const stylesheet = fs.readFileSync(path.resolve(import.meta.dirname, './email/style.css'), { encoding: 'utf8' })
 
 export async function formatEmailFile(filePath, params) {
-    const timestamp = format(new Date(), '[H:mm:ss yyyy/MM/dd]')
-    const stylesheet = fs.readFileSync(path.resolve(import.meta.dirname, './email/style.css'), { encoding: 'utf8' })
     const file = fs.readFileSync(path.resolve(import.meta.dirname, filePath), { encoding: 'utf8' })
+    const timestamp = format(new Date(), '[H:mm:ss yyyy/MM/dd]')
     return file.replace(/\$\s*\{\s*(\w+)\s*\}/g, (substring, key) => {
         switch (key) {
             case 'stylesheet': return stylesheet;
             case 'timestamp': return timestamp;
+            case 'hostname': return WEBSITE_HOSTNAME;
+            case 'protocol': return PROTOCOL;
+            case 'website': return `${PROTOCOL}://${WEBSITE_HOSTNAME}`
             default: return html_entities.encode(params[key] ?? key.toUpperCase())
         }
     })
