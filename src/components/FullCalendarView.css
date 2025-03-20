@@ -1,0 +1,134 @@
+:root {
+    --text-color: #222; /* Darker for better contrast */
+    --background-color: #f9f9f9;
+    --button-color: #007bff;
+    --button-hover-color: #0056b3;
+    --border-radius: 50px;
+}
+
+/* Full Calendar Container */
+.full-calendar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: var(--background-color);
+    padding: 20px;
+}
+
+/* Headings */
+h1 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: var(--text-color);
+    text-align: center;
+}
+
+/* React Calendar Styles */
+.react-calendar {
+    width: 95%;
+    height: 95vh;
+    max-width: 90%;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    font-size: 25px;
+    color: var(--text-color);
+}
+
+/* Calendar Text Visibility */
+.react-calendar abbr {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+/* Calendar Tile (Each Date Block) */
+.react-calendar__tile {
+    padding: 50px;
+    border-radius: 8px;
+    transition: background 0.3s ease-in-out, color 0.3s;
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+/* Hover Effect */
+.react-calendar__tile:hover {
+    background: #e0e0e0;
+    color: #000; /* Ensures visibility on hover */
+}
+
+/* Active Day */
+.react-calendar__tile--active {
+    background: var(--button-color) !important;
+    color: rgb(7, 7, 7) !important;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+/* Back Button */
+.back-button {
+    margin-top: 20px;
+    padding: 12px 25px;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: var(--button-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s;
+}
+
+.back-button:hover {
+    background-color: var(--button-hover-color);
+    transform: scale(1.05);
+}
+
+/* 🌙 Dark Mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #121212; /* True dark mode */
+        --text-color: #0f0101; /* Bright white for better contrast */
+        --button-color: #1a73e8;
+        --button-hover-color: #135abe;
+    }
+
+    .full-calendar-container {
+        background: var(--background-color);
+    }
+
+    .react-calendar {
+        background: #2c2c2c;
+        color: var(--text-color);
+        border-color: #444;
+    }
+
+    .react-calendar abbr {
+        color: var(--text-color);
+    }
+
+    .react-calendar__tile {
+        color: var(--text-color);
+    }
+
+    .react-calendar__tile:hover {
+        background: #3a3a3a;
+        color: #ffffff;
+    }
+
+    h1 {
+        color: var(--text-color);
+    }
+
+    .back-button {
+        background-color: var(--button-color);
+    }
+
+    .back-button:hover {
+        background-color: var(--button-hover-color);
+    }
+}

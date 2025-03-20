@@ -8,7 +8,7 @@ const Header = () => {
         <img src={Logo} alt="Logo" height="50" />
       </div>
       <nav className="navbar">
-        <ul>
+        <ul>a
           <li><a href="index.html">Home</a></li>
           <li className="dropdown">
             <a href="#explore-section">Treatments</a>
@@ -23,7 +23,7 @@ const Header = () => {
               <a href="#">Hands / Feet</a>
             </div>
           </li>
-          <li><a href="#map-section">Hours/Location</a></li>
+          <li><a href="#map-section">Location</a></li>
           <li><a href="#">About Us</a></li>
           <li><a href="#">Login</a></li>
         </ul>

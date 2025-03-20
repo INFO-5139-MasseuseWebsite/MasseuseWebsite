@@ -1,0 +1,126 @@
+:root {
+  --border-radius: 12px;
+}
+
+.full-calendar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--background-color, #f9f9f9);
+  padding: 20px;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+}
+
+.react-calendar {
+  width: 95%;
+  height: 85vh;
+  max-width: 90%;
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+  padding: 15px;
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+  will-change: transform;
+}
+
+.react-calendar:hover {
+  transform: scale(1.02);
+}
+
+.back-button {
+  margin-top: 20px;
+  padding: 12px 25px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background 0.3s ease-in-out, transform 0.2s;
+  will-change: transform;
+}
+
+.back-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+      --background-color: #1e1e1e;
+  }
+  .react-calendar {
+      background: #2c2c2c;
+      color: #fff;
+      border-color: #444;
+  }
+  h1 {
+      color: #ddd;
+  }
+  .back-button {
+      background-color: #1a73e8;
+  }
+  .back-button:hover {
+      background-color: #135abe;
+  }
+}
+.booking-health-history {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.form-container {
+  flex: 1;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Sidebar Styling */
+.sidebar {
+  width: 250px;
+  padding: 20px;
+  background: #f4f4f4;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.sidebar-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.sidebar-button:hover {
+  background-color: #0056b3;
+}

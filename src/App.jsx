@@ -1,58 +1,72 @@
-import React from 'react';
-import Header from './components/Header';
-import HeroVideo from './components/HeroVideo';
-import WelcomeSection from './components/WelcomeSection';
-import TreatmentsSection from './components/TreatmentsSection';
-import MapSection from './components/MapSection';
-import Footer from './components/Footer';
-
-
-
-import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HealthHistory from './HealthHistory';
-import BookingLayout from './components/BookingLayout'
-// import './HealthHistory.css';
-import Links from './Links';
-import CSSLoader from './CSSLoader';
-
-// function App() {
-//   return (
-//     <div>
-//       <Header />
-//       <HeroVideo />
-//       <WelcomeSection />
-//       <TreatmentsSection />
-//       <MapSection />
-//       <Footer />
-//     </div>
-//   );
-// }
-
-// export default App;
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import HeroVideo from "./components/HeroVideo";
+import WelcomeSection from "./components/WelcomeSection";
+import TreatmentsSection from "./components/TreatmentsSection";
+import MapSection from "./components/MapSection";
+import Footer from "./components/Footer";
+import HealthHistory from "./components/HealthHistory";
+import BookingLayout from "./components/BookingLayout"; // Fixed path
+import About from "./components/About"; // Fixed path
+import FullCalendarView from "./components/FullCalendarView"; // Added missing import
+import "./App.css"; // Ensure App.css exists
+import Logo from "./assets/logo/LogoCMTO.svg";
 
 function App() {
   return (
     <Router>
-      {/* <CSSLoader /> */}
       <div>
-        <Links />
+        {/* Header Component */}
+        <header className="header">
+          <div className="logo">
+            <Link to="/">
+              <img src={Logo} alt="Company Logo" height="50" />
+            </Link>
+          </div>
+          <nav className="navbar">
+            <ul className="nav-list">
+              <li><Link to="/">Home</Link></li>
+              <li className="dropdown">
+                <a href="#treatments" className="dropdown-toggle">Treatments</a>
+              </li>
+              <li><Link to="/booking">Book Appointment</Link></li> {/* Fixed link */}
+              <li><a href="#map-section">Location</a></li>
+              <li><Link to="/about">About Us</Link></li> {/* Fixed link */}
+              <li><Link to="/login">Login</Link></li>
+            </ul>
+          </nav>
+        </header>
 
-
+        {/* Main Routes */}
         <Routes>
-          <Route path="/" element={
-            <>
-              <Header />
-              <HeroVideo />
-              <WelcomeSection />
-              <TreatmentsSection />
-              <MapSection />
-              <Footer />
-            </>
-          } />
-          <Route path="/health-history" element={<HealthHistory />} />
+          {/* Home Page */}
+          <Route
+            path="/"
+            element={
+              <>
+                <HeroVideo />
+                <WelcomeSection />
+                <TreatmentsSection />
+                <MapSection />
+              </>
+            }
+          />
+
+          {/* Health History Page */}
+          <Route path="/health-history" element={<HealthHistory />} /> {/* Fixed path */}
+
+          {/* Booking Page */}
           <Route path="/booking" element={<BookingLayout />} />
+
+          {/* About Page */}
+          <Route path="/about" element={<About />} />
+
+          {/* Full Calendar Page */}
+          <Route path="/full-calendar-view" element={<FullCalendarView />} />
         </Routes>
+
+        {/* Footer */}
+        <Footer />
       </div>
     </Router>
   );
@@ -61,6 +75,3 @@ function App() {
 
 
 export default App;
-
-
-

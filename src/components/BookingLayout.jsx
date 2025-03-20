@@ -1,93 +1,170 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select } from "@/components/ui/select";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { Card, CardContent } from "../ui/card";
+import "../components/BookingLayout.css";
+import FullCalendarView from "../components/FullCalendarView.jsx";
+import Sidebar from "../components/Sidebar.jsx"; // Adjust path if needed
 
-export default function BookingLayout() {
-  const [date, setDate] = useState(null);
-  const [service, setService] = useState("");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+
+const BookingHealthHistory = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    name: '',
+    phoneNumber: '',
+    email: '',
+    address: '',
+    occupation: '',
+    dateOfBirth: '',
+    receivedMassageBefore: '',
+    referredByPractitioner: '',
+    practitionerNameAddress: '',
+    cardiovascularConditions: [],
+    cardiovascularHistory: '',
+    infections: [],
+    respiratoryConditions: [],
+    respiratoryFamilyHistory: '',
+    headNeckConditions: [],
+    otherConditions: {
+      lossOfSensation: '',
+      diabetesOnset: '',
+      allergies: '',
+      reactionType: '',
+      epilepsy: '',
+      cancer: '',
+      skinConditions: '',
+      arthritis: '',
+      arthritisFamilyHistory: '',
+    },
+    womenHealth: {
+      pregnantDue: '',
+      gynecologicalConditions: '',
+      generalHealth: '',
+      primaryCarePhysician: '',
+      physicianAddress: '',
+    },
+    currentMedications: [],
+    medication: '',
+    condition: '',
+    otherTreatment: '',
+    otherTreatmentReason: '',
+    surgeryDate: '',
+    surgeryNature: '',
+    injuryDate: '',
+    injuryNature: '',
+    otherMedicalConditions: '',
+    otherMedicalConditionsDetails: '',
+    internalPinsWires: '',
+    internalPinsWiresDetails: '',
+    internalPinsWiresLocation: '',
+    massageTherapyReason: '',
+    allergiesLubricants: '',
+    allergiesLubricantsDetails: '',
+    treatmentGoals: '',
+    limitationsDailyLife: '',
+    discomfortAreas: '',
+  });
+
+  const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState('');
+
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(`Booking confirmed for ${name} on ${format(date, "PPP")}`);
+    let newErrors = {};
+
+    if (!formData.date) newErrors.date = "Please select a date.";
+    if (!formData.service) newErrors.service = "Please choose a service.";
+    if (!formData.name.trim()) newErrors.name = "Name is required.";
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required.";
+    } else if (!validateEmail(formData.email)) {
+      newErrors.email = "Invalid email format.";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+    setSuccessMessage(`Booking confirmed for ${formData.name} on ${format(new Date(formData.date), "PPP")}`);
+
+    let bookings = JSON.parse(localStorage.getItem("bookings")) || {};
+    const formattedDate = format(new Date(formData.date), "yyyy-MM-dd");
+
+    if (!bookings[formattedDate]) {
+      bookings[formattedDate] = [];
+    }
+
+    bookings[formattedDate].push({
+      time: "10:00 AM", // Static time (Can be updated dynamically)
+      name: formData.name,
+    });
+
+    localStorage.setItem("bookings", JSON.stringify(bookings));
+    navigate("/full-calendar-view");
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-blue-100 to-blue-300 p-6">
-      <Card className="w-full max-w-2xl p-8 bg-white rounded-2xl shadow-2xl border border-gray-200">
-        <CardContent>
-          <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Book an Appointment</h2>
+    <div className="booking-health-history">
+      <Sidebar /> {/* Sidebar Component */}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Date Picker */}
-            <div>
-              <Label className="text-gray-700 text-lg">Select Date</Label>
-              <Popover>
-                <PopoverTrigger className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-700 text-left shadow-sm focus:ring-2 focus:ring-blue-500">
-                  {date ? format(date, "PPP") : "Pick a date"}
-                </PopoverTrigger>
-                <PopoverContent>
-                  <Calendar mode="single" selected={date} onSelect={setDate} />
-                </PopoverContent>
-              </Popover>
-            </div>
+      <div className="form-container">
+        <h1>Health History & Booking Form</h1>
+        {successMessage && <p className="success-message">{successMessage}</p>}
 
-            {/* Service Selection */}
-            <div>
-              <Label className="text-gray-700 text-lg">Service</Label>
-              <Select 
-                value={service} 
-                onChange={(e) => setService(e.target.value)} 
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Select a service</option>
-                <option value="consultation">Consultation</option>
-                <option value="therapy">Therapy Session</option>
-                <option value="massage">Massage</option>
-              </Select>
-            </div>
-
-            {/* Name Input */}
-            <div>
-              <Label className="text-gray-700 text-lg">Full Name</Label>
-              <Input 
-                type="text" 
-                value={name} 
-                onChange={(e) => setName(e.target.value)} 
-                required 
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-500"
+        <form onSubmit={handleSubmit}>
+          {["name", "phoneNumber", "email", "address", "occupation", "dateOfBirth"].map((field) => (
+            <div className="form-group" key={field}>
+              <label htmlFor={field}>{field.replace(/([A-Z])/g, " $1").trim()}:</label>
+              <input
+                type={field === "dateOfBirth" ? "date" : "text"}
+                id={field}
+                name={field}
+                value={formData[field]}
+                onChange={handleChange}
+                required
               />
             </div>
+          ))}
 
-            {/* Email Input */}
-            <div>
-              <Label className="text-gray-700 text-lg">Email</Label>
-              <Input 
-                type="email" 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
-                required 
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+          <div className="form-group">
+            <label>Select Date</label>
+            <input
+              type="date"
+              value={formData.date ? format(new Date(formData.date), "yyyy-MM-dd") : ""}
+              onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+              required
+            />
+            {errors.date && <p className="error-message">{errors.date}</p>}
+          </div>
 
-            {/* Submit Button */}
-            <Button 
-              type="submit" 
-              className="w-full mt-4 bg-gradient-to-r from-blue-500 to-blue-700 text-white text-lg px-6 py-3 rounded-lg shadow-md hover:scale-105 transition transform"
+          <div className="form-group">
+            <label>Service</label>
+            <select
+              value={formData.service}
+              onChange={(e) => setFormData({ ...formData, service: e.target.value })}
+              required
             >
-              Confirm Booking
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+              <option value="">Select a service</option>
+              <option value="consultation">Consultation</option>
+              <option value="therapy">Therapy Session</option>
+              <option value="massage">Massage</option>
+            </select>
+            {errors.service && <p className="error-message">{errors.service}</p>}
+          </div>
+
+          <button type="submit">Confirm Booking</button>
+        </form>
+      </div>
     </div>
   );
-}
+};
+
+export default BookingHealthHistory;

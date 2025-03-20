@@ -1,15 +1,21 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
-function Links() {
+function App() {
   return (
-    <header>
-      <nav>
-        <Link to="/">Home</Link>
-        <br />
-        <Link to="/health-history">Health History</Link>
-      </nav>
-    </header>
+    <Router>
+      <div className="app-container">
+        <Sidebar /> {/* ✅ Sidebar will always be visible */}
+        <div className="main-content">
+          <Routes>
+            <Route path="/health-history" element={<HealthHistory />} />
+            <Route path="/booking" element={<BookingPage />} />
+            <Route path="/full-calendar-view" element={<FullCalendarView />} />
+          </Routes>
+        </div>
+      </div>
+    </Router>
   );
 }
+
 
 export default Links;
