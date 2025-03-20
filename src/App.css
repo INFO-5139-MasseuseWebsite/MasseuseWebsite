@@ -22,6 +22,7 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 2;
+
 }
 
 /* Logo */
@@ -71,8 +72,6 @@ body {
   width: 100%;
   left: 0;
 }
-
-
 
 /* Dropdown Menu */
 .dropdown {

@@ -49,7 +49,10 @@ const Header = () => {
               <a href="#">Hands / Feet</a>
             </div>
           </li>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4d41476e2c513e66b6b94bfba2a1b7ca0c84fa36
           <li><a href="#map-section">Hours/Location</a></li>
           <li><a href="#">About Us</a></li>
           <li><a href="#">Login</a></li>

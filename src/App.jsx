@@ -14,6 +14,7 @@ import CSSLoader from './CSSLoader';
 import Login from './Login';
 import BookNow from './BookNow'; 
 
+
 // function App() {
 //   return (
 //     <div>
@@ -32,7 +33,6 @@ import BookNow from './BookNow';
 function App() {
 	return (
 		<Router>
-			
 			{/* <CSSLoader /> */}
 			<div>
 				<Links />
@@ -53,7 +53,9 @@ function App() {
 					/>
 					<Route path="/health-history" element={<HealthHistory />} />
 					<Route path="/login" element={<Login />} />
+
 					<Route path="/book-now" element={<BookNow />} /> 
+
 				</Routes>
 			</div>
 		</Router>
