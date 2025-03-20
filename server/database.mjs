@@ -17,7 +17,7 @@ export async function getFirebaseCredidentials() {
 // https://www.30secondsofcode.org/js/s/days-in-month/
 // Gets the number of days in a month
 // Expects month to be an integer from 0-11
-const daysInMonth = (year, month) => new Date(year, month + 1, 0).getDate()
+const daysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
 
 export async function addBooking(data) {
     //verify time
@@ -52,14 +52,14 @@ export async function addBooking(data) {
 // This can be moved into RMT data if we wanna personalize it
 const minHour = 9, // 9am
     maxHour = 12 + 5, // 5pm
-    noticeDays = 7 // 7 days buffer between today and next available booking date
+    noticeDays = 7; // 7 days buffer between today and next available booking date
 
 // rmtID: string ID of the rmt
 // year: numeric year. No restrictions
 // month: numeric month. Valid range: 0-11
 export async function getAvailableBookingsMonth(rmtID, year, month) {
     const rmt_result = await getRMTInfo(rmtID)
-    if(!rmt_result) throw {
+    if (!rmt_result) throw {
         status: 400,
         message: 'Invalid rmtID: RMT doesnt exist'
     }
@@ -76,7 +76,7 @@ export async function getAvailableBookingsMonth(rmtID, year, month) {
     const daysInTargetMonth = daysInMonth(year, month)
     const today = new Date()
 
-    // If the searched date is before today, 
+    // If the searched date is before today,
     if (year < today.getFullYear() || (year === today.getFullYear() && month < today.getMonth())) {
         return {
             // Arrays start at 0. Each index represents an hour. This determines what hour index 0 is.
@@ -86,29 +86,32 @@ export async function getAvailableBookingsMonth(rmtID, year, month) {
             available: [],
             // Number of days in the target month for ease of access
             maxDay: daysInTargetMonth,
-        }
+        };
     }
 
     let nextAvailableDay;
     if (today.getMonth() === month)
         // If target month is today's month
         // Offset with no extra consideration
-        nextAvailableDay = today.getDate() + noticeDays
+        nextAvailableDay = today.getDate() + noticeDays;
     else if (today.getMonth() + 1 === month)
         // If target month is next month
         // Take take into account wrap-around
-        nextAvailableDay = Math.max(today.getDate() + noticeDays - daysInMonth(today.getFullYear(), today.getMonth()), 1)
-    else
-        // At least 2 months of overhead. Don't bother with "can't book too soon" calculations
-        nextAvailableDay = 1
+        nextAvailableDay = Math.max(today.getDate() + noticeDays - daysInMonth(today.getFullYear(), today.getMonth()), 1);
+    // At least 2 months of overhead. Don't bother with "can't book too soon" calculations
+    else nextAvailableDay = 1;
     // only process bookings in this current year/month and that havnt been canceled
-    const validBookings = bookings.filter(booking => booking.year === year && booking.month === month && !booking.canceled)
+    const validBookings = bookings.filter(
+        (booking) => booking.year === year && booking.month === month && !booking.canceled
+    );
     // fill array with "no available bookings" up until the next available day
-    const available = Array(Math.min(nextAvailableDay - 1, daysInTargetMonth - 1)).fill(Array(maxHour - minHour).fill(false))
+    const available = Array(Math.min(nextAvailableDay - 1, daysInTargetMonth - 1)).fill(
+        Array(maxHour - minHour).fill(false)
+    );
     // fill rest of array with actual availability data
     for (let day = nextAvailableDay - 1; day <= daysInTargetMonth - 1; day++) {
-        const availableDay = getAvailableBookingsDay(validBookings, day, minHour, maxHour)
-        available.push(availableDay)
+        const availableDay = getAvailableBookingsDay(validBookings, day, minHour, maxHour);
+        available.push(availableDay);
     }
 
     return {
@@ -118,8 +121,8 @@ export async function getAvailableBookingsMonth(rmtID, year, month) {
         empty: false,
         available,
         // Number of days in the target month for ease of access
-        maxDay: daysInTargetMonth
-    }
+        maxDay: daysInTargetMonth,
+    };
 }
 function getAvailableBookingsDay(bookings, day, minHour, maxHour) {
     const ret = Array(maxHour - minHour).fill(true)
@@ -144,7 +147,7 @@ export async function getRMTInfo(rmtID) {
     const cmto = await cmto_result
     console.log('get cmto')
     const local = await local_result
-    if(cmto.status !== 200 && local.status !== 200) {
+    if (cmto.status !== 200 && local.status !== 200) {
         return null
     }
     console.log('get local')
@@ -182,24 +185,24 @@ export async function getBooking(bookingID) {
     let data = null
     for (let [rmt, rmtData] of Object.entries(result.data)) {
         console.log(rmt, rmtData)
-        if(rmtData[bookingID]) {
+        if (rmtData[bookingID]) {
             data = [rmtData[bookingID], rmt]
             break
         }
     }
     console.log(data)
-    if(!data) return null
+    if (!data) return null
     return data
 }
 
 export async function cancelBooking(bookingID) {
     const [booking, rmtID] = await getBooking(bookingID) ?? []
-    if(!booking) throw {
+    if (!booking) throw {
         serverError: `Booking with id ${bookingID} doesn't exist`,
         clientError: '(404) Page Not Found',
         status: 404,
     }
-    await axios.put(DB+ 'rmt_booking', {
+    await axios.put(DB + 'rmt_booking', {
         [rmtID]: {
             [booking.bookingID]: {
                 canceled: true

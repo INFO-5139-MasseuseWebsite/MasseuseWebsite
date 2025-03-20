@@ -18,75 +18,78 @@ const PORT = process.env.PORT || 80
 const app = e()
 
 // Blanket auth for public
-app.post('/api/public/:handle', filterJson, parseJson)
+app.post('/api/public/:handle', filterJson, parseJson);
 app.post('/api/public/add-booking', (request, response) => {
-    const form = request.body
-    const [valid, data] = checkType({
-        rmtID: STRING,
-        year: INTEGER,
-        month: INTEGER,
-        day: INTEGER,
-        hour: INTEGER,
-        form: {
-            firstName: STRING,
-            lastName: STRING,
-            email: EMAIL,
-            // give it a proper typing later
-            phoneNumber: STRING,
-            // if we are to actually store an address, it needs to be split up into proper fields
-            // this works as a placeholder for now though
-            address: NULLABLE(STRING),
-            occupation: NULLABLE(STRING),
-            dateOfBirth: NULLABLE(STRING),
-            recievedMassageBefore: NULLABLE(STRING),
-            referredByPractitioner: NULLABLE(STRING),
-            // this also needs to be split up if we are storing it
-            practitionerNameAddress: NULLABLE(STRING),
-            cardiovascularConditions: NULLABLE(ARRAY_T(STRING)),
-            cardiovascularHistory: NULLABLE(STRING),
-            infections: NULLABLE(ARRAY_T(STRING)),
-            respiratoryConditions: NULLABLE(ARRAY_T(STRING)),
-            respiratoryFamilyHistory: NULLABLE(STRING),
-            headNeckConditions: NULLABLE(ARRAY_T(STRING)),
-            otherConditions: NULLABLE({
-                lossOfSensation: NULLABLE(STRING),
-                diabetesOnset: NULLABLE(STRING),
-                allergies: NULLABLE(STRING),
-                reactionType: NULLABLE(STRING),
-                epilepsy: NULLABLE(STRING),
-                cancer: NULLABLE(STRING),
-                skinConditions: NULLABLE(STRING),
-                arthritis: NULLABLE(STRING),
-                arthritisFamilyHistory: NULLABLE(STRING),
-            }),
-            womenHealth: NULLABLE({
-                pregnantDue: NULLABLE(STRING),
-                gynecologicalConditions: NULLABLE(STRING),
-                generalHealth: NULLABLE(STRING),
-                primaryCarePhysician: NULLABLE(STRING),
-                physicianAddress: NULLABLE(STRING),
-            }),
-            currentMedications: NULLABLE(ARRAY_T(STRING)),
-            otherTreatment: NULLABLE(STRING),
-            otherTreatmentReason: NULLABLE(STRING),
-            surgeryDate: NULLABLE(STRING),
-            surgeryNature: NULLABLE(STRING),
-            injuryDate: NULLABLE(STRING),
-            injuryNature: NULLABLE(STRING),
+	const form = request.body;
+	const [valid, data] = checkType(
+		{
+			rmtID: STRING,
+			year: INTEGER,
+			month: INTEGER,
+			day: INTEGER,
+			hour: INTEGER,
+			form: {
+				firstName: STRING,
+				lastName: STRING,
+				email: EMAIL,
+				// give it a proper typing later
+				phoneNumber: STRING,
+				// if we are to actually store an address, it needs to be split up into proper fields
+				// this works as a placeholder for now though
+				address: NULLABLE(STRING),
+				occupation: NULLABLE(STRING),
+				dateOfBirth: NULLABLE(STRING),
+				recievedMassageBefore: NULLABLE(STRING),
+				referredByPractitioner: NULLABLE(STRING),
+				// this also needs to be split up if we are storing it
+				practitionerNameAddress: NULLABLE(STRING),
+				cardiovascularConditions: NULLABLE(ARRAY_T(STRING)),
+				cardiovascularHistory: NULLABLE(STRING),
+				infections: NULLABLE(ARRAY_T(STRING)),
+				respiratoryConditions: NULLABLE(ARRAY_T(STRING)),
+				respiratoryFamilyHistory: NULLABLE(STRING),
+				headNeckConditions: NULLABLE(ARRAY_T(STRING)),
+				otherConditions: NULLABLE({
+					lossOfSensation: NULLABLE(STRING),
+					diabetesOnset: NULLABLE(STRING),
+					allergies: NULLABLE(STRING),
+					reactionType: NULLABLE(STRING),
+					epilepsy: NULLABLE(STRING),
+					cancer: NULLABLE(STRING),
+					skinConditions: NULLABLE(STRING),
+					arthritis: NULLABLE(STRING),
+					arthritisFamilyHistory: NULLABLE(STRING),
+				}),
+				womenHealth: NULLABLE({
+					pregnantDue: NULLABLE(STRING),
+					gynecologicalConditions: NULLABLE(STRING),
+					generalHealth: NULLABLE(STRING),
+					primaryCarePhysician: NULLABLE(STRING),
+					physicianAddress: NULLABLE(STRING),
+				}),
+				currentMedications: NULLABLE(ARRAY_T(STRING)),
+				otherTreatment: NULLABLE(STRING),
+				otherTreatmentReason: NULLABLE(STRING),
+				surgeryDate: NULLABLE(STRING),
+				surgeryNature: NULLABLE(STRING),
+				injuryDate: NULLABLE(STRING),
+				injuryNature: NULLABLE(STRING),
 
-            otherMedicalConditions: NULLABLE(STRING),
-            otherMedicalConditionsDetails: NULLABLE(STRING),
-            internalPinsWires: NULLABLE(STRING),
-            internalPinsWiresDetails: NULLABLE(STRING),
-            internalPinsWiresLocation: NULLABLE(STRING),
-            massageTherapyReason: NULLABLE(STRING),
-            allergiesLubricants: NULLABLE(STRING),
-            allergiesLubricantsDetails: NULLABLE(STRING),
-            treatmentGoals: NULLABLE(STRING),
-            limitationsDailyLife: NULLABLE(STRING),
-            discomfortAreas: NULLABLE(STRING),
-        }
-    }, form)
+				otherMedicalConditions: NULLABLE(STRING),
+				otherMedicalConditionsDetails: NULLABLE(STRING),
+				internalPinsWires: NULLABLE(STRING),
+				internalPinsWiresDetails: NULLABLE(STRING),
+				internalPinsWiresLocation: NULLABLE(STRING),
+				massageTherapyReason: NULLABLE(STRING),
+				allergiesLubricants: NULLABLE(STRING),
+				allergiesLubricantsDetails: NULLABLE(STRING),
+				treatmentGoals: NULLABLE(STRING),
+				limitationsDailyLife: NULLABLE(STRING),
+				discomfortAreas: NULLABLE(STRING),
+			},
+		},
+		form
+	);
 
     if (!valid) {
         response.status(400).type('plain').send('(400) Invalid Form')
@@ -189,7 +192,7 @@ app.post('/api/admin/:handle', (request, response) => response.status(400).send(
 // This makes *everything* within the dist folder public.
 // If we add any private files, this needs to be changed.
 // Pipeline needs work
-app.use(e.static(path.resolve(import.meta.dirname, '../dist')))
+app.use(e.static(path.resolve(import.meta.dirname, '../dist')));
 
 // for testing purposes, use both http and https
 // when https testing is done (mainly need a certificate), remove the http
