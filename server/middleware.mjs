@@ -5,11 +5,14 @@ import { authenticateToken } from "./firebase.mjs"
 export const parseJson = bodyParser.json({ type: ['json', 'application/json'] })
 
 export function filterJson(request, response, next) {
-    if (request.headers['content-type'] && mime.getType(request.headers['content-type']) !== 'application/json') {
-        response.status(400).type('text').send(`Invalid content-type: expected application/json, got ${request.headers['content-type']}`)
-    } else {
-        next()
-    }
+	if ((mime.lookup(request.headers['content-type'] ?? '') || request.headers['content-type']) !== 'application/json') {
+		response
+			.status(400)
+			.type('text')
+			.send(`Invalid content-type: expected application/json, got ${request.headers['content-type']}`);
+	} else {
+		next();
+	}
 }
 
 const match_bearer=/bearer\s+(.+)/i
