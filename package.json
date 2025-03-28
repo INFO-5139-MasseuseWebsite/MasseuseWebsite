@@ -13,13 +13,16 @@
     "start-dev": "npm run build && node ./server/main.mjs"
   },
   "dependencies": {
+    "@azure/communication-email": "^1.0.0",
     "axios": "^1.8.1",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "firebase": "^11.4.0",
     "firebase-admin": "^13.1.0",
-    "mime": "^4.0.6",
+    "date-fns": "^4.1.0",
+    "html-entities": "^2.5.2",
+    "mime": "^1.6.0",
     "mime-types": "^2.1.35",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
