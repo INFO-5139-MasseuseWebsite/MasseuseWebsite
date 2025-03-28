@@ -20,6 +20,7 @@
     "firebase": "^11.4.0",
     "firebase-admin": "^13.1.0",
     "mime": "^4.0.6",
+    "mime-types": "^2.1.35",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^6.30.0",

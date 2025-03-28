@@ -137,6 +137,8 @@ app.post('/api/rmt/dothing', (request, response) => {
 	response.status(200).send('Accessing dothing...');
 });
 app.post('/api/rmt/get-all-bookings', (request, response) => {
+	console.log('Response', response);
+	console.log('App post rmt ID: ', response.locals.auth.rmtID);
 	getAllBookingsRMT(response.locals.auth.rmtID)
 		.then((bookings) => response.status(200).type('json').send(bookings))
 		.catch((err) => {

@@ -154,6 +154,7 @@ export async function getRMTIDFromFirebaseID(firebaseID) {
 }
 
 export async function getAllBookingsRMT(rmtID) {
+	console.log('Get all bookings rmtID: ', rmtID);
 	const allBookings = await axios.get(DB + 'rmt_booking');
 	if (!allBookings.data[rmtID]) return [];
 	const rmtBookings = [];

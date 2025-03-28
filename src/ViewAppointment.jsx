@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './ViewAppointment.css';
+import Header from './components/Header';
 import { getAuth } from 'firebase/auth';
 
 const ViewAppointment = () => {
@@ -12,6 +13,7 @@ const ViewAppointment = () => {
 		const getTokenAndFetchBookings = async () => {
 			try {
 				const user = auth.currentUser;
+				console.log('User', user);
 				if (user) {
 					const token = await user.getIdToken();
 					setIdToken(token);
@@ -45,29 +47,71 @@ const ViewAppointment = () => {
 		getTokenAndFetchBookings();
 	}, [auth]);
 
+	const formatDateTime = (booking) => {
+		const { year, month, day, hour } = booking;
+		const date = new Date(year, month - 1, day, hour); // month is 0-indexed in JS
+		const dateStr = date.toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+		});
+		const timeStr = date.toLocaleTimeString('en-US', {
+			hour: 'numeric',
+			minute: '2-digit',
+			hour12: true,
+		});
+		return `${dateStr} at ${timeStr}`;
+	};
+
 	return (
 		<div>
-			<h1>View Appointment</h1>
-			{error ? (
-				<p style={{ color: 'red' }}>{error}</p>
-			) : idToken ? (
-				<>
-					<p>ID Token: {idToken}</p>
-					{bookings.length > 0 ? (
-						<ul>
-							{bookings.map((booking, index) => (
-								<li key={index}>
-									{booking.date || 'No date'} - {booking.time || 'No time'}
-								</li>
-							))}
-						</ul>
-					) : (
-						<p>No bookings found</p>
-					)}
-				</>
-			) : (
-				<p>Loading token or no user signed in...</p>
-			)}
+			<Header />
+			<div className="view-appointment-container">
+				<h1 className="view-appointment-title">Your Appointments</h1>
+
+				{error && <p className="error-message">{error}</p>}
+
+				{idToken ? (
+					<div className="bookings-section">
+						<table className="bookings-table">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Date & Time</th>
+									<th>Email</th>
+									<th>Phone</th>
+									<th>Status</th>
+								</tr>
+							</thead>
+							<tbody>
+								{bookings.map((booking, index) => (
+									<tr key={booking.bookingID || index}>
+										<td>{`${booking.form.firstName} ${booking.form.lastName}`}</td>
+										<td>{formatDateTime(booking)}</td>
+										<td>{booking.form.email}</td>
+										<td>{booking.form.phoneNumber}</td>
+										<td>
+											<span
+												className={`status-badge ${
+													booking.canceled
+														? 'status-canceled'
+														: booking.confirmed
+														? 'status-confirmed'
+														: 'status-pending'
+												}`}
+											>
+												{booking.canceled ? 'Canceled' : booking.confirmed ? 'Confirmed' : 'Pending'}
+											</span>
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+				) : (
+					<p className="loading-message">Loading appointments...</p>
+				)}
+			</div>
 		</div>
 	);
 };
