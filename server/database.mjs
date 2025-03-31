@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid'
-import { sendEmail } from './email';
+import { sendEmail } from './email.mjs';
 import { format } from 'date-fns';
 
 const PANTRY_ID = process.env.PANTRY_ID
@@ -45,6 +45,7 @@ export async function addBooking(data) {
                 hour: data.hour,
                 confirmed: false,
                 canceled: false,
+                reject: null,
             }
         }
     })
@@ -267,6 +268,7 @@ export async function rmtConfirmAppointment(rmtID, bookingID) {
         })
         const rmt = await getRMTInfo(rmtID)
         const rmtAddress = rmt.placesOfPractice?.[0] ?? {}
+        const a = new Date(booking.year, booking.month, booking.day, booking.hour)
         await sendEmail(booking.form.email, 'Massage Appointment Confirmation', './email/clientFullConfirm.html', {
             rmtName: `${rmt.firstName} ${rmt.lastName}`,
             rmtAddressProvince: rmtAddress.province ?? rmtAddress.businessState,
@@ -301,12 +303,13 @@ export async function rmtRejectAppointment(rmtID, bookingID, reason) {
         await axios.put(DB + 'rmt_booking', {
             [rmtID]: {
                 [bookingID]: {
-                    rejected: reason
+                    reject: reason
                 }
             }
         })
         const rmt = await getRMTInfo(rmtID)
         const rmtAddress = rmt.placesOfPractice?.[0] ?? {}
+        const a = new Date(booking.year, booking.month, booking.day, booking.hour)
         await sendEmail(booking.form.email, 'Massage Appointment Rejected', './email/clientReject.html', {
             rmtName: `${rmt.firstName} ${rmt.lastName}`,
             rmtAddressProvince: rmtAddress.province ?? rmtAddress.businessState,
