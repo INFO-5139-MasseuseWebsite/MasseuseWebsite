@@ -1,6 +1,6 @@
 import path from 'path'
 import http from 'http'
-import { addBooking, publicCancelBooking, getAvailableBookingsMonth, getRMTInfo, rmtConfirmAppointment } from './database.mjs'
+import { addBooking, publicCancelBooking, getAvailableBookingsMonth, getRMTInfo, rmtConfirmAppointment, rmtRejectAppointment } from './database.mjs'
 import { authAdmin, authRMT, filterJson, parseJson } from './middleware.mjs'
 import checkType, { ARRAY_T, EMAIL, INTEGER, NULLABLE, STRING } from './formParser.mjs'
 import e from 'express'
@@ -182,8 +182,25 @@ app.post('/api/rmt/confirm-booking', (request, response) => {
     }, request.body)
     if (!valid) {
         response.status(400).type('plain').send('(400) Invalid json')
+        return
     }
     rmtConfirmAppointment(response.locals.auth.rmtID, data.bookingID)
+        .then(() => response.status(200).send())
+        .catch(e => {
+            console.error(e.serverError)
+            response.status(e.statusCode ?? 500).type('plain').send(e.clientError)
+        })
+})
+app.post('/api/rmt/reject-booking', (request, response) => {
+    const [valid, data] = checkType({
+        bookingID: STRING,
+        reason: STRING,
+    }, request.body)
+    if (!valid) {
+        response.status(400).type('plain').send('(400) Invalid json')
+        return
+    }
+    rmtRejectAppointment(response.locals.auth.rmtID, data.bookingID, data.reason)
         .then(() => response.status(200).send())
         .catch(e => {
             console.error(e.serverError)

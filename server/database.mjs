@@ -280,6 +280,42 @@ export async function rmtConfirmAppointment(rmtID, bookingID) {
     }
 }
 
+export async function rmtRejectAppointment(rmtID, bookingID, reason) {
+    const booking = await getBookingExact(rmtID, bookingID)
+    if (!booking) throw {
+        statusCode: 400,
+        serverError: `No booking found with rmtID ${rmtID} and bookingID ${bookingID}`,
+        clientError: null
+    }
+    try {
+        await axios.put(DB + 'rmt_booking', {
+            [rmtID]: {
+                [bookingID]: {
+                    rejected: reason
+                }
+            }
+        })
+        const rmt = await getRMTInfo(rmtID)
+        const rmtAddress = rmt.placesOfPractice?.[0] ?? {}
+        await sendEmail(booking.form.email, 'Massage Appointment Rejected', './email/clientReject.html', {
+            rmtName: `${rmt.firstName} ${rmt.lastName}`,
+            rmtAddressProvince: rmtAddress.province ?? rmtAddress.businessState,
+            rmtAddressCity: rmtAddress.city ?? rmtAddress.businessCity,
+            rmtAddressStreet: rmtAddress.businessAddress,
+            rmtAddressPhone: rmtAddress.phone,
+            date: `${format(a, 'EEEE, MMMM do, yyyy')} at ${format(a, 'h:mm b')}`,
+            bookingID: bookingID,
+            reason: reason,
+        })
+    } catch (e) {
+        throw {
+            statusCode: 500,
+            serverError: e,
+            clientError: '(500) Internal server error'
+        }
+    }
+}
+
 export async function getAdminFromFirebaseID(firebaseID) {
     const admins = await axios.get(DB + 'admin_firebase')
     const isAdmin = admins.data[firebaseID]
