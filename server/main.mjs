@@ -4,7 +4,7 @@ import { addBooking, publicCancelBooking, getAvailableBookingsMonth, getRMTInfo,
 import { authAdmin, authRMT, filterJson, parseJson } from './middleware.mjs'
 import checkType, { ARRAY_T, EMAIL, INTEGER, NULLABLE, STRING } from './formParser.mjs'
 import e from 'express'
-import { sendEmail } from './email.js'
+import { sendEmail } from './email.mjs'
 import { format } from 'date-fns'
 
 // Node version requirement check
