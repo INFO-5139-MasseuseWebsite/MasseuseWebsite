@@ -252,6 +252,11 @@ export async function rmtConfirmAppointment(rmtID, bookingID) {
         serverError: `No booking found with rmtID ${rmtID} and bookingID ${bookingID}`,
         clientError: null
     }
+    if (booking.reject || booking.confirmed || booking.canceled) throw {
+        statusCode: 400,
+        serverError: `Booking with id ${bookingID} has already been confirmed/canceled/rejected. Cannot confirm.`,
+        clientError: null
+    }
     try {
         await axios.put(DB + 'rmt_booking', {
             [rmtID]: {
@@ -285,6 +290,11 @@ export async function rmtRejectAppointment(rmtID, bookingID, reason) {
     if (!booking) throw {
         statusCode: 400,
         serverError: `No booking found with rmtID ${rmtID} and bookingID ${bookingID}`,
+        clientError: null
+    }
+    if (booking.reject || booking.confirmed || booking.canceled) throw {
+        statusCode: 400,
+        serverError: `Booking with id ${bookingID} has already been confirmed/canceled/rejected. Cannot reject.`,
         clientError: null
     }
     try {
