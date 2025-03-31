@@ -292,13 +292,12 @@ body {
   }
 }
 
-
-
 /* welcome Section */
 .welcome {
   background-color: #f9f9f9;
-  padding: 40px 20px;
+  padding: 20px 20px;
   text-align: center;
+  margin-top: -400px; 
 }
 
 .welcome h2 {
@@ -313,14 +312,34 @@ body {
   line-height: 1.6;
   max-width: 800px;
   margin: 0 auto;
+  text-align: left;
+}
+/*Media queries for welcome section*/
+@media (max-width: 1024) {
+  .welcome {
+    background-color: #f9f9f9;
+    padding: 20px 20px;
+    text-align: center;
+    margin-top: -400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .welcome {
+    background-color: #f9f9f9;
+    padding: 20px 20px;
+    text-align: center;
+    margin-top: -170px;
+  }
 }
 
 
 /* Explore Section */
 .explore-section {
-  padding: 60px 20px;
+  padding: 80px 20px;
   background-color: #f9f9f9;
   text-align: center;
+  margin-top: 90px;
 }
 
 .explore-section h2 {
@@ -353,24 +372,32 @@ body {
   transform: translateY(-10px);
 }
 
-.treatment-image {
+.treatment-image-container {
   width: 100%;
-  /* height: auto; */
-  height: 45%;
+  height: 200px; 
+  overflow: hidden;
   border-radius: 8px;
   margin-bottom: 20px;
+}
+
+.treatment-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .treatment-card h3 {
   font-size: 24px;
   color: #4B3621;
   margin-bottom: 15px;
+  text-align: center;
 }
 
 .treatment-card p {
   font-size: 16px;
   color: #4B3621;
   margin-bottom: 15px;
+  text-align: left;
 }
 
 .price {
@@ -389,7 +416,7 @@ body {
   text-decoration: underline;
 }
 
-/* Responsive Layout */
+/* Responsive Layout for treatment section*/
 @media (max-width: 1024px) {
   .treatment-card {
     width: 48%; 
@@ -400,6 +427,7 @@ body {
   .treatment-card {
     width: 100%; 
     height: 70%;
+    height: auto;
   }
 
   .treatment-container {
@@ -414,6 +442,7 @@ body {
   padding: 20px;
   border-radius: 8px;
   text-align: center;
+  background-color: #f4f4f4;
 }
 
 .map h1 {
