@@ -9,7 +9,7 @@ const Header = () => {
       </div>
       <nav className="navbar">
         <ul>
-          <li><a href="index.html">Home</a></li>
+          <li><a href="#">Home</a></li>
           <li className="dropdown">
             <a href="#explore-section">Treatments</a>
             <div className="dropdown-content">
