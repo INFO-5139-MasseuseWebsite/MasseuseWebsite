@@ -340,6 +340,10 @@ body {
   background-color: #f9f9f9;
   text-align: center;
   margin-top: 90px;
+  max-width: 1308px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 8px;
 }
 
 .explore-section h2 {
@@ -416,6 +420,18 @@ body {
   text-decoration: underline;
 }
 
+/*Responsive layout for explore section*/
+@media (max-width: 1024px) {
+  .explore-section {
+    max-width: 90%;
+  }
+}
+@media (max-width: 768px) {
+  .explore-section {
+    max-width: 95%;
+  }
+}
+
 /* Responsive Layout for treatment section*/
 @media (max-width: 1024px) {
   .treatment-card {
@@ -443,6 +459,9 @@ body {
   border-radius: 8px;
   text-align: center;
   background-color: #f4f4f4;
+  max-width: 1308px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .map h1 {
@@ -473,16 +492,13 @@ body {
   display: flex;
   align-items: center;
   margin: 10px 0; 
+  text-align: left;
 }
 
 .map-icon {
   margin-right: 10px; 
   width: 20px; 
   height: auto; 
-}
-
-.info {
-  text-align: left;
 }
 
 
@@ -504,10 +520,20 @@ body {
   height: 100%; 
   border: none;
 }
- 
 
-/* Mobile Responsiveness */
+/* Mobile Responsiveness for map layout */
+@media (max-width: 1024px) {
+  .map {
+    max-width: 90%;
+  }
+}
+
+
 @media (max-width: 768px) {
+  .map {
+    max-width: 95%;
+  }
+
   .mapContainer {
     flex-direction: column;
     align-items: center;
@@ -534,7 +560,7 @@ body {
   }
 
   .info {
-    text-align: center;
+    text-align: left;
     font-size: 14px;
     margin-bottom: 15px;
   }
