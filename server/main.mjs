@@ -149,6 +149,24 @@ app.post('/api/public/get-available-bookings', (request, response) => {
         .then(available => response.status(200).type('json').send(available))
         .catch(err => response.status(err.status).type('text').send(err.message))
 })
+app.post('/api/public/get-rmt', (request, response) => {
+    const [valid, data] = checkType({
+        rmtID: STRING
+    }, request.body)
+    if (!valid) {
+        response.status(400).type('text').send('(400) Invalid json')
+        return
+    }
+    getRMTInfo(data.rmtID)
+        .then(rmtData => {
+            if(rmtData) response.status(200).type('json').send(rmtData)
+            else response.status(404).type('text').send('(404) No rmt found')
+        })
+        .catch(err => {
+            console.error(err)
+            response.status(500).type('text').send()
+        })
+})
 app.get('/api/public/cancel-booking', (request, response) => {
     if (!request.query?.id) {
         response.status(400).send('(400) No id')
