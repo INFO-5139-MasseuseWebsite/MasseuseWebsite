@@ -150,6 +150,10 @@ app.post('/api/public/get-available-bookings', (request, response) => {
         .then(available => response.status(200).type('json').send(available))
         .catch(err => response.status(err.status).type('text').send(err.message))
 })
+
+
+
+
 app.post('/api/public/get-rmt', (request, response) => {
     const [valid, data] = checkType({
         rmtID: STRING
