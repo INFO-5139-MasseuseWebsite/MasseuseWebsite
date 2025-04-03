@@ -6,120 +6,117 @@ const months = [
   "July", "August", "September", "October", "November", "December"
 ];
 const weekdays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+const timeSlots = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"];
 
 const CalendarBooking = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState("");
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
     email: "",
     phoneNumber: ""
   });
-  const [bookingSuccess, setBookingSuccess] = useState(null);
-  const [bookedDates, setBookedDates] = useState([]);
+  const [bookedSlots, setBookedSlots] = useState([]); // ["2025-04-04 10:00"]
+  const [statusMessage, setStatusMessage] = useState("");
   const [fetchError, setFetchError] = useState(null);
 
   useEffect(() => {
-    const fetchBookedDates = async () => {
+    const fetchBooked = async () => {
       try {
         const res = await axios.get("/api/public/get-booked-dates");
         const data = res?.data;
-        let dates = [];
+        let slots = [];
 
         if (Array.isArray(data)) {
-          dates = data;
+          slots = data;
         } else if (Array.isArray(data?.bookedDates)) {
-          dates = data.bookedDates;
-        } else {
-          throw new Error("Unexpected booked dates format");
+          slots = data.bookedDates;
         }
 
-        setBookedDates(dates);
-        setFetchError(null);
+        setBookedSlots(slots);
       } catch (err) {
-        console.error("Failed to fetch booked dates", err);
-        setBookedDates([]);
-        setFetchError("Unable to load booked dates. Please check your network or try again later.");
+        console.error("Error fetching booked dates", err);
+        setFetchError("Unable to load booked slots. Please try again later.");
       }
     };
 
-    fetchBookedDates();
+    fetchBooked();
   }, []);
 
-  const year = selectedDate.getFullYear();
-  const month = selectedDate.getMonth();
-  const day = selectedDate.getDate();
-
-  const formatDate = (y, m, d) => {
-    return `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-  };
-
-  const isDisabled = (d) => {
-    const dateStr = formatDate(currentDate.getFullYear(), currentDate.getMonth(), d);
-    return bookedDates.includes(dateStr);
+  const formatDate = (dateObj) => {
+    return dateObj ? `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, "0")}-${String(dateObj.getDate()).padStart(2, "0")}` : "";
   };
 
   const changeMonth = (offset) => {
-    const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + offset, 1);
-    setCurrentDate(newDate);
+    const newMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + offset, 1);
+    setCurrentDate(newMonth);
   };
 
-  const handleInputChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const isDayDisabled = (day) => {
+    const dateStr = formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), day));
+    return timeSlots.every(time => bookedSlots.includes(`${dateStr} ${time}`));
   };
 
   const handleBooking = async () => {
-    const selectedDateStr = formatDate(year, month, day);
-    if (bookedDates.includes(selectedDateStr)) {
-      setBookingSuccess("This date is already booked.");
+    if (!selectedDate || !selectedTime) {
+      setStatusMessage("Please select a date and time.");
+      return;
+    }
+
+    const dateStr = formatDate(selectedDate);
+    const dateTimeStr = `${dateStr} ${selectedTime}`;
+
+    if (bookedSlots.includes(dateTimeStr)) {
+      setStatusMessage("That time slot is already booked.");
       return;
     }
 
     try {
       await axios.post("/api/public/add-booking", {
         rmtID: "debug",
-        year,
-        month: month + 1,
-        day,
-        hour: 10,
+        date: dateStr,
+        time: selectedTime,
         form
       });
-      setBookingSuccess("Booking successful!");
-      setBookedDates((prev) => [...prev, selectedDateStr]);
-    } catch (error) {
-      console.error("Booking failed", error);
-      setBookingSuccess("Booking failed. Try again.");
+
+      setBookedSlots(prev => [...prev, dateTimeStr]);
+      setStatusMessage("✅ Booking confirmed!");
+      setSelectedTime("");
+    } catch (err) {
+      console.error("Booking failed", err);
+      setStatusMessage("❌ Booking failed. Please try again.");
     }
   };
 
-  const renderCalendarDays = () => {
-    const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
-    const totalDays = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+  const renderCalendar = () => {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
 
     const blanks = Array.from({ length: firstDay }, (_, i) => (
-      <div className="day blank" key={`b-${i}`}></div>
+      <div key={`b${i}`} className="day blank" />
     ));
 
-    const days = Array.from({ length: totalDays }, (_, i) => {
-      const d = i + 1;
-      const dateObj = new Date(currentDate.getFullYear(), currentDate.getMonth(), d);
+    const days = Array.from({ length: daysInMonth }, (_, i) => {
+      const day = i + 1;
+      const thisDate = new Date(year, month, day);
+      const disabled = isDayDisabled(day);
       const isSelected =
-        selectedDate.getDate() === d &&
-        selectedDate.getMonth() === currentDate.getMonth() &&
-        selectedDate.getFullYear() === currentDate.getFullYear();
-      const disabled = isDisabled(d);
+        selectedDate &&
+        selectedDate.getDate() === day &&
+        selectedDate.getMonth() === month &&
+        selectedDate.getFullYear() === year;
 
       return (
         <div
-          key={d}
+          key={day}
           className={`day ${isSelected ? "selected" : ""} ${disabled ? "disabled" : ""}`}
-          onClick={() => {
-            if (!disabled) setSelectedDate(dateObj);
-          }}
+          onClick={() => !disabled && setSelectedDate(thisDate)}
         >
-          {d}
-          {disabled && <div className="dot"></div>}
+          {day}
         </div>
       );
     });
@@ -127,62 +124,73 @@ const CalendarBooking = () => {
     return [...blanks, ...days];
   };
 
+  const renderTimeDropdown = () => {
+    if (!selectedDate) return null;
+
+    const dateStr = formatDate(selectedDate);
+    return (
+      <select value={selectedTime} onChange={(e) => setSelectedTime(e.target.value)}>
+        <option value="">-- Select Time --</option>
+        {timeSlots.map((time) => {
+          const fullSlot = `${dateStr} ${time}`;
+          const isTaken = bookedSlots.includes(fullSlot);
+          return (
+            <option key={time} value={time} disabled={isTaken}>
+              {time} {isTaken ? " (Booked)" : ""}
+            </option>
+          );
+        })}
+      </select>
+    );
+  };
+
   return (
     <div className="calendar-wrapper">
       <aside className="calendar-left">
         <div className="date-large">
-          <div className="number">{selectedDate.getDate()}</div>
-          <div className="weekday">
-            {selectedDate.toLocaleDateString("en-US", { weekday: "long" })}
+          <div className="number">
+            {selectedDate ? selectedDate.getDate() : "--"}
           </div>
-        </div>
-
-        <div className="event-section">
-          <p>Booked Dates</p>
-          {fetchError && <p className="error-message">{fetchError}</p>}
-          <ul>
-            {bookedDates.map((e, i) => (
-              <li key={i}>{e}</li>
-            ))}
-          </ul>
-          <span className="post-link">See booking history</span>
-          <div className="create-event">
-            Create an Event <span className="plus">+</span>
+          <div className="weekday">
+            {selectedDate ? selectedDate.toLocaleDateString("en-US", { weekday: "long" }) : "No date selected"}
           </div>
         </div>
 
         <div className="booking-form">
-          <h4>Book This Date</h4>
+          <h4>Book Appointment</h4>
           <input
             type="text"
             name="firstName"
             placeholder="First Name"
             value={form.firstName}
-            onChange={handleInputChange}
+            onChange={(e) => setForm({ ...form, firstName: e.target.value })}
           />
           <input
             type="text"
             name="lastName"
             placeholder="Last Name"
             value={form.lastName}
-            onChange={handleInputChange}
+            onChange={(e) => setForm({ ...form, lastName: e.target.value })}
           />
           <input
             type="email"
             name="email"
             placeholder="Email"
             value={form.email}
-            onChange={handleInputChange}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
           />
           <input
             type="text"
             name="phoneNumber"
             placeholder="Phone Number"
             value={form.phoneNumber}
-            onChange={handleInputChange}
+            onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })}
           />
-          <button onClick={handleBooking}>Book</button>
-          {bookingSuccess && <p className="booking-status">{bookingSuccess}</p>}
+
+          {renderTimeDropdown()}
+
+          <button onClick={handleBooking}>Book Now</button>
+          {statusMessage && <p className="booking-status">{statusMessage}</p>}
         </div>
       </aside>
 
@@ -190,33 +198,20 @@ const CalendarBooking = () => {
         <div className="calendar-header">
           <button onClick={() => changeMonth(-1)}>&lt;</button>
           <div className="month-year">
-            <span className="month">{months[currentDate.getMonth()]}</span>
-            <span className="year">{currentDate.getFullYear()}</span>
+            {months[currentDate.getMonth()]} {currentDate.getFullYear()}
           </div>
           <button onClick={() => changeMonth(1)}>&gt;</button>
         </div>
 
-        <div className="calendar-months">
-          {months.map((m, i) => (
-            <span
-              key={m}
-              className={`month-select ${i === currentDate.getMonth() ? "active" : ""}`}
-              onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), i))}
-            >
-              {m}
-            </span>
-          ))}
-        </div>
-
         <div className="weekdays">
-          {weekdays.map((d) => (
-            <div key={d} className="weekday-label">
-              {d}
-            </div>
+          {weekdays.map((day) => (
+            <div key={day} className="weekday-label">{day}</div>
           ))}
         </div>
 
-        <div className="calendar-grid">{renderCalendarDays()}</div>
+        <div className="calendar-grid">
+          {renderCalendar()}
+        </div>
       </main>
     </div>
   );
