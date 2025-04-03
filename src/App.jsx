@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 
-// Page Components
+// Components
 import Header from './components/Header';
 import HeroVideo from './components/HeroVideo';
 import WelcomeSection from './components/WelcomeSection';
@@ -14,15 +14,16 @@ import CSSLoader from './CSSLoader';
 
 // Pages
 import HealthHistory from './HealthHistory';
-import CalendarBooking from './CalendarBooking'; // ✅ Correct!
+import CalendarBooking from './CalendarBooking';
 import Login from './Login';
 import BookNow from './BookNow';
 import NotFound404 from './404';
+import NewAppointment from './components/NewAppointment'; // ✅ Corrected and moved up
 
 function App() {
   return (
     <Router>
-      {/* <CSSLoader /> Uncomment if needed */}
+      {/* <CSSLoader /> Uncomment if you're using dynamic CSS switching */}
       <Links />
       <Routes>
         <Route
@@ -40,6 +41,7 @@ function App() {
         />
         <Route path="/health-history" element={<HealthHistory />} />
         <Route path="/calendar-booking" element={<CalendarBooking />} />
+        <Route path="/new-appointment" element={<NewAppointment />} /> {/* ✅ Added */}
         <Route path="/login" element={<Login />} />
         <Route path="/book-now" element={<BookNow />} />
         <Route path="*" element={<NotFound404 />} />

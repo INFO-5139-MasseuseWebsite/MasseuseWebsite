@@ -1,24 +1,195 @@
-.calendar-booking {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  
-  .booking-list {
-    list-style: none;
-    padding: 0;
-    margin-top: 20px;
-  }
-  
-  .booking-list li {
-    padding: 10px;
-    margin: 5px 0;
-    background: #e3f2fd;
-    border-radius: 6px;
-    font-size: 1rem;
-  }
-  
+.calendar-wrapper {
+  transform: scale(1.3);
+  transform-origin: top center;
+  max-width: 1300px;
+  display: flex;
+  width: 100%;
+  margin: 40px auto;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.calendar-left {
+  background-color: #007bff;
+  color: white;
+  width: 35%;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.date-large .number {
+  font-size: 96px;
+  font-weight: bold;
+}
+
+.date-large .weekday {
+  font-size: 22px;
+  text-transform: uppercase;
+}
+
+.event-section p {
+  margin: 20px 0 10px;
+  font-weight: bold;
+}
+
+.event-section ul {
+  padding-left: 20px;
+}
+
+.post-link {
+  text-decoration: underline dotted;
+  font-size: 14px;
+  display: inline-block;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.create-event {
+  margin-top: 30px;
+  border-top: 1px solid rgba(255,255,255,0.3);
+  padding-top: 12px;
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.plus {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.calendar-main {
+  flex: 1;
+  background: white;
+  padding: 20px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 10px;
+}
+
+.calendar-header button {
+  background: #007bff;
+  border: none;
+  color: white;
+  font-size: 18px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  min-width: 40px;
+}
+
+.month-year {
+  text-align: center;
+}
+
+.month {
+  font-size: 26px;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.year {
+  display: block;
+  font-size: 16px;
+  color: #666;
+}
+
+.calendar-months {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.month-select {
+  margin: 0 5px;
+  cursor: pointer;
+  color: #666;
+}
+
+.month-select.active {
+  color: #007bff;
+  font-weight: bold;
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-top: 20px;
+  text-align: center;
+  font-weight: bold;
+  color: #999;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.day {
+  background: #f4f4f4;
+  border-radius: 50%;
+  height: 42px;
+  line-height: 42px;
+  text-align: center;
+  font-weight: 500;
+  color: #333;
+  position: relative;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.day:hover {
+  background-color: #e1efff;
+}
+
+.day.selected {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+.day.disabled {
+  background-color: #eee;
+  color: #aaa;
+  cursor: not-allowed;
+  pointer-events: none;
+  position: relative;
+}
+
+.day.disabled .dot {
+  background-color: red;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.day .dot {
+  width: 5px;
+  height: 5px;
+  background-color: #0056b3;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.blank {
+  background: transparent;
+  cursor: default;
+}

@@ -11,10 +11,10 @@ const Header = () => {
 			<nav className="navbar">
 				<ul>
 					<li>
-					<Link to="/">Home</Link>
+						<Link to="/">Home</Link>
 					</li>
 					<li>
-					<Link to="/book-now">Find an RMT</Link> 
+						<Link to="/book-now">Find an RMT</Link>
 					</li>
 					<li className="dropdown">
 						<a href="#explore-section">Treatments</a>
@@ -24,7 +24,7 @@ const Header = () => {
 							<a href="#">Holistic</a>
 							<a href="#">Aromatherapy</a>
 							<a href="#">Acupuncture</a>
-							<a href="#">chiropractic-care</a>
+							<a href="#">Chiropractic Care</a>
 							<a href="#">Facial Care</a>
 							<a href="#">Hands / Feet</a>
 						</div>
@@ -35,6 +35,16 @@ const Header = () => {
 					<li>
 						<a href="#">About Us</a>
 					</li>
+
+					{/* ✅ Updated New Appointment with dropdown */}
+					<li className="dropdown">
+						<Link to="#">New Appointment</Link>
+						<div className="dropdown-content">
+							<Link to="/health-history">Health History Form</Link>
+							<Link to="/Calendar-Booking">Calendar</Link>
+						</div>
+					</li>
+
 					<li>
 						<Link to="/login">Login</Link>
 					</li>
