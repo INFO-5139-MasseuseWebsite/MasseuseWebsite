@@ -4,12 +4,11 @@ function Links() {
   return (
     <header>
       <nav>
-        {/* <Link to="/">Home</Link> */}
         <br />
         <Link to="/health-history">Health History</Link>
         <br />
-        {/* <Link to="/book-now">Book Now</Link>  */}
-
+        <Link to="/calendar-booking">Calendar Booking</Link> {/* ✅ Correct route */}
+        <br />
       </nav>
     </header>
   );
