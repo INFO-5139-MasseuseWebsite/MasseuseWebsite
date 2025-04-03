@@ -1,25 +1,44 @@
-import path from 'path'
-import http from 'http'
-import { addBooking, publicCancelBooking, getAvailableBookingsMonth, getRMTInfo, rmtConfirmAppointment, rmtRejectAppointment } from './database.mjs'
-import { authAdmin, authRMT, filterJson, parseJson } from './middleware.mjs'
-import checkType, { ARRAY_T, EMAIL, INTEGER, NULLABLE, STRING } from './formParser.mjs'
-import e from 'express'
-import { sendEmail } from './email.mjs'
-import { format } from 'date-fns'
+import path from 'path';
+import http from 'http';
+import { addBooking, publicCancelBooking, getAvailableBookingsMonth, getRMTInfo, rmtConfirmAppointment, rmtRejectAppointment, getAllBookedSlots } from './database.mjs';
+import { authAdmin, authRMT, filterJson, parseJson } from './middleware.mjs';
+import checkType, { ARRAY_T, EMAIL, INTEGER, NULLABLE, STRING } from './formParser.mjs';
+import e from 'express';
+import { sendEmail } from './email.mjs';
+import { format } from 'date-fns';
 
-// Node version requirement check
-const [major, minor, patch] = process.versions.node.split('.').map(Number)
+// Ensure the current Node.js version is 20.x.x
+const [major] = process.versions.node.split('.').map(Number);
 if (major !== 20) {
-    throw 'Node version must be 20.x.x'
+    throw new Error('Node version must be 20.x.x');
 }
 
-const PORT = process.env.PORT || 80
-const app = e()
+const PORT = process.env.PORT || 80;
+const app = e();
 
-// Blanket auth for public
-app.post('/api/public/:handle', filterJson, parseJson);
-app.post('/api/public/add-booking', (request, response) => {
+// In-memory storage for booked slots (for fallback)
+let memoryBookedSlots = [];
+
+// GET route to return all booked date-time slots
+app.get('/api/public/get-booked-dates', async (req, res) => {
+    try {
+        const allSlots = await getAllBookedSlots?.();
+        if (Array.isArray(allSlots)) {
+            res.status(200).json(allSlots);
+        } else {
+            res.status(200).json(memoryBookedSlots);
+        }
+    } catch (err) {
+        console.error('Failed to get booked slots:', err);
+        res.status(500).json([]);
+    }
+});
+
+// POST route to handle a new booking
+app.post('/api/public/add-booking', filterJson, parseJson, (request, response) => {
     const form = request.body;
+
+    // Validate request data types using checkType
     const [valid, data] = checkType(
         {
             rmtID: STRING,
@@ -31,16 +50,12 @@ app.post('/api/public/add-booking', (request, response) => {
                 firstName: STRING,
                 lastName: STRING,
                 email: EMAIL,
-                // give it a proper typing later
                 phoneNumber: STRING,
-                // if we are to actually store an address, it needs to be split up into proper fields
-                // this works as a placeholder for now though
                 address: NULLABLE(STRING),
                 occupation: NULLABLE(STRING),
                 dateOfBirth: NULLABLE(STRING),
                 recievedMassageBefore: NULLABLE(STRING),
                 referredByPractitioner: NULLABLE(STRING),
-                // this also needs to be split up if we are storing it
                 practitionerNameAddress: NULLABLE(STRING),
                 cardiovascularConditions: NULLABLE(ARRAY_T(STRING)),
                 cardiovascularHistory: NULLABLE(STRING),
@@ -73,7 +88,6 @@ app.post('/api/public/add-booking', (request, response) => {
                 surgeryNature: NULLABLE(STRING),
                 injuryDate: NULLABLE(STRING),
                 injuryNature: NULLABLE(STRING),
-
                 otherMedicalConditions: NULLABLE(STRING),
                 otherMedicalConditionsDetails: NULLABLE(STRING),
                 internalPinsWires: NULLABLE(STRING),
@@ -90,25 +104,42 @@ app.post('/api/public/add-booking', (request, response) => {
         form
     );
 
+    // If invalid, return 400 Bad Request
     if (!valid) {
-        response.status(400).type('plain').send('(400) Invalid Form')
-        return
+        response.status(400).type('plain').send('(400) Invalid Form');
+        return;
     }
 
-    (async () => {
-        const [success, bookingID] = await addBooking(data)
-        if (!success) {
-            response.status(400).type('plain').send(bookingID)
-            return
-        }
-        response.status(200).send()
+    // Construct a formatted booking slot string
+    const bookingSlot = `${data.year}-${String(data.month).padStart(2, '0')}-${String(data.day).padStart(2, '0')} ${String(data.hour).padStart(2, '0')}:00`;
 
-        // get target rmt data
-        const rmt = await getRMTInfo(data.rmtID)
-        // gets the first place of practice, even if it doesnt exist
-        // Need to handle 
-        const rmtAddress = rmt.placesOfPractice?.[0] ?? {}
-        const a = new Date(data.year, data.month, data.day, data.hour)
+    // Check if the slot is already booked
+    if (memoryBookedSlots.includes(bookingSlot)) {
+        response.status(409).json({ error: "Slot already booked" });
+        return;
+    }
+
+    // Store the slot in memory
+    memoryBookedSlots.push(bookingSlot);
+
+    (async () => {
+        // Attempt to add the booking using database function
+        const [success, bookingID] = await addBooking(data);
+        if (!success) {
+            response.status(400).type('plain').send(bookingID);
+            return;
+        }
+
+        response.status(200).send();
+
+        // Retrieve RMT (massage therapist) information
+        const rmt = await getRMTInfo(data.rmtID);
+        const rmtAddress = rmt.placesOfPractice?.[0] ?? {};
+
+        // Generate a JavaScript Date object for formatting
+        const a = new Date(data.year, data.month - 1, data.day, data.hour);
+
+        // Send confirmation email to client
         const clientEmail = sendEmail(data.form.email, 'Massage Appointment Scheduled', './email/clientConfirm.html', {
             rmtName: `${rmt.firstName} ${rmt.lastName}`,
             rmtAddressProvince: rmtAddress.province ?? rmtAddress.businessState,
@@ -117,115 +148,30 @@ app.post('/api/public/add-booking', (request, response) => {
             rmtAddressPhone: rmtAddress.phone,
             date: `${format(a, 'EEEE, MMMM do, yyyy')} at ${format(a, 'h:mm b')}`,
             bookingID: bookingID,
-        })
+        });
+
+        // Send confirmation email to the RMT if they have an email
         if (rmt.email) {
             await sendEmail(rmt.email, 'New Client Booked', './email/rmtConfirm.html', {
                 date: `${format(a, 'EEEE, MMMM do, yyyy')} at ${format(a, 'h:mm b')}`,
                 bookingID: bookingID,
-            })
+            });
         } else {
-            console.log(`RMT ${data.rmtID} does not have an email`)
+            console.log(`RMT ${data.rmtID} does not have an email`);
         }
-        // we wait to await so that the rmt confirmation email starts sending before we start spinning
-        await clientEmail
-    })()
-        .catch(e => {
-            console.error(e)
-            response.status(500).send()
-        })
-})
-app.post('/api/public/get-available-bookings', (request, response) => {
-    const [valid, form] = checkType({
-        rmtID: STRING,
-        year: INTEGER,
-        month: INTEGER
-    }, request.body)
-    if (!valid) {
-        console.log('(404)', form)
-        response.status(400).type('text').send('(404) Bad Request: Invalid types')
-        return
-    }
-    getAvailableBookingsMonth(form.rmtID, form.year, form.month)
-        .then(available => response.status(200).type('json').send(available))
-        .catch(err => response.status(err.status).type('text').send(err.message))
-})
-app.get('/api/public/cancel-booking', (request, response) => {
-    if (!request.query?.id) {
-        response.status(400).send('(400) No id')
-        return
-    }
-    publicCancelBooking(request.query.id)
-        .then(() => response.status(200).send('Appointment Successfully Canceled'))
-        .catch(e => {
-            console.error(e.serverError ?? e)
-            response.status(e.status ?? 500).send(e.clientError)
-        })
-})
 
-// Blanket auth for RMTs
-app.post('/api/rmt/:handle', authRMT, filterJson, parseJson)
-app.post('/api/rmt/dothing', (request, response) => {
-    console.log('Accessing dothing...')
-    response.status(200).send('Accessing dothing...')
-})
-app.post('/api/rmt/get-all-bookings', (request, response) => {
-    getAllBookingsRMT(response.locals.auth.rmtID)
-        .then(bookings => response.status(200).type('json').send(bookings))
-        .catch(err => {
-            console.log(err)
-            response.status(400).send()
-        })
-})
-app.post('/api/rmt/confirm-booking', (request, response) => {
-    const [valid, data] = checkType({
-        bookingID: STRING
-    }, request.body)
-    if (!valid) {
-        response.status(400).type('plain').send('(400) Invalid json')
-        return
-    }
-    rmtConfirmAppointment(response.locals.auth.rmtID, data.bookingID)
-        .then(() => response.status(200).send())
-        .catch(e => {
-            console.error(e.serverError)
-            response.status(e.statusCode ?? 500).type('plain').send(e.clientError)
-        })
-})
-app.post('/api/rmt/reject-booking', (request, response) => {
-    const [valid, data] = checkType({
-        bookingID: STRING,
-        reason: STRING,
-    }, request.body)
-    if (!valid) {
-        response.status(400).type('plain').send('(400) Invalid json')
-        return
-    }
-    rmtRejectAppointment(response.locals.auth.rmtID, data.bookingID, data.reason)
-        .then(() => response.status(200).send())
-        .catch(e => {
-            console.error(e.serverError)
-            response.status(e.statusCode ?? 500).type('plain').send(e.clientError)
-        })
-})
-app.post('/api/rmt/:handle', (request, response) => response.status(400).send())
+        await clientEmail;
+    })().catch(e => {
+        console.error(e);
+        response.status(500).send();
+    });
+});
 
-// Blanket auth for Admins
-app.post('/api/admin/:handle', authAdmin, filterJson, parseJson)
-app.post('/api/admin/dothing', (request, response, next) => {
-    console.log('Accessing dothing...')
-    response.status(200).send()
-})
-app.post('/api/admin/:handle', (request, response) => response.status(400).send())
+// Serve static files from the dist directory
+app.use(e.static(path.resolve(import.meta.dirname, '../dist')));
 
-// This makes *everything* within the dist folder public.
-app.use(e.static(path.resolve(import.meta.dirname, '../dist')))
-// Allows React Routing to work properly
-app.get('*', (req, res) => res.sendFile(path.resolve(import.meta.dirname, '../dist/index.html')))
+// Serve index.html for all unmatched routes (for React Router support)
+app.get('*', (req, res) => res.sendFile(path.resolve(import.meta.dirname, '../dist/index.html')));
 
-// for testing purposes, use both http and https
-// when https testing is done (mainly need a certificate), remove the http
+// Start HTTP server
 http.createServer(app).listen(PORT, () => console.log(`Server listening on port ${PORT}`));
-// certificate information goes here
-const https_credentials = {}
-// https.createServer(https_credentials, app).listen(443, () => console.log('Server listening on port 443'));
-

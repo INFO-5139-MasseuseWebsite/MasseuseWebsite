@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+const API_BASE = "http://localhost:80"; // ✅ Change this if your backend uses another port
+
 const months = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
@@ -18,35 +20,30 @@ const CalendarBooking = () => {
     email: "",
     phoneNumber: ""
   });
-  const [bookedSlots, setBookedSlots] = useState([]); // ["2025-04-04 10:00"]
+  const [bookedSlots, setBookedSlots] = useState([]);
   const [statusMessage, setStatusMessage] = useState("");
   const [fetchError, setFetchError] = useState(null);
 
   useEffect(() => {
     const fetchBooked = async () => {
       try {
-        const res = await axios.get("/api/public/get-booked-dates");
+        const res = await axios.get(`${API_BASE}/api/public/get-booked-dates`);
         const data = res?.data;
-        let slots = [];
-
         if (Array.isArray(data)) {
-          slots = data;
-        } else if (Array.isArray(data?.bookedDates)) {
-          slots = data.bookedDates;
+          setBookedSlots(data);
         }
-
-        setBookedSlots(slots);
       } catch (err) {
         console.error("Error fetching booked dates", err);
-        setFetchError("Unable to load booked slots. Please try again later.");
+        setFetchError("Could not load booked slots.");
       }
     };
-
     fetchBooked();
   }, []);
 
   const formatDate = (dateObj) => {
-    return dateObj ? `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, "0")}-${String(dateObj.getDate()).padStart(2, "0")}` : "";
+    return dateObj
+      ? `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, "0")}-${String(dateObj.getDate()).padStart(2, "0")}`
+      : "";
   };
 
   const changeMonth = (offset) => {
@@ -74,10 +71,12 @@ const CalendarBooking = () => {
     }
 
     try {
-      await axios.post("/api/public/add-booking", {
+      await axios.post(`${API_BASE}/api/public/add-booking`, {
         rmtID: "debug",
-        date: dateStr,
-        time: selectedTime,
+        year: selectedDate.getFullYear(),
+        month: selectedDate.getMonth() + 1,
+        day: selectedDate.getDate(),
+        hour: parseInt(selectedTime.split(":")[0]),
         form
       });
 
@@ -148,9 +147,7 @@ const CalendarBooking = () => {
     <div className="calendar-wrapper">
       <aside className="calendar-left">
         <div className="date-large">
-          <div className="number">
-            {selectedDate ? selectedDate.getDate() : "--"}
-          </div>
+          <div className="number">{selectedDate ? selectedDate.getDate() : "--"}</div>
           <div className="weekday">
             {selectedDate ? selectedDate.toLocaleDateString("en-US", { weekday: "long" }) : "No date selected"}
           </div>
