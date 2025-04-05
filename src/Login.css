@@ -9,6 +9,24 @@
 	
 }
 
+@media (max-width: 1024) {
+	.login-container {
+	  background-color: #f9f9f9;
+	  padding: 20px 20px;
+	  text-align: center;
+	  margin-top: -400px;
+	}
+  }
+  
+  @media (max-width: 768px) {
+	.login-container {
+	  background-color: #f9f9f9;
+	  padding: 20px 20px;
+	  text-align: center;
+	  margin-top: -170px;
+	}
+  }
+
 .login-container h2 {
 	font-size: 36px;
 	color: #4B3621; 
