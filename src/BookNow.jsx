@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Logo from './assets/logo/LogoCMTO.svg';
-import TableImage from './assets/images/table.jpeg';
+import Header from './components/Header';
+import HeroImage from './components/HeroImage';
 import './BookNow.css';
 
 const BookNow = () => {
@@ -18,15 +18,10 @@ const BookNow = () => {
         : 'Enter name of the corporation';
 
     return (
+        <div>
+        <HeroImage />
+        <Header />
         <div className="book-now-content">
-            <div className="logo-container">
-                <div className="logo">
-                    <img src={Logo} alt="Logo" />
-                </div>
-            </div>
-
-            <hr className="logo-hr" />
-
             <div className="book-with-us-section">
                 <h1>Book with Us!</h1>
                 <p>
@@ -61,11 +56,6 @@ const BookNow = () => {
                     <br />
                     View the <a href="https://www.cmto.com/glossary-public-register-terms/" target="_blank" rel="noopener noreferrer">glossary of terms</a> used in the public register.
                 </p>
-            </div>
-
-
-            <div className="table-image">
-                <img src={TableImage} alt="Table" />
             </div>
 
             <div className="search-form">
@@ -223,6 +213,7 @@ const BookNow = () => {
                 <p>If you're unable to find what you're looking for or need further assistance, please contact the Registration Services Department at <a href="mailto:registrationservices@cmto.com">registrationservices@cmto.com</a>.</p>
                 <br /> <br /> <br /> <br />
             </div>
+        </div>
         </div>
 
     );

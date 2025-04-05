@@ -267,19 +267,20 @@ body {
   }
 }
 
-
-/* Video Section */
-.hero-video {
+/* Background Section */
+.hero-image {
   position: relative;
   width: 100%;
   height: 550px;
   overflow: hidden;
 }
 
-.video-bg {
+.image-bg {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   position: fixed;
   top: 0;
   left: 0;
@@ -287,7 +288,7 @@ body {
 }
 
 @media (max-width: 768px) {
-  .hero-video {
+  .hero-image {
     height: 400px;
   }
 }
@@ -297,7 +298,11 @@ body {
   background-color: #f9f9f9;
   padding: 20px 20px;
   text-align: center;
-  margin-top: -400px; 
+  margin-top: -400px;
+  max-width: 1308px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 8px; 
 }
 
 .welcome h2 {
@@ -401,7 +406,7 @@ body {
   font-size: 16px;
   color: #4B3621;
   margin-bottom: 15px;
-  text-align: left;
+  text-align: justify;
 }
 
 .price {

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './HealthHistory.css';
+import Header from './components/Header';
+import MassageWall from './components/HeroImage'
 
 const HealthHistory = () => {
   const [formData, setFormData] = useState({
@@ -131,6 +133,10 @@ const HealthHistory = () => {
   };
 
   return (
+    <div>
+      <MassageWall />
+      <Header />
+    <div className="health-history-content">
     <div className="health-history-form">
       <h1>Health History Form</h1>
       <p>
@@ -880,8 +886,10 @@ const HealthHistory = () => {
           </label>
         </div>
 
-        <button type="submit">Submit</button>
+        <button type="submit" className="submit-button" >Submit</button>
       </form>
+    </div>
+    </div>
     </div>
   );
 };
