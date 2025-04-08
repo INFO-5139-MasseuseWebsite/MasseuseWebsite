@@ -2,11 +2,12 @@ import path from 'path'
 import http from 'http'
 import { addBooking, publicCancelBooking, getAvailableBookingsMonth, getRMTInfo, rmtConfirmAppointment, rmtRejectAppointment } from './database.mjs'
 import { authAdmin, authRMT, filterJson, parseJson } from './middleware.mjs'
-import checkType, { ARRAY_T, EMAIL, INTEGER, NULLABLE, STRING } from './formParser.mjs'
+import checkType, { ARRAY_T, BOOLEAN, DEFAULT, EMAIL, INTEGER, NULLABLE, STRING } from './formParser.mjs'
 import e from 'express'
 import { sendEmail } from './email.mjs'
 import { format } from 'date-fns'
 import cors from 'cors';
+import axios from 'axios';
 
 // Node version requirement check
 const [major, minor, patch] = process.versions.node.split('.').map(Number);
@@ -159,6 +160,67 @@ app.post('/api/public/get-available-bookings', (request, response) => {
     getAvailableBookingsMonth(form.rmtID, form.year, form.month)
         .then(available => response.status(200).type('json').send(available))
         .catch(err => response.status(err.status).type('text').send(err.message))
+})
+
+
+
+
+app.post('/api/public/get-rmt', (request, response) => {
+    const [valid, data] = checkType({
+        rmtID: STRING
+    }, request.body)
+    if (!valid) {
+        response.status(400).type('text').send('(400) Invalid json')
+        return
+    }
+    getRMTInfo(data.rmtID)
+        .then(rmtData => {
+            if (rmtData) response.status(200).type('json').send(rmtData)
+            else response.status(404).type('text').send('(404) No rmt found')
+        })
+        .catch(err => {
+            console.error(err)
+            response.status(500).type('text').send()
+        })
+})
+app.post('/api/public/search-rmt', (request, response) => {
+    const [valid, data] = checkType({
+        keyword: STRING,
+        skip: INTEGER,
+        take: DEFAULT(INTEGER, 10),
+        authorizedToPractice: DEFAULT(BOOLEAN, true),
+        acupunctureAuthorized: DEFAULT(BOOLEAN, true),
+        gender: DEFAULT(STRING, 'all'),
+        registrationStatus: DEFAULT(STRING, 'all'),
+        city: DEFAULT(STRING, 'all'),
+        language: DEFAULT(STRING, 'all'),
+        sortOrder: DEFAULT(STRING, 'asc'),
+        sortField: DEFAULT(STRING, 'lastname'),
+    }, request.body)
+    if (!valid) {
+        response.status(400).type('text').send('(400) Invalid json')
+        return
+    }
+    axios.get('https://cmto.ca.thentiacloud.net/rest/public/profile/search/', {
+        params: {
+            keyword: data.keyword,
+            skip: data.skip,
+            take: data.take,
+            authorizedToPractice: data.authorizedToPractice ? 1 : 0,
+            acupunctureAuthorized: data.acupunctureAuthorized ? 1 : 0,
+            gender: data.gender,
+            registrationStatus: data.registrationStatus,
+            city: data.city,
+            language: data.language,
+            sortOrder: data.sortOrder,
+            sortField: data.sortField
+        }
+    })
+    .then(res=>response.status(res.status).type('json').send(res.data))
+    .catch(err=> {
+        console.error(err)
+        response.status(500).send()
+    })
 })
 app.get('/api/public/cancel-booking', (request, response) => {
     if (!request.query?.id) {

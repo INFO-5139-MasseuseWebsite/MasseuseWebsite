@@ -1,8 +1,49 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Logo from '../assets/logo/LogoCMTO.svg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const Header = () => {
+	const navigate = useNavigate();
+	const location = useLocation();
+
+	const handleAnchorClick = (sectionId, e) => {
+		e.preventDefault();
+
+		if (location.pathname !== '/') {
+			navigate('/', { state: { scrollTo: sectionId } });
+		} else {
+			scrollToSection(sectionId);
+		}
+	};
+
+	const scrollToSection = (sectionId) => {
+		const section = document.getElementById(sectionId);
+		if (section) {
+			section.scrollIntoView({
+				behavior: 'smooth',
+				block: 'start'
+			});
+		}
+	};
+
+	useEffect(() => {
+		if (location.pathname === '/' && location.state?.scrollTo) {
+			const sectionId = location.state.scrollTo;
+
+			const tryScroll = () => {
+				const section = document.getElementById(sectionId);
+				if (section) {
+					section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+					navigate('.', { state: {}, replace: true });
+				} else {
+					requestAnimationFrame(tryScroll);
+				}
+			};
+
+			tryScroll();
+		}
+	}, [location, navigate]);
+
 	return (
 		<header className="header">
 			<div className="logo">
@@ -11,29 +52,41 @@ const Header = () => {
 			<nav className="navbar">
 				<ul>
 					<li>
-					<Link to="/">Home</Link>
+						<Link to="/">Home</Link>
 					</li>
 					<li>
-					<Link to="/book-now">Find an RMT</Link> 
+						<Link to="/book-now">Find an RMT</Link>
 					</li>
 					<li className="dropdown">
-						<a href="#explore-section">Treatments</a>
+						<Link
+							to="/#explore-section"
+							onClick={(e) => handleAnchorClick('explore-section', e)}
+						>
+							Treatments
+						</Link>
 						<div className="dropdown-content">
-							<a href="#">Massages</a>
-							<a href="#">Deep Tissue</a>
-							<a href="#">Holistic</a>
-							<a href="#">Aromatherapy</a>
-							<a href="#">Acupuncture</a>
-							<a href="#">chiropractic-care</a>
-							<a href="#">Facial Care</a>
-							<a href="#">Hands / Feet</a>
+							{['Massages', 'Deep Tissue', 'Holistic', 'Aromatherapy', 'Acupuncture',
+								'Chiropractic Care', 'Facial Care', 'Hands/Feet'].map((treatment) => (
+									<Link
+										key={treatment}
+										to="/#explore-section"
+										onClick={(e) => handleAnchorClick('explore-section', e)}
+									>
+										{treatment}
+									</Link>
+								))}
 						</div>
 					</li>
 					<li>
-						<a href="#map-section">Hours/Location</a>
+						<Link
+							to="/#map-section"
+							onClick={(e) => handleAnchorClick('map-section', e)}
+						>
+							Hours/Location
+						</Link>
 					</li>
 					<li>
-						<a href="#">About Us</a>
+						<Link to="/about">About Us</Link>
 					</li>
 					<li>
 						<Link to="/login">Login</Link>

@@ -9,6 +9,10 @@ export const AND = (typeA, typeB) => v => {
     if (!valid) return [valid, value]
     return checkType(typeB, value)
 }
+export const DEFAULT = (type, _default) => v => {
+    const [valid, value] = checkType(type, v)
+    return [true, valid ? value : _default]
+}
 
 // Modifier Constructors
 export const NULLABLE = type => OR(NULL, type)
@@ -17,7 +21,7 @@ export const ARRAY_T = type => AND(ARRAY, v => {
     const vv = v.map(value => checkType(type, value)).filter(([valid, value]) => valid).map(([valid, value]) => value)
     return [vv.length === v.length, vv]
 })
-export const VECTOR_N = length => AND(ARRAY_T(NUMBER), v=>[v.length === length, v])
+export const VECTOR_N = length => AND(ARRAY_T(NUMBER), v => [v.length === length, v])
 
 // Primitives
 export const NULL = v => [v == undefined, null]
