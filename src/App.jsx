@@ -36,26 +36,6 @@ function App() {
 		<Router>
 			{/* <CSSLoader /> */}
 			<Links />
-
-      <Routes>
-        <Route path="/" element={
-          <>
-            <Header />
-            <HeroImage />
-            <WelcomeSection />
-            <TreatmentsSection />
-            <MapSection />
-            <Footer />
-          </>
-        } />
-        <Route path="/health-history" element={<HealthHistory />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/book-now" element={<BookNow />} /> 
-        <Route path='*' element={<NotFound404 />} />
-      </Routes>
-    </Router>
-  );
-
 			<Routes>
 				<Route
 					path="/"
