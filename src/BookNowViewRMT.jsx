@@ -64,10 +64,10 @@ const BookNowViewRMT = () => {
                         <p>{person.gender || 'N/A'}</p>
 
                         <p><strong>Initial Registration Date</strong></p>
-                        <p>{formatDate(person.registrationDate)}</p>
+                        <p>{formatDate(person.initialRegistrationDate)}</p>
 
                         <p><strong>Class of Registration</strong></p>
-                        <p>{person.registrationClass || 'N/A'}</p>
+                        <p>{person.registrationCategory	 || 'N/A'}</p>
 
                         <p><strong>Status</strong></p>
                         <p>{person.registrationStatus || 'N/A'}</p>
