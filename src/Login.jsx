@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import './Login.css';
 import { auth } from './firebaseConfig';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from './contexts/AuthContext';
 
 const Login = () => {
 	const [email, setEmail] = useState('');
@@ -11,10 +12,20 @@ const Login = () => {
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
+	const { currentUser } = useAuth();
+
+	useEffect(() => {
+		// If user is already logged in, redirect to view-appointment
+		if (currentUser) {
+			navigate('../view-appointment');
+		}
+	}, [currentUser, navigate]);
 
 	const loginWithEmail = async (email, password) => {
 		setLoading(true);
 		try {
+			// Set persistence to LOCAL before signing in
+			await setPersistence(auth, browserLocalPersistence);
 			const userCredential = await signInWithEmailAndPassword(auth, email, password);
 			console.log('User logged in:', userCredential.user);
 			// Reset form
