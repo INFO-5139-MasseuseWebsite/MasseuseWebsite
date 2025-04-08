@@ -3,12 +3,14 @@ import Header from './components/Header';
 import './Login.css';
 import { auth } from './firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
+	const navigate = useNavigate();
 
 	const loginWithEmail = async (email, password) => {
 		setLoading(true);
@@ -18,6 +20,8 @@ const Login = () => {
 			// Reset form
 			setEmail('');
 			setPassword('');
+			// Navigate to ViewAppointment page
+			navigate('../view-appointment');
 		} catch (err) {
 			handleError(err);
 		} finally {

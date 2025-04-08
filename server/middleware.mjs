@@ -1,8 +1,8 @@
-import bodyParser from "body-parser"
-import mime from 'mime'
-import { authenticateToken } from "./firebase.mjs"
+import bodyParser from 'body-parser';
+import mime from 'mime-types';
+import { authenticateToken } from './firebase.mjs';
 
-export const parseJson = bodyParser.json({ type: ['json', 'application/json'] })
+export const parseJson = bodyParser.json({ type: ['json', 'application/json'] });
 
 export function filterJson(request, response, next) {
     if ((mime.lookup(request.headers['content-type'] ?? '') || request.headers['content-type']) !== 'application/json') {
