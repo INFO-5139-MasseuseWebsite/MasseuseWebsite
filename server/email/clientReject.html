@@ -1,0 +1,28 @@
+<html>
+
+<head>
+    <style>
+        $ {
+            stylesheet
+        }
+    </style>
+</head>
+
+<body class="body">
+    <div class="center container">
+        <h1>Appointment Rejected by RMT</h1>
+        <p>This email is in regards to your appointment scheduled with ${rmtName} at ${rmtAddressStreet}, ${rmtAddressCity}, ${rmtAddressProvince} on ${date}</p>
+        <p>The RMT has gone over your submitted form and has rejected your appointment.</p>
+        <p>The RMT has left the following reason for the rejection:</p>
+        <br/>
+        <p>${reason}</p>
+        <br/>
+        <p>If you want to contact the RMT for clarification, please call ${rmtAddressPhone}.</p>
+        <div class="footer">
+            <p>&copy; 2025 CMTO. All Rights Reserved.</p>
+            <p>Sent at ${timestamp}</p>
+        </div>
+    </div>
+</body>
+
+</html>
