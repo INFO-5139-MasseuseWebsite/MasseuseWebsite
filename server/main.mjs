@@ -1,12 +1,3 @@
-import path from 'path';
-import http from 'http';
-import https from 'https';
-import { addBooking, cancelBooking, getAvailableBookingsMonth, getBooking, getRMTInfo, getRMTIDFromFirebaseID, getAllBookingsRMT } from './database.mjs';
-import { authAdmin, authRMT, filterJson, parseJson } from './middleware.mjs';
-import checkType, { ARRAY_T, EMAIL, INTEGER, NULLABLE, STRING } from './formParser.mjs';
-import e from 'express';
-import cors from 'cors';
-import { sendEmail } from './email.js'
 import path from 'path'
 import http from 'http'
 import { addBooking, publicCancelBooking, getAvailableBookingsMonth, getRMTInfo, rmtConfirmAppointment, rmtRejectAppointment } from './database.mjs'
@@ -15,6 +6,7 @@ import checkType, { ARRAY_T, EMAIL, INTEGER, NULLABLE, STRING } from './formPars
 import e from 'express'
 import { sendEmail } from './email.mjs'
 import { format } from 'date-fns'
+import cors from 'cors';
 
 // Node version requirement check
 const [major, minor, patch] = process.versions.node.split('.').map(Number);
@@ -198,13 +190,6 @@ app.post('/api/rmt/get-all-bookings', (request, response) => {
 		});
 });
 app.post('/api/rmt/:handle', (request, response) => response.status(400).send());
-    getAllBookingsRMT(response.locals.auth.rmtID)
-        .then(bookings => response.status(200).type('json').send(bookings))
-        .catch(err => {
-            console.log(err)
-            response.status(400).send()
-        })
-})
 app.post('/api/rmt/confirm-booking', (request, response) => {
     const [valid, data] = checkType({
         bookingID: STRING
