@@ -1,3 +1,13 @@
+import path from 'path';
+import http from 'http';
+import https from 'https';
+import { addBooking, cancelBooking, getAvailableBookingsMonth, getBooking, getRMTInfo, getRMTIDFromFirebaseID, getAllBookingsRMT } from './database.mjs';
+import { authAdmin, authRMT, filterJson, parseJson } from './middleware.mjs';
+import checkType, { ARRAY_T, EMAIL, INTEGER, NULLABLE, STRING } from './formParser.mjs';
+import e from 'express';
+import cors from 'cors';
+import { sendEmail } from './email.js'
+
 import path from 'path'
 import http from 'http'
 import { addBooking, publicCancelBooking, getAvailableBookingsMonth, getRMTInfo, rmtConfirmAppointment, rmtRejectAppointment } from './database.mjs'
@@ -5,16 +15,27 @@ import { authAdmin, authRMT, filterJson, parseJson } from './middleware.mjs'
 import checkType, { ARRAY_T, EMAIL, INTEGER, NULLABLE, STRING } from './formParser.mjs'
 import e from 'express'
 import { sendEmail } from './email.mjs'
+
 import { format } from 'date-fns'
 
 // Node version requirement check
-const [major, minor, patch] = process.versions.node.split('.').map(Number)
+const [major, minor, patch] = process.versions.node.split('.').map(Number);
 if (major !== 20) {
-    throw 'Node version must be 20.x.x'
+	throw 'Node version must be 20.x.x';
 }
 
-const PORT = process.env.PORT || 80
-const app = e()
+const PORT = process.env.PORT || 80;
+const app = e();
+
+app.use(
+	cors({
+		origin: 'http://localhost:5173',
+		methods: ['GET', 'POST', 'OPTIONS'],
+		allowedHeaders: ['Content-Type', 'Authorization'],
+	})
+);
+
+app.use(e.json());
 
 // Blanket auth for public
 app.post('/api/public/:handle', filterJson, parseJson);
@@ -163,12 +184,23 @@ app.get('/api/public/cancel-booking', (request, response) => {
 })
 
 // Blanket auth for RMTs
-app.post('/api/rmt/:handle', authRMT, filterJson, parseJson)
+app.post('/api/rmt/:handle', authRMT, filterJson, parseJson);
 app.post('/api/rmt/dothing', (request, response) => {
-    console.log('Accessing dothing...')
-    response.status(200).send('Accessing dothing...')
-})
+	console.log('Accessing dothing...');
+	response.status(200).send('Accessing dothing...');
+});
 app.post('/api/rmt/get-all-bookings', (request, response) => {
+
+	console.log('Response', response);
+	console.log('App post rmt ID: ', response.locals.auth.rmtID);
+	getAllBookingsRMT(response.locals.auth.rmtID)
+		.then((bookings) => response.status(200).type('json').send(bookings))
+		.catch((err) => {
+			console.log(err);
+			response.status(400).send();
+		});
+});
+app.post('/api/rmt/:handle', (request, response) => response.status(400).send());
     getAllBookingsRMT(response.locals.auth.rmtID)
         .then(bookings => response.status(200).type('json').send(bookings))
         .catch(err => {
@@ -210,12 +242,12 @@ app.post('/api/rmt/reject-booking', (request, response) => {
 app.post('/api/rmt/:handle', (request, response) => response.status(400).send())
 
 // Blanket auth for Admins
-app.post('/api/admin/:handle', authAdmin, filterJson, parseJson)
+app.post('/api/admin/:handle', authAdmin, filterJson, parseJson);
 app.post('/api/admin/dothing', (request, response, next) => {
-    console.log('Accessing dothing...')
-    response.status(200).send()
-})
-app.post('/api/admin/:handle', (request, response) => response.status(400).send())
+	console.log('Accessing dothing...');
+	response.status(200).send();
+});
+app.post('/api/admin/:handle', (request, response) => response.status(400).send());
 
 // This makes *everything* within the dist folder public.
 app.use(e.static(path.resolve(import.meta.dirname, '../dist')))
@@ -226,6 +258,5 @@ app.get('*', (req, res) => res.sendFile(path.resolve(import.meta.dirname, '../di
 // when https testing is done (mainly need a certificate), remove the http
 http.createServer(app).listen(PORT, () => console.log(`Server listening on port ${PORT}`));
 // certificate information goes here
-const https_credentials = {}
+const https_credentials = {};
 // https.createServer(https_credentials, app).listen(443, () => console.log('Server listening on port 443'));
-

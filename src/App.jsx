@@ -13,8 +13,9 @@ import Links from './Links';
 import CSSLoader from './CSSLoader';
 import NotFound404 from './404';
 import Login from './Login';
-import BookNow from './BookNow'; 
-
+import BookNow from './BookNow';
+import ViewAppointment from './ViewAppointment';
+import CreateRMTAccount from './CreateRMTAccount';
 
 // function App() {
 //   return (
@@ -32,30 +33,34 @@ import BookNow from './BookNow';
 // export default App;
 
 function App() {
-  return (
-    <Router>
-      {/* <CSSLoader /> */}
-      <Links />
+	return (
+		<Router>
+			{/* <CSSLoader /> */}
+			<Links />
 
-
-      <Routes>
-        <Route path="/" element={
-          <>
-            <Header />
-            <HeroVideo />
-            <WelcomeSection />
-            <TreatmentsSection />
-            <MapSection />
-            <Footer />
-          </>
-        } />
-        <Route path="/health-history" element={<HealthHistory />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/book-now" element={<BookNow />} /> 
-        <Route path='*' element={<NotFound404 />} />
-      </Routes>
-    </Router>
-  );
+			<Routes>
+				<Route
+					path="/"
+					element={
+						<>
+							<Header />
+							<HeroVideo />
+							<WelcomeSection />
+							<TreatmentsSection />
+							<MapSection />
+							<Footer />
+						</>
+					}
+				/>
+				<Route path="/health-history" element={<HealthHistory />} />
+				<Route path="/login" element={<Login />} />
+				<Route path="/book-now" element={<BookNow />} />
+				<Route path="/view-appointment" element={<ViewAppointment />} />
+				<Route path="/create-rmt-account" element={<CreateRMTAccount />} />
+				<Route path="*" element={<NotFound404 />} />
+			</Routes>
+		</Router>
+	);
 }
 
 export default App;
