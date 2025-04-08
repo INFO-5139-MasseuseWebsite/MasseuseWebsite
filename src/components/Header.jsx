@@ -1,8 +1,23 @@
 import React from 'react';
 import Logo from '../assets/logo/LogoCMTO.svg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { getAuth, signOut } from 'firebase/auth';
 
 const Header = () => {
+	const { currentUser } = useAuth();
+	const navigate = useNavigate();
+
+	const handleLogout = async () => {
+		try {
+			const auth = getAuth();
+			await signOut(auth);
+			navigate('/');
+		} catch (error) {
+			console.error('Error logging out:', error);
+		}
+	};
+
 	return (
 		<header className="header">
 			<div className="logo">
@@ -11,10 +26,10 @@ const Header = () => {
 			<nav className="navbar">
 				<ul>
 					<li>
-					<Link to="/">Home</Link>
+						<Link to="/">Home</Link>
 					</li>
 					<li>
-					<Link to="/book-now">Find an RMT</Link> 
+						<Link to="/book-now">Find an RMT</Link>
 					</li>
 					<li className="dropdown">
 						<a href="#explore-section">Treatments</a>
@@ -36,8 +51,19 @@ const Header = () => {
 						<a href="#">About Us</a>
 					</li>
 					<li>
-						<Link to="/login">Login</Link>
+						{currentUser ? (
+							<a href="#" onClick={handleLogout} style={{ cursor: 'pointer' }}>
+								Logout
+							</a>
+						) : (
+							<Link to="/login">Login</Link>
+						)}
 					</li>
+					{currentUser && (
+						<li>
+							<Link to="/view-appointment">My Appointments</Link>
+						</li>
+					)}
 				</ul>
 			</nav>
 		</header>
