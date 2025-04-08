@@ -26,11 +26,11 @@ const ViewAppointment = () => {
 							Authorization: `Bearer ${token}`,
 						},
 					});
-
 					if (!response.ok) {
 						throw new Error(`Failed to fetch bookings: ${response.statusText}`);
 					}
 
+					
 					const data = await response.json();
 					setBookings(data);
 					console.log('Bookings:', data);
@@ -46,6 +46,8 @@ const ViewAppointment = () => {
 
 		getTokenAndFetchBookings();
 	}, [auth]);
+
+
 
 	const formatDateTime = (booking) => {
 		const { year, month, day, hour } = booking;
