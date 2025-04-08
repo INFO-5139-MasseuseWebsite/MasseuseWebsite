@@ -7,6 +7,7 @@ import e from 'express'
 import { sendEmail } from './email.mjs'
 import { format } from 'date-fns'
 import cors from 'cors';
+import axios from 'axios';
 
 // Node version requirement check
 const [major, minor, patch] = process.versions.node.split('.').map(Number);

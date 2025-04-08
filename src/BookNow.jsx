@@ -346,9 +346,9 @@ const BookNow = () => {
                                     <label>Gender</label>
                                     <select value={gender} onChange={(e) => setGender(e.target.value)}>
                                         <option value="">Select one...</option>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
-                                        <option value="Non-Binary">X</option>
+                                        <option value="60914e93204efc01ac067252">Male</option>
+                                        <option value="60914e9987debc15c63d12ed">Female</option>
+                                        <option value="6091f2df87debc15c63d150e">X</option>
                                     </select>
                                 </div>
 
