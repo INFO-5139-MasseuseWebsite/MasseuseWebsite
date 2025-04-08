@@ -7,7 +7,6 @@ import checkType, { ARRAY_T, EMAIL, INTEGER, NULLABLE, STRING } from './formPars
 import e from 'express';
 import cors from 'cors';
 import { sendEmail } from './email.js'
-
 import path from 'path'
 import http from 'http'
 import { addBooking, publicCancelBooking, getAvailableBookingsMonth, getRMTInfo, rmtConfirmAppointment, rmtRejectAppointment } from './database.mjs'
@@ -15,7 +14,6 @@ import { authAdmin, authRMT, filterJson, parseJson } from './middleware.mjs'
 import checkType, { ARRAY_T, EMAIL, INTEGER, NULLABLE, STRING } from './formParser.mjs'
 import e from 'express'
 import { sendEmail } from './email.mjs'
-
 import { format } from 'date-fns'
 
 // Node version requirement check
@@ -190,7 +188,6 @@ app.post('/api/rmt/dothing', (request, response) => {
 	response.status(200).send('Accessing dothing...');
 });
 app.post('/api/rmt/get-all-bookings', (request, response) => {
-
 	console.log('Response', response);
 	console.log('App post rmt ID: ', response.locals.auth.rmtID);
 	getAllBookingsRMT(response.locals.auth.rmtID)
