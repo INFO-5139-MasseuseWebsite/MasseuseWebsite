@@ -50,6 +50,17 @@ const Header = () => {
 					<li>
 						<a href="#">About Us</a>
 					</li>
+					{currentUser && (
+						<li className="dropdown">
+							<a href="#" style={{ cursor: 'pointer' }}>
+								My Appointments
+							</a>
+							<div className="dropdown-content">
+								<Link to="/view-appointment">View Appointments</Link>
+								<Link to="/manage-bookings">Manage Appointments</Link>
+							</div>
+						</li>
+					)}
 					<li>
 						{currentUser ? (
 							<a href="#" onClick={handleLogout} style={{ cursor: 'pointer' }}>
@@ -59,11 +70,6 @@ const Header = () => {
 							<Link to="/login">Login</Link>
 						)}
 					</li>
-					{currentUser && (
-						<li>
-							<Link to="/view-appointment">My Appointments</Link>
-						</li>
-					)}
 				</ul>
 			</nav>
 		</header>

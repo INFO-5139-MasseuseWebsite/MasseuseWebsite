@@ -1,6 +1,6 @@
 .manage-bookings-container {
 	max-width: 1200px;
-	margin: 2rem auto;
+	margin: 100px auto;
 	padding: 20px;
 }
 
@@ -131,4 +131,19 @@
 	border-radius: 4px;
 	margin-bottom: 20px;
 	text-align: center;
+}
+
+/* Ensure header is consistent with other pages */
+.header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	background-color: white;
+	z-index: 1000;
+}
+
+/* Add padding to body to account for fixed header */
+body {
+	padding-top: 90px;
 }
