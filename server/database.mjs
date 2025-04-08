@@ -2,6 +2,10 @@
 
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
+import { sendEmail } from './email.mjs';
+import { format } from 'date-fns';
+
 
 const PANTRY_ID = process.env.PANTRY_ID
 if (!PANTRY_ID)
@@ -43,6 +47,7 @@ export async function addBooking(data) {
                 hour: data.hour,
                 confirmed: false,
                 canceled: false,
+                reject: null,
             }
         }
     })
@@ -179,7 +184,7 @@ export async function getEmailCredentials() {
     }
 }
 
-export async function getBooking(bookingID) {
+export async function getBookingSearch(bookingID) {
     const result = await axios.get(DB + 'rmt_booking')
     console.log(bookingID)
     let data = null
@@ -195,12 +200,27 @@ export async function getBooking(bookingID) {
     return data
 }
 
-export async function cancelBooking(bookingID) {
-    const [booking, rmtID] = await getBooking(bookingID) ?? []
+export async function getBookingExact(rmtID, bookingID) {
+    const result = await axios.get(DB + 'rmt_booking')
+    return result.data[rmtID]?.[bookingID] ?? null
+}
+
+export async function publicCancelBooking(bookingID) {
+    const [booking, rmtID] = await getBookingSearch(bookingID) ?? []
     if (!booking) throw {
         serverError: `Booking with id ${bookingID} doesn't exist`,
         clientError: '(404) Page Not Found',
         status: 404,
+    }
+    if (booking.canceled) throw {
+        serverError: `Booking with id ${bookingID} is already canceled`,
+        clientError: '(404) Page Not Found',
+        status: 404,
+    }
+    if (booking.confirmed) throw {
+        serverError: `Booking with id ${bookingID} is already confirmed by the rmt and cannot be calceled`,
+        clientError: '(400) Booking is already confirmed by RMT and cannot be canceled online. Please contact the clinic to cancel your appointment',
+        status: 400,
     }
     await axios.put(DB + 'rmt_booking', {
         [rmtID]: {
@@ -227,6 +247,89 @@ export async function getAllBookingsRMT(rmtID) {
 		rmtBookings.push(booking);
 	}
 	return rmtBookings;
+}
+
+export async function rmtConfirmAppointment(rmtID, bookingID) {
+    const booking = await getBookingExact(rmtID, bookingID)
+    if (!booking) throw {
+        statusCode: 400,
+        serverError: `No booking found with rmtID ${rmtID} and bookingID ${bookingID}`,
+        clientError: null
+    }
+    if (booking.reject || booking.confirmed || booking.canceled) throw {
+        statusCode: 400,
+        serverError: `Booking with id ${bookingID} has already been confirmed/canceled/rejected. Cannot confirm.`,
+        clientError: null
+    }
+    try {
+        await axios.put(DB + 'rmt_booking', {
+            [rmtID]: {
+                [bookingID]: {
+                    confirmed: true
+                }
+            }
+        })
+        const rmt = await getRMTInfo(rmtID)
+        const rmtAddress = rmt.placesOfPractice?.[0] ?? {}
+        const a = new Date(booking.year, booking.month, booking.day, booking.hour)
+        await sendEmail(booking.form.email, 'Massage Appointment Confirmation', './email/clientFullConfirm.html', {
+            rmtName: `${rmt.firstName} ${rmt.lastName}`,
+            rmtAddressProvince: rmtAddress.province ?? rmtAddress.businessState,
+            rmtAddressCity: rmtAddress.city ?? rmtAddress.businessCity,
+            rmtAddressStreet: rmtAddress.businessAddress,
+            rmtAddressPhone: rmtAddress.phone,
+            date: `${format(a, 'EEEE, MMMM do, yyyy')} at ${format(a, 'h:mm b')}`,
+            bookingID: bookingID,
+        })
+    } catch (e) {
+        throw {
+            statusCode: 500,
+            serverError: e,
+            clientError: '(500) Internal server error'
+        }
+    }
+}
+
+export async function rmtRejectAppointment(rmtID, bookingID, reason) {
+    const booking = await getBookingExact(rmtID, bookingID)
+    if (!booking) throw {
+        statusCode: 400,
+        serverError: `No booking found with rmtID ${rmtID} and bookingID ${bookingID}`,
+        clientError: null
+    }
+    if (booking.reject || booking.confirmed || booking.canceled) throw {
+        statusCode: 400,
+        serverError: `Booking with id ${bookingID} has already been confirmed/canceled/rejected. Cannot reject.`,
+        clientError: null
+    }
+    try {
+        await axios.put(DB + 'rmt_booking', {
+            [rmtID]: {
+                [bookingID]: {
+                    reject: reason
+                }
+            }
+        })
+        const rmt = await getRMTInfo(rmtID)
+        const rmtAddress = rmt.placesOfPractice?.[0] ?? {}
+        const a = new Date(booking.year, booking.month, booking.day, booking.hour)
+        await sendEmail(booking.form.email, 'Massage Appointment Rejected', './email/clientReject.html', {
+            rmtName: `${rmt.firstName} ${rmt.lastName}`,
+            rmtAddressProvince: rmtAddress.province ?? rmtAddress.businessState,
+            rmtAddressCity: rmtAddress.city ?? rmtAddress.businessCity,
+            rmtAddressStreet: rmtAddress.businessAddress,
+            rmtAddressPhone: rmtAddress.phone,
+            date: `${format(a, 'EEEE, MMMM do, yyyy')} at ${format(a, 'h:mm b')}`,
+            bookingID: bookingID,
+            reason: reason,
+        })
+    } catch (e) {
+        throw {
+            statusCode: 500,
+            serverError: e,
+            clientError: '(500) Internal server error'
+        }
+    }
 }
 
 export async function getAdminFromFirebaseID(firebaseID) {
