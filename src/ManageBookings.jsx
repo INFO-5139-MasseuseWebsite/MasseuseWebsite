@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './ManageBookings.css';
 import Header from './components/Header';
+import { getAuth } from 'firebase/auth';
 
 const ManageBookings = () => {
+	const [idToken, setIdToken] = useState(null);
 	const [bookings, setBookings] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState('');
 	const [success, setSuccess] = useState('');
+	const auth = getAuth();
 
 	useEffect(() => {
 		fetchBookings();
@@ -14,10 +17,21 @@ const ManageBookings = () => {
 
 	const fetchBookings = async () => {
 		try {
+			const user = auth.currentUser;
+			if (!user) {
+				setLoading(false);
+				setError('Please sign in to view appointments');
+				return;
+			}
+
+			const token = await user.getIdToken(true); // Force token refresh
+			setIdToken(token);
+
 			const response = await fetch('http://localhost/api/rmt/get-all-bookings', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
 				},
 			});
 
