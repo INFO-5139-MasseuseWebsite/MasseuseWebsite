@@ -65,9 +65,6 @@ const HealthHistory = () => {
     discomfortAreas: '',
   });
 
-//To Do: Add sanitization and data validation to forms
-
-
   const sanitizeInput = (input) => {
     if (typeof input === 'string') {
       return DOMPurify.sanitize(input);
@@ -515,7 +512,7 @@ const HealthHistory = () => {
               className="text-style"
             />
           </label>
-          
+
           <p>Arthritis:</p>
           <label>
             <input
@@ -551,7 +548,7 @@ const HealthHistory = () => {
           <label>
             <input
               type="radio"
-               name="otherConditions.arthritisFamilyHistory"
+              name="otherConditions.arthritisFamilyHistory"
               value="No"
               checked={formData.otherConditions.arthritisFamilyHistory === 'No'}
               onChange={handleChange}

@@ -1,0 +1,84 @@
+.about-us {
+  font-family: 'Arial', sans-serif;
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 2rem;
+  color: #000000;
+}
+
+.about-header h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #522607;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+section {
+  margin-bottom: 2rem;
+}
+
+h2 {
+  font-size: 1.8rem;
+  color: #522607;
+  border-bottom: 2px solid #4B3621;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+  color: #522607;
+  margin-top: 1.2rem;
+}
+
+p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+ul {
+  margin-left: 20px;
+}
+
+ul li {
+  margin-bottom: 0.5rem;
+}
+
+strong {
+  font-weight: bold;
+  color: #333;
+}
+
+a {
+  text-decoration: none;
+  color: #522607;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 768px) {
+  .about-us {
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+  }
+
+  p,
+  ul {
+    font-size: 1rem;
+  }
+}
