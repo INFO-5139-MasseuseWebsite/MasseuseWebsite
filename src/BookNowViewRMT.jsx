@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useLocation, useNavigate, NavLink, useSearchParams } from "react-router-dom";
+import { useParams, useLocation, useNavigate, NavLink, useSearchParams, createSearchParams } from "react-router-dom";
 import axios from "axios";
 import './BookNowViewRMT.css';
 import Header from './components/Header';

@@ -17,6 +17,7 @@ import ViewAppointment from './ViewAppointment';
 import CreateRMTAccount from './CreateRMTAccount';
 import BookNowViewRMT from "./BookNowViewRMT";
 import AboutUs from './AboutUs';
+import NewAppointment from './NewAppointment';
 
 // function App() {
 //   return (
@@ -36,9 +37,6 @@ import AboutUs from './AboutUs';
 function App() {
     return (
         <Router>
-            {/* <CSSLoader /> */}
-            <Links />
-
             <Routes>
                 <Route path="/" element={
                     <>
@@ -50,12 +48,12 @@ function App() {
                         <Footer />
                     </>
                 } />
-                <Route path="/health-history" element={<HealthHistory />} />
+                {/* <Route path="/health-history" element={<HealthHistory />} /> */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/book-now" element={<BookNow />} />
                 <Route path="/about" element={<AboutUs />} />
                 <Route path="/booknowviewrmt" element={<BookNowViewRMT />} />
-                {/* <Route path="/new-appointment" element={<NewAppointment />} /> */}
+                <Route path="/new-appointment" element={<NewAppointment />} />
                 <Route path="/view-appointment" element={<ViewAppointment />} />
                 <Route path="/create-rmt-account" element={<CreateRMTAccount />} />
                 <Route path='*' element={<NotFound404 />} />
