@@ -1,0 +1,149 @@
+.manage-bookings-container {
+	max-width: 1200px;
+	margin: 100px auto;
+	padding: 20px;
+}
+
+.manage-bookings-container h1 {
+	text-align: center;
+	margin-bottom: 2rem;
+	color: #333;
+}
+
+.bookings-list {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	gap: 20px;
+	padding: 20px;
+}
+
+.booking-card {
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	padding: 20px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.booking-info {
+	margin-bottom: 20px;
+}
+
+.booking-info h3 {
+	color: #333;
+	margin-bottom: 15px;
+	border-bottom: 1px solid #eee;
+	padding-bottom: 10px;
+}
+
+.booking-info p {
+	margin: 8px 0;
+	color: #666;
+}
+
+.status-badge {
+	display: inline-block;
+	padding: 4px 8px;
+	border-radius: 4px;
+	font-size: 0.9em;
+	font-weight: bold;
+	text-transform: capitalize;
+}
+
+.status-badge.pending {
+	background-color: #fff3cd;
+	color: #856404;
+}
+
+.status-badge.confirmed {
+	background-color: #d4edda;
+	color: #155724;
+}
+
+.status-badge.cancelled {
+	background-color: #f8d7da;
+	color: #721c24;
+}
+
+.booking-actions {
+	display: flex;
+	gap: 10px;
+	margin-top: 20px;
+}
+
+.confirm-button,
+.cancel-button {
+	flex: 1;
+	padding: 10px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-weight: bold;
+	transition: background-color 0.3s ease;
+}
+
+.confirm-button {
+	background-color: #28a745;
+	color: white;
+}
+
+.confirm-button:hover {
+	background-color: #218838;
+}
+
+.cancel-button {
+	background-color: #dc3545;
+	color: white;
+}
+
+.cancel-button:hover {
+	background-color: #c82333;
+}
+
+.loading {
+	text-align: center;
+	font-size: 1.2em;
+	color: #666;
+	margin: 2rem 0;
+}
+
+.no-bookings {
+	text-align: center;
+	font-size: 1.2em;
+	color: #666;
+	grid-column: 1 / -1;
+	padding: 2rem;
+}
+
+.error-message {
+	background-color: #f8d7da;
+	color: #721c24;
+	padding: 10px;
+	border-radius: 4px;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+.success-message {
+	background-color: #d4edda;
+	color: #155724;
+	padding: 10px;
+	border-radius: 4px;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+/* Ensure header is consistent with other pages */
+.header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	background-color: white;
+	z-index: 1000;
+}
+
+/* Add padding to body to account for fixed header */
+body {
+	padding-top: 90px;
+}

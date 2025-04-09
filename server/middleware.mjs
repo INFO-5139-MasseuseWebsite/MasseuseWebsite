@@ -33,6 +33,7 @@ export function authRMT(request, response, next) {
         next()
     })
         .catch(err => {
+            console.log('failed to authenticate')
             console.error(err)
             response.status(401).send()
         })
