@@ -64,7 +64,7 @@ const BookNow = () => {
         setIsLoading(true);
 
         try {
-            const response = await axios.post('http://localhost/api/public/search-rmt', {
+            const response = await axios.post('/api/public/search-rmt', {
                 keyword: searchTerm,
                 skip: 0,
                 take: 10,

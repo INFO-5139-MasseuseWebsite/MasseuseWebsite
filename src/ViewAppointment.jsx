@@ -19,7 +19,7 @@ const ViewAppointment = () => {
 					setIdToken(token);
 					console.log('ID Token:', token);
 
-					const response = await fetch('http://localhost/api/rmt/get-all-bookings', {
+					const response = await fetch('/api/rmt/get-all-bookings', {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json',
