@@ -54,7 +54,8 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/book-now" element={<BookNow />} />
                 <Route path="/about" element={<AboutUs />} />
-                <Route path="/booknowviewrmt/:id" element={<BookNowViewRMT />} />
+                <Route path="/booknowviewrmt" element={<BookNowViewRMT />} />
+                {/* <Route path="/new-appointment" element={<NewAppointment />} /> */}
                 <Route path="/view-appointment" element={<ViewAppointment />} />
                 <Route path="/create-rmt-account" element={<CreateRMTAccount />} />
                 <Route path='*' element={<NotFound404 />} />

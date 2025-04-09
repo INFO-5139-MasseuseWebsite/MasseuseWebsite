@@ -1,4 +1,8 @@
-import { rmtRejectAppointment } from "./database.mjs";
+import axios from "axios";
 
-rmtRejectAppointment('debug', 'cd4064bc-34f0-4a39-9d49-ba971d1bc806', 'Cause f@ck you lmao')
-.catch(e=>console.error(e))
+
+axios.get(`https://cmto.ca.thentiacloud.net/rest/public/profile/get/`, {
+    params: {
+        id: '61b33680a77193777c4b96b2'
+    }
+}).then(a => console.log(a.status, a.data))

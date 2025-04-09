@@ -4,7 +4,7 @@ import './BookNow.css';
 import axios from 'axios';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, createSearchParams } from "react-router-dom";
 
 const BookNow = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -128,23 +128,11 @@ const BookNow = () => {
         };
 
         sessionStorage.setItem('searchState', JSON.stringify(currentState));
-
-        navigate(`/booknowviewrmt/${result.id}`, {
-            state: {
-                personDetails: result,
-                searchResults: searchResults,
-                searchState: {
-                    searchTerm,
-                    city,
-                    registrationStatus,
-                    gender,
-                    language,
-                    authorizedToPractice,
-                    acupunctureAuthorized,
-                    searchType
-                }
-            },
-        });
+        console.log(result)
+        navigate(`/booknowviewrmt?${createSearchParams({
+            id: result.id,
+            profileID: result.profileId	
+        })}`);
     };
 
     useEffect(() => {
