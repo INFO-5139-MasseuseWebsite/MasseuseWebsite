@@ -70,7 +70,7 @@ const BookNowViewRMT = () => {
                         <p>{formatDate(person.initialRegistrationDate)}</p>
 
                         <p><strong>Class of Registration</strong></p>
-                        <p>{person.registrationCategory	 || 'N/A'}</p>
+                        <p>{person.registrationCategory || 'N/A'}</p>
 
                         <p><strong>Status</strong></p>
                         <p>{person.registrationStatus || 'N/A'}</p>
@@ -91,39 +91,55 @@ const BookNowViewRMT = () => {
                     <p>{person.publicRegisterAlert || 'None.'}</p>
                 </section>
 
+
+
                 {person.placesOfPractice?.length > 0 && (
                     <section className="info-section">
                         <h2 className="section-title">Business Contact Information</h2>
-                        <table className="info-table">
-                            <thead>
-                                <tr>
-                                    <th>Business Name</th>
-                                    <th>Street Address</th>
-                                    <th>City</th>
-                                    <th>Province</th>
-                                    <th>Postal Code</th>
-                                    <th>Phone Number</th>
-                                    <th>Business Website</th>
-                                    <th>Is Primary?</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {person.placesOfPractice.map((loc, i) => (
-                                    <tr key={i}>
-                                        <td>{loc.practiceLocation}</td>
+                        <div className="table-responsive">
+                            <table className="info-table">
+                                <thead>
+                                    <tr>
+                                        <th>Business Name</th>
+                                        <th>Street Address</th>
+                                        <th>City</th>
+                                        <th>Province</th>
+                                        <th>Postal Code</th>
+                                        <th>Phone Number</th>
+                                        <th>Business Website</th>
+                                        <th>Is Primary?</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {person.placesOfPractice.map((loc, i) => (
+                                        <tr key={i}>
+                                            {/* <td>{loc.practiceLocation}</td>
                                         <td>{loc.address1}</td>
                                         <td>{loc.city}</td>
                                         <td>{loc.province}</td>
                                         <td>{loc.postalCode}</td>
                                         <td>{loc.phone}</td>
                                         <td>{loc.website || '-'}</td>
-                                        <td>{loc.isPrimary ? "Yes" : "No"}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                        <td>{loc.isPrimary ? "Yes" : "No"}</td> */}
+
+                                            <td>{loc.employerName || '-'}</td>
+                                            <td>{loc.businessAddress || '-'}</td>
+                                            <td>{loc.city || '-'}</td>
+                                            <td>{loc.province || '-'}</td>
+                                            <td>{loc.businessZipCode || '-'}</td>
+                                            <td>{loc.phone || '-'}</td>
+                                            <td>{loc.websiteURL || loc.website || '-'}</td>
+                                            <td>{loc.isPrimary ? "Yes" : "No"}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </section>
                 )}
+
+
+
 
                 <section className="info-section">
                     <h2 className="section-title">Registration History</h2>
@@ -131,28 +147,37 @@ const BookNowViewRMT = () => {
                         As of January 1, 2021, only changes to an RMT's class (i.e., General or Inactive) or status (i.e., suspended, revoked) will show in "Registration History" below. For example, if the most recent record is General Certificate, Current, Effective 01-Jan-2021, it means there has been no change to that RMT's class and status and they are still a current General Certificate holder.
                     </p>
                     {person.registrationHistory?.length > 0 ? (
-                        <table className="info-table">
-                            <thead>
-                                <tr>
-                                    <th>Class</th>
-                                    <th>Status</th>
-                                    <th>Effective Date</th>
-                                    <th>Notes</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {person.registrationHistory.map((entry, idx) => (
-                                    <tr key={idx}>
-                                        <td>{entry.class}</td>
-                                        <td>{entry.status}</td>
-                                        <td>{formatDate(entry.effectiveDate)}</td>
-                                        <td>{entry.notes || '-'}</td>
+                        <div className="table-responsive">
+                            <table className="info-table">
+                                <thead>
+                                    <tr>
+                                        <th>Class</th>
+                                        <th>Status</th>
+                                        <th>Effective Date</th>
+                                        <th>Notes</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {person.registrationHistory.map((entry, idx) => (
+                                        <tr key={idx}>
+                                            {/* <td>{entry.class}</td>
+                                            <td>{entry.status}</td>
+                                            <td>{formatDate(entry.effectiveDate)}</td>
+                                            <td>{entry.notes || '-'}</td>
+                                             */}
+                                            <td>{entry.classOfRegistration || '-'}</td>
+                                            <td>{entry.registrationStatus || '-'}</td>
+                                            <td>{formatDate(entry.effectiveDate)}</td>
+                                            <td>{entry.notes || '-'}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     ) : <p>No registration history available.</p>}
+
                 </section>
+
 
 
                 {person.education?.length > 0 && (
@@ -169,9 +194,12 @@ const BookNowViewRMT = () => {
                             <tbody>
                                 {person.education.map((edu, idx) => (
                                     <tr key={idx}>
-                                        <td>{edu.institution}</td>
-                                        <td>{formatDate(edu.completionDate)}</td>
-                                        <td>{edu.level}</td>
+                                        {/* <td>{edu.institution}</td> */}
+                                        <td>{edu.name || edu.institutionName}</td>
+                                        {/* <td>{formatDate(edu.completionDate)}</td> */}
+                                        <td>{formatDate(edu.graduationDate || edu.completionDate)}</td>
+                                        {/* <td>{edu.level}</td> */}
+                                        <td>{edu.degreeName || edu.level}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -215,9 +243,9 @@ const BookNowViewRMT = () => {
                     <button
                         className="book-button"
                         onClick={() => navigate(`/new-appointment?${createSearchParams({
-                                    rmt: searchParams.get('id')
-                                })}`)
-                            } //Link to Rodrigo's page 
+                            rmt: searchParams.get('id')
+                        })}`)
+                        } //Link to Rodrigo's page 
                     >
                         📅 Book Now
                     </button>

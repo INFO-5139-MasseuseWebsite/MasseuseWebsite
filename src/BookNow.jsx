@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import HeroImage from './components/HeroImage';
+// import HeroImage from './components/HeroImage';
 import './BookNow.css';
 import axios from 'axios';
 import Header from './components/Header';
@@ -172,9 +172,12 @@ const BookNow = () => {
 
     return (
         <div>
-            <HeroImage />
+            {/* <HeroImage /> */}
             <Header />
             <div className="book-now-content">
+
+            <hr className="logo-hr" />
+
                 <div className="book-with-us-section">
                     <h1>Book with Us!</h1>
                     <p>
@@ -223,6 +226,7 @@ const BookNow = () => {
                     ></iframe>
                 </div>
 
+                <br/>
                 <div className="search-form">
                     <h2>Search for:</h2>
                     <form>
@@ -257,7 +261,7 @@ const BookNow = () => {
                             <br /> <br />
                         </div>
 
-                        <div className="checkbox-group">
+                        {/* <div className="checkbox-group">
                             <div>
                                 <input
                                     type="checkbox"
@@ -266,9 +270,9 @@ const BookNow = () => {
                                     onChange={() => setAuthorizedToPractice(!authorizedToPractice)}
                                 />
                                 <label htmlFor="authorizedToPractice">Only show massage therapists who are authorized to practice</label>
-                            </div>
+                            </div> */}
 
-                            <div className="input-group">
+                            {/* <div className="input-group">
                                 <input
                                     type="text"
                                     value={searchTerm}
@@ -276,7 +280,7 @@ const BookNow = () => {
                                     placeholder={placeholderText}
                                 />
                                 <br /> <br />
-                            </div>
+                            </div> */}
 
                             <div className="checkbox-group">
                                 <div>
@@ -383,7 +387,7 @@ const BookNow = () => {
                                 {isLoading ? 'Searching...' : 'Search'}
                             </button>
                             <br />
-                        </div>
+                      
                     </form>
 
                     <div className="search-container">

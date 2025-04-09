@@ -2,10 +2,42 @@
 .profile {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 4rem 2rem 2rem;
     font-family: Arial, sans-serif;
     color: #333;
 }
+
+@media screen and (max-width: 768px) {
+  .profile {
+      padding-top: 160px
+  }
+
+  .info-table th,
+  .info-table td {
+    font-size: 0.875rem;
+    padding: 0.5rem;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+  }
+
+  .section-note {
+    font-size: 0.85rem;
+  }
+}
+
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive .info-table {
+  min-width: 600px;
+}
+
 
 .book-button {
     width: 30%;

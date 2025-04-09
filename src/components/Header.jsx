@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import Logo from '../assets/logo/LogoCMTO.svg';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -40,6 +40,47 @@ const Header = () => {
 
 	const [isOpen, setIsOpen] = useState(false);
 	const toggleMenu = () => setIsOpen(!isOpen);
+	const navigate = useNavigate();
+	const location = useLocation();
+
+	const handleAnchorClick = (sectionId, e) => {
+		e.preventDefault();
+		setIsOpen(false);
+
+		if (location.pathname !== '/') {
+			navigate('/', { state: { scrollTo: sectionId } });
+		} else {
+			scrollToSection(sectionId);
+		}
+	};
+
+	const scrollToSection = (sectionId) => {
+		const section = document.getElementById(sectionId);
+		if (section) {
+			section.scrollIntoView({
+				behavior: 'smooth',
+				block: 'start',
+			});
+		}
+	};
+
+	useEffect(() => {
+		if (location.pathname === '/' && location.state?.scrollTo) {
+			const sectionId = location.state.scrollTo;
+
+			const tryScroll = () => {
+				const section = document.getElementById(sectionId);
+				if (section) {
+					section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+					navigate('.', { state: {}, replace: true });
+				} else {
+					requestAnimationFrame(tryScroll);
+				}
+			};
+
+			tryScroll();
+		}
+	}, [location, navigate]);
 
 	return (
 		<header className="header">
@@ -69,36 +110,23 @@ const Header = () => {
 					</li>
 					<li>
 						<Link
-							to="/"
-							onClick={() => {
-								toggleMenu();
-								handleSectionClick('explore-section');
-							}}
+]
+							to="/#explore-section"
+							onClick={(e) => handleAnchorClick('explore-section', e)}
 						>
 							Treatments
 						</Link>
 					</li>
 					<li>
 						<Link
-							to="/"
-							onClick={() => {
-								toggleMenu();
-								handleSectionClick('map-section');
-							}}
+							to="/#map-section"
+							onClick={(e) => handleAnchorClick('map-section', e)}
 						>
 							Hours/Location
 						</Link>
 					</li>
 					<li>
-						<Link
-							to="/"
-							onClick={() => {
-								toggleMenu();
-								handleSectionClick('about-section');
-							}}
-						>
-							About Us
-						</Link>
+						<Link to="/about">About Us</Link>
 					</li>
 					{currentUser && (
 						<li className="dropdown">

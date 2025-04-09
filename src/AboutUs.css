@@ -6,12 +6,17 @@
   color: #000000;
 }
 
+.about-header {
+  padding-top: 60px;
+}
+
 .about-header h1 {
   font-size: 2.5rem;
   font-weight: bold;
   color: #522607;
   text-align: center;
   margin-bottom: 1.5rem;
+  /* margin-top: 60px;  */
 }
 
 section {
@@ -63,6 +68,10 @@ a:hover {
 @media screen and (max-width: 768px) {
   .about-us {
     padding: 1rem;
+  }
+
+  .about-header {
+    padding-top: 150px; 
   }
 
   h1 {
