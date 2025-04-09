@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import Logo from './assets/logo/LogoCMTO.svg';
-import TableImage from './assets/images/table.jpeg';
+import HeroImage from './components/HeroImage';
 import './BookNow.css';
 import axios from 'axios';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { useNavigate, useLocation } from "react-router-dom";
-import isMobile from './isMobile';
 
 const BookNow = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -185,19 +183,10 @@ const BookNow = () => {
     }, [location.state]);
 
     return (
-
         <div>
+            <HeroImage />
             <Header />
-
             <div className="book-now-content">
-                {/* <div className="logo-container">
-                <div className="logo">
-                    <img src={Logo} alt="Logo" />
-                </div>
-            </div> */}
-
-                <hr className="logo-hr" />
-
                 <div className="book-with-us-section">
                     <h1>Book with Us!</h1>
                     <p>
@@ -246,10 +235,9 @@ const BookNow = () => {
                     ></iframe>
                 </div>
 
-
                 <div className="search-form">
                     <h2>Search for:</h2>
-                    <form onSubmit={handleSearch}>
+                    <form>
                         <div className="radio-group">
                             <label>
                                 <input
@@ -291,101 +279,123 @@ const BookNow = () => {
                                 />
                                 <label htmlFor="authorizedToPractice">Only show massage therapists who are authorized to practice</label>
                             </div>
-                            <div>
+
+                            <div className="input-group">
                                 <input
-                                    type="checkbox"
-                                    id="acupunctureAuthorized"
-                                    checked={acupunctureAuthorized}
-                                    onChange={() => setAcupunctureAuthorized(!acupunctureAuthorized)}
+                                    type="text"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    placeholder={placeholderText}
                                 />
-                                <label htmlFor="acupunctureAuthorized">Only show massage therapists who are acupuncture authorized</label>
+                                <br /> <br />
                             </div>
+
+                            <div className="checkbox-group">
+                                <div>
+                                    <input
+                                        type="checkbox"
+                                        id="authorizedToPractice"
+                                        checked={authorizedToPractice}
+                                        onChange={() => setAuthorizedToPractice(!authorizedToPractice)}
+                                    />
+                                    <label htmlFor="authorizedToPractice">Only show massage therapists who are authorized to practice</label>
+                                </div>
+                                <div>
+                                    <input
+                                        type="checkbox"
+                                        id="acupunctureAuthorized"
+                                        checked={acupunctureAuthorized}
+                                        onChange={() => setAcupunctureAuthorized(!acupunctureAuthorized)}
+                                    />
+                                    <label htmlFor="acupunctureAuthorized">Only show massage therapists who are acupuncture authorized</label>
+                                </div>
+                            </div>
+
+                            {searchType === 'rmt' && (
+                                <>
+                                    <br />
+                                    <div className="select-group">
+                                        <label>City or Town</label>
+                                        <select value={city} onChange={(e) => setCity(e.target.value)}>
+                                            <option value="">Select one...</option>
+                                            <option value="London">London</option>
+                                            <option value="Barrie">Barrie</option>
+                                            <option value="Brampton">Brampton</option>
+                                            <option value="Guelph">Guelph</option>
+                                            <option value="Hamilton">Hamilton</option>
+                                            <option value="Kitchener">Kitchener</option>
+                                            <option value="Markham">Markham</option>
+                                            <option value="Mississauga">Mississauga</option>
+                                            <option value="North Bay">North Bay</option>
+                                            <option value="Oakville">Oakville</option>
+                                            <option value="Ottawa">Ottawa</option>
+                                            <option value="Sarnia">Sarnia</option>
+                                            <option value="St. Catharines">St. Catharines</option>
+                                            <option value="St. Thomas">St. Thomas</option>
+                                            <option value="Sudbury">Sudbury</option>
+                                            <option value="Thunder Bay">Thunder Bay</option>
+                                            <option value="Toronto">Toronto</option>
+                                            <option value="Waterloo">Waterloo</option>
+                                        </select>
+                                    </div>
+
+                                    <div className="select-group">
+                                        <label>Registration Status</label>
+                                        <select value={registrationStatus} onChange={(e) => setRegistrationStatus(e.target.value)}>
+                                            <option value="">Select one...</option>
+                                            <option value="Current">Current</option>
+                                            <option value="Deceased">Deceased</option>
+                                            <option value="Resigned">Resigned</option>
+                                            <option value="Revoked">Revoked</option>
+                                            <option value="Suspended">Suspended</option>
+                                        </select>
+                                    </div>
+
+                                    <div className="select-group">
+                                        <label>Gender</label>
+                                        <select value={gender} onChange={(e) => setGender(e.target.value)}>
+                                            <option value="">Select one...</option>
+                                            <option value="60914e93204efc01ac067252">Male</option>
+                                            <option value="60914e9987debc15c63d12ed">Female</option>
+                                            <option value="6091f2df87debc15c63d150e">X</option>
+                                        </select>
+                                    </div>
+
+                                    <div className="select-group">
+                                        <label>Language</label>
+                                        <select value={language} onChange={(e) => setLanguage(e.target.value)}>
+                                            <option value="">Select one...</option>
+                                            <option value="English">English</option>
+                                            <option value="Arabic">Arabic</option>
+                                            <option value="Chinese">Chinese</option>
+                                            <option value="French">French</option>
+                                            <option value="German">German</option>
+                                            <option value="Hindi">Hindi</option>
+                                            <option value="Italian">Italian</option>
+                                            <option value="Japanese">Japanese</option>
+                                            <option value="Korean">Korean</option>
+                                            <option value="Polish">Polish</option>
+                                            <option value="Portuguese">Portuguese</option>
+                                            <option value="Russian">Russian</option>
+                                            <option value="Spanish">Spanish</option>
+                                            <option value="Tagalog">Tagalog</option>
+                                            <option value="Turkish">Turkish</option>
+                                            <option value="Vietnamese">Vietnamese</option>
+                                            <option value="Bengali">Bengali</option>
+                                            <option value="Thai">Thai</option>
+                                            <option value="Persian">Persian</option>
+                                            <option value="Punjabi">Punjabi</option>
+                                            <option value="Urdu">Urdu</option>
+                                        </select>
+                                    </div>
+                                </>
+                            )}
+                            <br />
+                            <button onClick={handleSearch} type="submit" className="search-btn" disabled={isLoading}>
+                                {isLoading ? 'Searching...' : 'Search'}
+                            </button>
+                            <br />
                         </div>
-
-                        {searchType === 'rmt' && (
-                            <>
-                                <br />
-                                <div className="select-group">
-                                    <label>City or Town</label>
-                                    <select value={city} onChange={(e) => setCity(e.target.value)}>
-                                        <option value="">Select one...</option>
-                                        <option value="London">London</option>
-                                        <option value="Barrie">Barrie</option>
-                                        <option value="Brampton">Brampton</option>
-                                        <option value="Guelph">Guelph</option>
-                                        <option value="Hamilton">Hamilton</option>
-                                        <option value="Kitchener">Kitchener</option>
-                                        <option value="Markham">Markham</option>
-                                        <option value="Mississauga">Mississauga</option>
-                                        <option value="North Bay">North Bay</option>
-                                        <option value="Oakville">Oakville</option>
-                                        <option value="Ottawa">Ottawa</option>
-                                        <option value="Sarnia">Sarnia</option>
-                                        <option value="St. Catharines">St. Catharines</option>
-                                        <option value="St. Thomas">St. Thomas</option>
-                                        <option value="Sudbury">Sudbury</option>
-                                        <option value="Thunder Bay">Thunder Bay</option>
-                                        <option value="Toronto">Toronto</option>
-                                        <option value="Waterloo">Waterloo</option>
-                                    </select>
-                                </div>
-
-                                <div className="select-group">
-                                    <label>Registration Status</label>
-                                    <select value={registrationStatus} onChange={(e) => setRegistrationStatus(e.target.value)}>
-                                        <option value="">Select one...</option>
-                                        <option value="Current">Current</option>
-                                        <option value="Deceased">Deceased</option>
-                                        <option value="Resigned">Resigned</option>
-                                        <option value="Revoked">Revoked</option>
-                                        <option value="Suspended">Suspended</option>
-                                    </select>
-                                </div>
-
-                                <div className="select-group">
-                                    <label>Gender</label>
-                                    <select value={gender} onChange={(e) => setGender(e.target.value)}>
-                                        <option value="">Select one...</option>
-                                        <option value="60914e93204efc01ac067252">Male</option>
-                                        <option value="60914e9987debc15c63d12ed">Female</option>
-                                        <option value="6091f2df87debc15c63d150e">X</option>
-                                    </select>
-                                </div>
-
-                                <div className="select-group">
-                                    <label>Language</label>
-                                    <select value={language} onChange={(e) => setLanguage(e.target.value)}>
-                                        <option value="">Select one...</option>
-                                        <option value="English">English</option>
-                                        <option value="Arabic">Arabic</option>
-                                        <option value="Chinese">Chinese</option>
-                                        <option value="French">French</option>
-                                        <option value="German">German</option>
-                                        <option value="Hindi">Hindi</option>
-                                        <option value="Italian">Italian</option>
-                                        <option value="Japanese">Japanese</option>
-                                        <option value="Korean">Korean</option>
-                                        <option value="Polish">Polish</option>
-                                        <option value="Portuguese">Portuguese</option>
-                                        <option value="Russian">Russian</option>
-                                        <option value="Spanish">Spanish</option>
-                                        <option value="Tagalog">Tagalog</option>
-                                        <option value="Turkish">Turkish</option>
-                                        <option value="Vietnamese">Vietnamese</option>
-                                        <option value="Bengali">Bengali</option>
-                                        <option value="Thai">Thai</option>
-                                        <option value="Persian">Persian</option>
-                                        <option value="Punjabi">Punjabi</option>
-                                        <option value="Urdu">Urdu</option>
-                                    </select>
-                                </div>
-                            </>
-                        )}
-                        <br />
-                        <button onClick={handleSearch} type="submit" className="search-btn" disabled={isLoading}>
-                            {isLoading ? 'Searching...' : 'Search'}
-                        </button>
-                        <br />
                     </form>
 
                     <div className="search-container">
@@ -476,6 +486,7 @@ const BookNow = () => {
             </div>
             <Footer />
         </div>
+
     );
 };
 

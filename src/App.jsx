@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from './components/Header';
-import HeroVideo from './components/HeroVideo';
+import HeroImage from './components/HeroImage';
 import WelcomeSection from './components/WelcomeSection';
 import TreatmentsSection from './components/TreatmentsSection';
 import MapSection from './components/MapSection';
@@ -8,7 +8,6 @@ import Footer from './components/Footer';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import HealthHistory from './HealthHistory';
-// import './HealthHistory.css';
 import Links from './Links';
 import CSSLoader from './CSSLoader';
 import NotFound404 from './404';
@@ -44,7 +43,7 @@ function App() {
                 <Route path="/" element={
                     <>
                         <Header />
-                        <HeroVideo />
+                        <HeroImage />
                         <WelcomeSection />
                         <TreatmentsSection />
                         <MapSection />

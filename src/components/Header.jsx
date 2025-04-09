@@ -1,95 +1,43 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
+import { FaBars, FaTimes } from 'react-icons/fa';
 import Logo from '../assets/logo/LogoCMTO.svg';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const Header = () => {
-	const navigate = useNavigate();
-	const location = useLocation();
-
-	const handleAnchorClick = (sectionId, e) => {
-		e.preventDefault();
-
-		if (location.pathname !== '/') {
-			navigate('/', { state: { scrollTo: sectionId } });
-		} else {
-			scrollToSection(sectionId);
-		}
-	};
-
-	const scrollToSection = (sectionId) => {
-		const section = document.getElementById(sectionId);
-		if (section) {
-			section.scrollIntoView({
-				behavior: 'smooth',
-				block: 'start'
-			});
-		}
-	};
-
-	useEffect(() => {
-		if (location.pathname === '/' && location.state?.scrollTo) {
-			const sectionId = location.state.scrollTo;
-
-			const tryScroll = () => {
-				const section = document.getElementById(sectionId);
-				if (section) {
-					section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-					navigate('.', { state: {}, replace: true });
-				} else {
-					requestAnimationFrame(tryScroll);
-				}
-			};
-
-			tryScroll();
-		}
-	}, [location, navigate]);
+	const [isOpen, setIsOpen] = useState(false);
+	const toggleMenu = () => setIsOpen(!isOpen);
 
 	return (
 		<header className="header">
 			<div className="logo">
 				<img src={Logo} alt="Logo" height="50" />
 			</div>
-			<nav className="navbar">
+			<div className='hamburguer' onClick={toggleMenu}>
+				{isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+			</div>
+
+			<nav className={`navbar ${isOpen ? "active" : ""}`}>
 				<ul>
 					<li>
-						<Link to="/">Home</Link>
+						<Link to="/" onClick={toggleMenu}>Home</Link>
 					</li>
 					<li>
-						<Link to="/book-now">Find an RMT</Link>
-					</li>
-					<li className="dropdown">
-						<Link
-							to="/#explore-section"
-							onClick={(e) => handleAnchorClick('explore-section', e)}
-						>
-							Treatments
-						</Link>
-						<div className="dropdown-content">
-							{['Massages', 'Deep Tissue', 'Holistic', 'Aromatherapy', 'Acupuncture',
-								'Chiropractic Care', 'Facial Care', 'Hands/Feet'].map((treatment) => (
-									<Link
-										key={treatment}
-										to="/#explore-section"
-										onClick={(e) => handleAnchorClick('explore-section', e)}
-									>
-										{treatment}
-									</Link>
-								))}
-						</div>
+						<Link to="/book-now" onClick={toggleMenu}>Find an RMT</Link>
 					</li>
 					<li>
-						<Link
-							to="/#map-section"
-							onClick={(e) => handleAnchorClick('map-section', e)}
-						>
-							Hours/Location
-						</Link>
+						<Link to="/health-history" onClick={toggleMenu}>Complete the Form</Link>
 					</li>
 					<li>
-						<Link to="/about">About Us</Link>
+						<a href="#explore-section" onClick={toggleMenu}>Treatments</a>
 					</li>
 					<li>
-						<Link to="/login">Login</Link>
+						<a href="#map-section" onClick={toggleMenu}>Hours/Location</a>
+					</li>
+					<li>
+						<a href="#" onClick={toggleMenu}>About Us</a>
+					</li>
+					<li>
+						<Link to="/login" onClick={toggleMenu}>Login</Link>
 					</li>
 				</ul>
 			</nav>

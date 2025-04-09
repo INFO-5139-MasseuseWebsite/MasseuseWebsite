@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Header from './components/Header';
+import MassageWall from './components/HeroImage'
 import './Login.css';
 import { auth } from './firebaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -69,8 +70,10 @@ const Login = () => {
 
 	return (
 		<div>
+			<MassageWall />
 			<Header />
 			<div className="login-container">
+				<div className="login-section">
 				<h2>Login</h2>
 				<form onSubmit={handleSubmit}>
 					<label htmlFor="email">Email</label>
@@ -107,6 +110,7 @@ const Login = () => {
 
 					{error && <p className="error-msg">{error}</p>}
 				</form>
+				</div>
 			</div>
 		</div>
 	);

@@ -14,6 +14,8 @@ body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
   color: #333;
+  margin: 0;
+  padding: 0;
 }
 
 /* Header styling */
@@ -22,11 +24,13 @@ body {
   justify-content: space-between;
   align-items: center;
   background-color: white;
-  padding: 20px 30px;
+  padding: 0 30px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  position: relative;
+  position: fixed;
   z-index: 2;
-
+  margin: 0;
+  top: 0;
+  width: 100%;
 }
 
 /* Logo */
@@ -76,6 +80,11 @@ body {
   width: 100%;
   left: 0;
 }
+.hamburguer {
+  display: none;
+  cursor: pointer;
+}
+
 
 /* Dropdown Menu */
 .dropdown {
@@ -107,6 +116,27 @@ body {
   color: #4B3621;
 }
 
+/*Hamburguer menu*/
+@media (max-width: 1024px) {
+  .navbar ul {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .navbar.active ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .hamburguer {
+    display: block;
+    cursor: pointer;
+  }
+}
 section {
   scroll-margin-top: 80px;
   padding-top: 20px;
@@ -213,8 +243,6 @@ section {
   margin-top: 5px;
 }
 
-
-
 /* Copyright Section */
 .copyright {
   margin-top: 20px;
@@ -243,40 +271,42 @@ section {
   }
 }
 
-
-
-/* Video Section */
-.hero-video {
+/* Background Section */
+.hero-image {
   position: relative;
   width: 100%;
   height: 550px;
   overflow: hidden;
 }
 
-.video-bg {
+.image-bg {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  position: absolute;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: fixed;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: -1;
 }
 
-
 @media (max-width: 768px) {
-  .hero-video {
+  .hero-image {
     height: 400px;
   }
 }
 
-
-
 /* welcome Section */
 .welcome {
   background-color: #f9f9f9;
-  padding: 40px 20px;
+  padding: 20px 20px;
   text-align: center;
+  margin-top: -400px;
+  max-width: 1308px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 8px; 
 }
 
 .welcome h2 {
@@ -291,14 +321,38 @@ section {
   line-height: 1.6;
   max-width: 800px;
   margin: 0 auto;
+  text-align: left;
+}
+/*Media queries for welcome section*/
+@media (max-width: 1024) {
+  .welcome {
+    background-color: #f9f9f9;
+    padding: 20px 20px;
+    text-align: center;
+    margin-top: -400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .welcome {
+    background-color: #f9f9f9;
+    padding: 20px 20px;
+    text-align: center;
+    margin-top: -170px;
+  }
 }
 
 
 /* Explore Section */
 .explore-section {
-  padding: 60px 20px;
+  padding: 80px 20px;
   background-color: #f9f9f9;
   text-align: center;
+  margin-top: 90px;
+  max-width: 1308px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 8px;
 }
 
 .explore-section h2 {
@@ -331,24 +385,32 @@ section {
   transform: translateY(-10px);
 }
 
-.treatment-image {
+.treatment-image-container {
   width: 100%;
-  /* height: auto; */
-  height: 45%;
+  height: 200px; 
+  overflow: hidden;
   border-radius: 8px;
   margin-bottom: 20px;
+}
+
+.treatment-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .treatment-card h3 {
   font-size: 24px;
   color: #4B3621;
   margin-bottom: 15px;
+  text-align: center;
 }
 
 .treatment-card p {
   font-size: 16px;
   color: #4B3621;
   margin-bottom: 15px;
+  text-align: justify;
 }
 
 .price {
@@ -367,7 +429,19 @@ section {
   text-decoration: underline;
 }
 
-/* Responsive Layout */
+/*Responsive layout for explore section*/
+@media (max-width: 1024px) {
+  .explore-section {
+    max-width: 90%;
+  }
+}
+@media (max-width: 768px) {
+  .explore-section {
+    max-width: 95%;
+  }
+}
+
+/* Responsive Layout for treatment section*/
 @media (max-width: 1024px) {
   .treatment-card {
     width: 48%;
@@ -378,14 +452,12 @@ section {
   .treatment-card {
     width: 100%;
     height: 70%;
+    height: auto;
   }
 
   .treatment-container {
     justify-content: center;
   }
-
-
-
 }
 
 
@@ -395,6 +467,10 @@ section {
   padding: 20px;
   border-radius: 8px;
   text-align: center;
+  background-color: #f4f4f4;
+  max-width: 1308px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .map h1 {
@@ -424,17 +500,14 @@ section {
 .info {
   display: flex;
   align-items: center;
-  margin: 10px 0;
+  margin: 10px 0; 
+  text-align: left;
 }
 
 .map-icon {
   margin-right: 10px;
   width: 20px;
   height: auto;
-}
-
-.info {
-  text-align: left;
 }
 
 
@@ -457,9 +530,19 @@ section {
   border: none;
 }
 
+/* Mobile Responsiveness for map layout */
+@media (max-width: 1024px) {
+  .map {
+    max-width: 90%;
+  }
+}
 
-/* Mobile Responsiveness */
+
 @media (max-width: 768px) {
+  .map {
+    max-width: 95%;
+  }
+
   .mapContainer {
     flex-direction: column;
     align-items: center;
@@ -486,7 +569,7 @@ section {
   }
 
   .info {
-    text-align: center;
+    text-align: left;
     font-size: 14px;
     margin-bottom: 15px;
   }
