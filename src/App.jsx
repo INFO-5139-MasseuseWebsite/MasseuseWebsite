@@ -39,15 +39,12 @@ function App() {
 			<Router>
 				<div className="app-container">
 					<Header />
-					{/* <CSSLoader /> */}
-					<Links />
 					<main className="main-content">
 						<Routes>
 							<Route
 								path="/"
 								element={
 									<>
-										<HeroImage />
 										<WelcomeSection />
 										<TreatmentsSection />
 										<MapSection />
@@ -58,6 +55,7 @@ function App() {
 								path="/health-history"
 								element={
 									<>
+										<Links />
 										<HealthHistory />
 									</>
 								}
@@ -67,12 +65,11 @@ function App() {
 								path="/book-now"
 								element={
 									<>
+										<Links />
 										<BookNow />
 									</>
 								}
 							/>
-							<Route path="/about" element={<AboutUs />} />
-							<Route path="/booknowviewrmt" element={<BookNowViewRMT />} />
 							<Route
 								path="/view-appointment"
 								element={
