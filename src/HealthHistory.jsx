@@ -3,67 +3,7 @@ import './HealthHistory.css';
 import Header from './components/Header';
 import MassageWall from './components/HeroImage'
 
-const HealthHistory = () => {
-  const [formData, setFormData] = useState({
-
-    name: '',
-    phoneNumber: '',
-    email: '',
-    address: '',
-    occupation: '',
-    dateOfBirth: '',
-    receivedMassageBefore: '',
-    referredByPractitioner: '',
-    practitionerNameAddress: '',
-
-    cardiovascularConditions: [],
-    cardiovascularHistory: '',
-    infections: [],
-    respiratoryConditions: [],
-    respiratoryFamilyHistory: '',
-    headNeckConditions: [],
-
-
-    otherConditions: {
-      lossOfSensation: '',
-      diabetesOnset: '',
-      allergies: '',
-      reactionType: '',
-      epilepsy: '',
-      cancer: '',
-      skinConditions: '',
-      arthritis: '',
-      arthritisFamilyHistory: '',
-    },
-    womenHealth: {
-      pregnantDue: '',
-      gynecologicalConditions: '',
-      generalHealth: '',
-      primaryCarePhysician: '',
-      physicianAddress: '',
-    },
-    currentMedications: [],
-    medication: '',
-    condition: '',
-    otherTreatment: '',
-    otherTreatmentReason: '',
-    surgeryDate: '',
-    surgeryNature: '',
-    injuryDate: '',
-    injuryNature: '',
-
-    otherMedicalConditions: '',
-    otherMedicalConditionsDetails: '',
-    internalPinsWires: '',
-    internalPinsWiresDetails: '',
-    internalPinsWiresLocation: '',
-    massageTherapyReason: '',
-    allergiesLubricants: '',
-    allergiesLubricantsDetails: '',
-    treatmentGoals: '',
-    limitationsDailyLife: '',
-    discomfortAreas: '',
-  });
+const HealthHistory = ({formData, setFormData, onSubmit}) => {
 
   const sanitizeInput = (input) => {
     if (typeof input === 'string') {
@@ -125,8 +65,9 @@ const HealthHistory = () => {
   //TO DO: Once linked handle submit 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form Data Submitted:', formData);
-    alert('Form submitted successfully!');
+    // console.log('Form Data Submitted:', formData);
+    // alert('Form submitted successfully!');
+    onSubmit()
   };
 
   return (
@@ -145,12 +86,24 @@ const HealthHistory = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="name">Name:</label>
+          <label htmlFor="firstName">First Name:</label>
           <input
             type="text"
-            id="name"
-            name="name"
-            value={formData.name}
+            id="firstName"
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+            required
+            className="text-style"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="lastName">Last Name:</label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            value={formData.lastName}
             onChange={handleChange}
             required
             className="text-style"
