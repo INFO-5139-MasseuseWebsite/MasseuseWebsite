@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ManageBookings.css';
 import Header from './components/Header';
+import { getAuth } from 'firebase/auth';
 
 
 const ManageBookings = () => {
@@ -9,6 +10,7 @@ const ManageBookings = () => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState('');
 	const [success, setSuccess] = useState('');
+	const auth = getAuth();
 
 	useEffect(() => {
 		fetchBookings();
