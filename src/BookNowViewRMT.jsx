@@ -1,26 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useLocation, useNavigate, NavLink } from "react-router-dom";
+import { useParams, useLocation, useNavigate, NavLink, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import './BookNowViewRMT.css';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
 const BookNowViewRMT = () => {
-    const { id } = useParams();
     const location = useLocation();
+    const [searchParams, _setSearchParams] = useSearchParams();
     // const navigate = useNavigate();
-    const [person, setPerson] = useState(location.state?.personDetails || null);
+    const [person, setPerson] = useState(null);
     const [loading, setLoading] = useState(!person);
     const [error, setError] = useState(null);
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (!person) {
-            axios.post(`http://localhost/api/public/rmt-details/${id}`)
+            axios.post(`/api/public/get-rmt`, {
+                rmtID: searchParams.get('profileID')
+            })
                 .then(res => setPerson(res.data))
                 .catch(() => setError("Error fetching RMT details"))
                 .finally(() => setLoading(false));
         }
-    }, [id, person]);
+    }, [searchParams, person]);
 
     const formatDate = (dateStr) => {
         if (!dateStr) return "N/A";
@@ -211,7 +214,10 @@ const BookNowViewRMT = () => {
                 <div className="book-container">
                     <button
                         className="book-button"
-                        onClick={() => alert("Booking feature coming soon..")} //Link to Rodrigo's page 
+                        onClick={() => navigate(`/new-appointment?${createSearchParams({
+                                    rmt: searchParams.get('id')
+                                })}`)
+                            } //Link to Rodrigo's page 
                     >
                         📅 Book Now
                     </button>

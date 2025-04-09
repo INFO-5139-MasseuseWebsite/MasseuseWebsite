@@ -216,7 +216,7 @@ app.post('/api/public/search-rmt', (request, response) => {
             sortField: data.sortField
         }
     })
-    .then(res=>response.status(res.status).type('json').send(res.data))
+    .then(res=>{response.status(res.status).type('json').send(res.data)})
     .catch(err=> {
         console.error(err)
         response.status(500).send()
