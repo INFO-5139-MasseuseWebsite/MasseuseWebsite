@@ -51,7 +51,7 @@ const ManageBookings = () => {
 			const endpoint =
 				newStatus === 'confirmed'
 					? 'http://localhost/api/rmt/confirm-booking'
-					: 'http://localhost/api/rmt/cancel-booking';
+					: 'http://localhost/api/rmt/reject-booking';
 
 			const response = await fetch(endpoint, {
 				method: 'POST',
@@ -105,7 +105,7 @@ const ManageBookings = () => {
 	};
 
 	return (
-		<>
+		<div>
 			<Header />
 			<div className="manage-bookings-container">
 				<h1>Manage Bookings</h1>
@@ -161,7 +161,7 @@ const ManageBookings = () => {
 					</div>
 				)}
 			</div>
-		</>
+		</div>
 	);
 };
 
