@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
-import MassageWall from './components/HeroImage'
 import './Login.css';
 import { auth } from './firebaseConfig';
 import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from 'firebase/auth';
@@ -16,7 +15,6 @@ const Login = () => {
 	const { currentUser } = useAuth();
 
 	useEffect(() => {
-		// If user is already logged in, redirect to view-appointment
 		if (currentUser) {
 			navigate('../view-appointment');
 		}
@@ -80,50 +78,49 @@ const Login = () => {
 	};
 
 	return (
-		<div>
-			<MassageWall />
+		<>
 			<Header />
 			<div className="login-container">
 				<div className="login-section">
-				<h2>Login</h2>
-				<form onSubmit={handleSubmit}>
-					<label htmlFor="email">Email</label>
-					<input
-						type="text"
-						placeholder="Type your email"
-						value={email}
-						id="email"
-						name="email"
-						required
-						onChange={(e) => setEmail(e.target.value)}
-						className="text-style"
-					/>
+					<h2>Login</h2>
+					<form onSubmit={handleSubmit}>
+						<label htmlFor="email">Email</label>
+						<input
+							type="text"
+							placeholder="Type your email"
+							value={email}
+							id="email"
+							name="email"
+							required
+							onChange={(e) => setEmail(e.target.value)}
+							className="text-style"
+						/>
 
-					<label htmlFor="password">Password</label>
-					<input
-						type="password"
-						placeholder="Type your password"
-						value={password}
-						id="password"
-						name="password"
-						required
-						onChange={(e) => setPassword(e.target.value)}
-						className="text-style"
-					/>
+						<label htmlFor="password">Password</label>
+						<input
+							type="password"
+							placeholder="Type your password"
+							value={password}
+							id="password"
+							name="password"
+							required
+							onChange={(e) => setPassword(e.target.value)}
+							className="text-style"
+						/>
 
-					{loading ? (
-						<button type="submit" disabled>
-							Logging in...
-						</button>
-					) : (
-						<button type="submit">Login</button>
-					)}
+						{loading ? (
+							<button type="submit" disabled>
+								Logging in...
+							</button>
+						) : (
+							<button type="submit">Login</button>
+						)}
 
-					{error && <p className="error-msg">{error}</p>}
-				</form>
+						{error && <p className="error-msg">{error}</p>}
+					</form>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 

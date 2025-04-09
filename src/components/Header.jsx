@@ -8,6 +8,7 @@ import { getAuth, signOut } from 'firebase/auth';
 const Header = () => {
 	const { currentUser } = useAuth();
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	const handleLogout = async () => {
 		try {
@@ -19,6 +20,24 @@ const Header = () => {
 		}
 	};
 
+	const handleSectionClick = (sectionId) => {
+		if (location.pathname !== '/') {
+			navigate('/');
+			// Wait for the navigation to complete before scrolling
+			setTimeout(() => {
+				const element = document.getElementById(sectionId);
+				if (element) {
+					element.scrollIntoView({ behavior: 'smooth' });
+				}
+			}, 100);
+		} else {
+			const element = document.getElementById(sectionId);
+			if (element) {
+				element.scrollIntoView({ behavior: 'smooth' });
+			}
+		}
+	};
+
 	const [isOpen, setIsOpen] = useState(false);
 	const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -27,35 +46,65 @@ const Header = () => {
 			<div className="logo">
 				<img src={Logo} alt="Logo" height="50" />
 			</div>
-			<div className='hamburguer' onClick={toggleMenu}>
+			<div className="hamburguer" onClick={toggleMenu}>
 				{isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
 			</div>
 
-			<nav className={`navbar ${isOpen ? "active" : ""}`}>
+			<nav className={`navbar ${isOpen ? 'active' : ''}`}>
 				<ul>
 					<li>
-						<Link to="/" onClick={toggleMenu}>Home</Link>
+						<Link to="/" onClick={toggleMenu}>
+							Home
+						</Link>
 					</li>
 					<li>
-						<Link to="/book-now" onClick={toggleMenu}>Find an RMT</Link>
+						<Link to="/book-now" onClick={toggleMenu}>
+							Find an RMT
+						</Link>
 					</li>
 					<li>
-						<Link to="/health-history" onClick={toggleMenu}>Complete the Form</Link>
+						<Link to="/health-history" onClick={toggleMenu}>
+							Complete the Form
+						</Link>
 					</li>
 					<li>
-						<a href="#explore-section" onClick={toggleMenu}>Treatments</a>
+						<Link
+							to="/"
+							onClick={() => {
+								toggleMenu();
+								handleSectionClick('explore-section');
+							}}
+						>
+							Treatments
+						</Link>
 					</li>
 					<li>
-						<a href="#map-section" onClick={toggleMenu}>Hours/Location</a>
+						<Link
+							to="/"
+							onClick={() => {
+								toggleMenu();
+								handleSectionClick('map-section');
+							}}
+						>
+							Hours/Location
+						</Link>
 					</li>
 					<li>
-						<a href="#" onClick={toggleMenu}>About Us</a>
+						<Link
+							to="/"
+							onClick={() => {
+								toggleMenu();
+								handleSectionClick('about-section');
+							}}
+						>
+							About Us
+						</Link>
 					</li>
 					{currentUser && (
 						<li className="dropdown">
-							<a href="#" style={{ cursor: 'pointer' }}>
+							<Link to="#" style={{ cursor: 'pointer' }}>
 								My Appointments
-							</a>
+							</Link>
 							<div className="dropdown-content">
 								<Link to="/view-appointment">View Appointments</Link>
 								<Link to="/manage-bookings">Manage Appointments</Link>
@@ -64,9 +113,9 @@ const Header = () => {
 					)}
 					<li>
 						{currentUser ? (
-							<a href="#" onClick={handleLogout} style={{ cursor: 'pointer' }}>
+							<Link to="#" onClick={handleLogout} style={{ cursor: 'pointer' }}>
 								Logout
-							</a>
+							</Link>
 						) : (
 							<Link to="/login">Login</Link>
 						)}
