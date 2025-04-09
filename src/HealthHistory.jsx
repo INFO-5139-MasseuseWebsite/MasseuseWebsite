@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './HealthHistory.css';
+import Header from './components/Header';
+import MassageWall from './components/HeroImage'
 
 const HealthHistory = () => {
   const [formData, setFormData] = useState({
@@ -62,9 +64,6 @@ const HealthHistory = () => {
     limitationsDailyLife: '',
     discomfortAreas: '',
   });
-
-//To Do: Add sanitization and data validation to forms
-
 
   const sanitizeInput = (input) => {
     if (typeof input === 'string') {
@@ -131,6 +130,10 @@ const HealthHistory = () => {
   };
 
   return (
+    <div>
+      <MassageWall />
+      <Header />
+    <div className="health-history-content">
     <div className="health-history-form">
       <h1>Health History Form</h1>
       <p>
@@ -509,7 +512,7 @@ const HealthHistory = () => {
               className="text-style"
             />
           </label>
-          
+
           <p>Arthritis:</p>
           <label>
             <input
@@ -545,7 +548,7 @@ const HealthHistory = () => {
           <label>
             <input
               type="radio"
-               name="otherConditions.arthritisFamilyHistory"
+              name="otherConditions.arthritisFamilyHistory"
               value="No"
               checked={formData.otherConditions.arthritisFamilyHistory === 'No'}
               onChange={handleChange}
@@ -880,8 +883,10 @@ const HealthHistory = () => {
           </label>
         </div>
 
-        <button type="submit">Submit</button>
+        <button type="submit" className="submit-button" >Submit</button>
       </form>
+    </div>
+    </div>
     </div>
   );
 };
