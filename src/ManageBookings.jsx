@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './ManageBookings.css';
 import Header from './components/Header';
+import { getAuth } from 'firebase/auth';
 
 const ManageBookings = () => {
 	const [bookings, setBookings] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState('');
 	const [success, setSuccess] = useState('');
+	const [idToken, setIdToken] = useState(null);
+	const auth = getAuth();
 
 	useEffect(() => {
 		fetchBookings();
@@ -14,19 +17,24 @@ const ManageBookings = () => {
 
 	const fetchBookings = async () => {
 		try {
+			const user = auth.currentUser;
+			const token = await user.getIdToken(true);
+			setIdToken(token);
+
 			const response = await fetch('http://localhost/api/rmt/get-all-bookings', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`
 				},
 			});
 
 			if (!response.ok) {
-				throw new Error('Failed to fetch bookings');
+				const errorText = await response.text();
+				throw new Error(errorText || 'Failed to fetch bookings');
 			}
 
 			const data = await response.json();
-			// Filter for pending bookings (not confirmed and not canceled)
 			const pendingBookings = data.filter((booking) => booking.confirmed === false && booking.canceled === false);
 			setBookings(pendingBookings);
 			setError(null);
@@ -49,6 +57,7 @@ const ManageBookings = () => {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
+					Authorization: `Bearer ${idToken}`
 				},
 				body: JSON.stringify({ bookingID: bookingId }),
 			});

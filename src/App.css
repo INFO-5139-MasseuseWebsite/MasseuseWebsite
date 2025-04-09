@@ -439,12 +439,6 @@ body {
 	justify-content: center;
 }
 
-/* .mapEmbed {
-  margin-right: 20px;
-  border: 15px solid #4B3621;
-  border-radius: 8px; 
-} */
-
 .infoContainer {
 	display: flex;
 	flex-direction: column;
